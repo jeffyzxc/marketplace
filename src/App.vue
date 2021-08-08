@@ -38,10 +38,13 @@
   width: 15rem;
 }
 .navlinks{
-  padding-left: 5px;
-  padding-right:5px;
+  padding-left: 15px;
+  padding-right:15px;
   text-decoration: none;
   color : rgba(255, 255, 255, 0.5);
+}
+.nav-top > .nav {
+  align-items: center;
 }
 
 .active-navlink {

@@ -1,8 +1,8 @@
 <template>
   <b-container class="bv-example-row" fluid>
       <b-row class="buy-main">
-        <b-col cols="3" class="market-filters">Market Filters</b-col>
-        <b-col cols="9">
+        <b-col cols="2" class="market-filters">Market Filters</b-col>
+        <b-col cols="10">
           <div>
             Banner Section
           </div>
