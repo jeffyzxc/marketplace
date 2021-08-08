@@ -2,13 +2,13 @@
   <div class="app">
     <b-container class="bv-example-row" fluid>
       <b-row class="navbar-cb-logo">
-        <b-col cols="3" class="logo-title">CryptoBlades</b-col>
-        <b-col cols="9" class="nav-top">
+        <b-col cols="2" class="logo-title"><img src='./assets/logo_Text_Source@2x.png'/></b-col>
+        <b-col cols="10" class="nav-top">
           <div class="nav">
-            <router-link to="/">Buy</router-link>
-            <router-link to="/sell">Sell</router-link>
-            <router-link to="/listings">My listings</router-link>
-            <router-link to="/history">Transaction History</router-link>
+            <router-link to="/" class="navlinks" active-class="active-navlink">Buy</router-link>
+            <router-link to="/sell"  class="navlinks" active-class="active-navlink">Sell</router-link>
+            <router-link to="/listings"  class="navlinks" active-class="active-navlink">My listings</router-link>
+            <router-link to="/history"  class="navlinks" active-class="active-navlink">Transaction History</router-link>
           </div>
         </b-col>
       </b-row>
@@ -22,10 +22,29 @@
   height:100%;
 }
 .navbar-cb-logo {
-  height : 3.5rem;
+  background : rgb(8,20,43);
+  height : 5.5rem;
 }
 
 .logo-title, .nav-top {
   border: 1px solid rgba(57, 67, 85, 1);
+  display: flex;
+}
+.logo-title {
+  justify-content: center;
+  align-items: center;
+}
+.logo-title > img {
+  width: 15rem;
+}
+.navlinks{
+  padding-left: 5px;
+  padding-right:5px;
+  text-decoration: none;
+  color : rgba(255, 255, 255, 0.5);
+}
+
+.active-navlink {
+  color : rgb(255, 255, 255);
 }
 </style>
