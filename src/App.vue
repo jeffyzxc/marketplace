@@ -2,15 +2,15 @@
   <div class="app">
     <b-container class="bv-example-row" fluid>
       <b-row class="navbar-cb-logo">
-        <b-col cols="2" class="logo-title"><img src='./assets/logo_Text_Source@2x.png'/></b-col>
-        <b-col cols="10" class="nav-top">
-          <div class="nav">
-            <router-link to="/" class="navlinks" active-class="active-navlink">Buy</router-link>
+        <b-col cols="2" class="logo-title d-flex"><img src='./assets/logo_Text_Source@2x.png'/></b-col>
+        <b-col cols="10" class="nav-top d-flex">
+          <div class="nav justify-self-start align-items-center d-flex p-2 flex-grow-2">
+            <router-link to="/" class="navlinks" active-class="active-navlink" exact>Buy</router-link>
             <router-link to="/sell"  class="navlinks" active-class="active-navlink">Sell</router-link>
             <router-link to="/listings"  class="navlinks" active-class="active-navlink">My listings</router-link>
             <router-link to="/history"  class="navlinks" active-class="active-navlink">Transaction History</router-link>
           </div>
-          <div class="wallet-details">
+          <div class="wallet-details d-flex flex-grow-1 justify-self-end align-items-center justify-content-around">
             <div class="skill-wallet">
               <img src="./assets/addButton.png" alt="" srcset="" class="add-wallet-icon">
               <span>Buy Skill</span>
@@ -40,6 +40,34 @@ html, body {
   margin:0px;
   height:100%;
 }
+
+/* Additional Flex Utilities (non-bootstrap existent) */
+
+.flex-grow-1 {
+  flex: 1;
+}
+.flex-grow-2 {
+  flex: 2;
+}
+.flex-grow-3 {
+  flex: 3;
+}
+.flex-grow-4 {
+  flex: 4;
+}
+
+.justify-self-end {
+  justify-self : flex-end;
+}
+.justify-self-center {
+  justify-self : center;
+}
+
+.justify-self-start {
+  justify-self : flex-start;
+}
+
+
 </style>
 <style scoped>
 .app {
@@ -56,7 +84,6 @@ html, body {
 
 .logo-title, .nav-top {
   border: 1px solid rgba(57, 67, 85, 1);
-  display: flex;
 }
 .logo-title {
   justify-content: center;
@@ -71,22 +98,9 @@ html, body {
   text-decoration: none;
   color : rgba(255, 255, 255, 0.5);
 }
-.nav-top > .nav {
-  align-items: center;
-  justify-self: flex-start;
-  flex : 2
-}
 
 .active-navlink {
   color : rgb(255, 255, 255);
-}
-
-.wallet-details {
-  flex : 1;
-  justify-self: flex-end;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
 }
 
 .add-wallet-icon {
