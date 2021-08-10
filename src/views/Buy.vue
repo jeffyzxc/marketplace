@@ -1,7 +1,7 @@
 <template>
   <b-container class="bv-example-row" fluid>
       <b-row class="buy-main">
-        <b-col cols="2" class="market-filters">Market Filters</b-col>
+        <b-col cols="2" class="market-filters"><market-filter/></b-col>
         <b-col cols="10">
           <div>
             Banner Section
@@ -19,9 +19,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
+import MarketFilter from '../components/marketFilter.vue'
 export default Vue.extend({
-  name: 'Buy'
+  name: 'Buy',
+  components: {
+        MarketFilter
+    }
 });
 </script>
 

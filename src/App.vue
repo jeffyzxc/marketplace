@@ -36,6 +36,10 @@
 </template>
 
 <style>
+  @import './App.css';
+</style>
+
+<style>
 html, body {
   margin:0px;
   height:100%;
