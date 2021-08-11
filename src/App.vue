@@ -2,8 +2,8 @@
   <div class="app">
     <b-container class="bv-example-row" fluid>
       <b-row class="navbar-cb-logo">
-        <b-col cols="2" class="logo-title d-flex"><img src='./assets/logo_Text_Source@2x.png'/></b-col>
-        <b-col cols="10" class="nav-top d-flex">
+        <b-col lg='2' md='3'  class="logo-title p-10 d-flex"><img class="cb-logo" src='./assets/logo_Text_Source@2x.png'/></b-col>
+        <b-col lg='10' md='9' class="nav-top d-flex">
           <div class="nav justify-self-start align-items-center d-flex p-2 flex-grow-2">
             <router-link to="/" class="navlinks" active-class="active-navlink" exact>Buy</router-link>
             <router-link to="/sell"  class="navlinks" active-class="active-navlink">Sell</router-link>
@@ -74,6 +74,11 @@ html, body {
 
 </style>
 <style scoped>
+    .cb-logo {
+        width: 200px !important;
+        height: 30px !important;
+    }
+
 .app {
   background-color: rgb(8,20,43);
   height:100%;
@@ -87,7 +92,9 @@ html, body {
 }
 
 .logo-title, .nav-top {
-  border: 1px solid rgba(57, 67, 85, 1);
+  /* border-right: 0px !important; */
+  border-right: 1px solid rgba(57, 67, 85, 1);
+  border-bottom: 1px solid rgba(57, 67, 85, 1);
 }
 .logo-title {
   justify-content: center;

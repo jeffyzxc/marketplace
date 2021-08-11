@@ -1,8 +1,8 @@
 <template>
   <b-container class="bv-example-row" fluid>
       <b-row class="buy-main">
-        <b-col cols="2" class="market-filters"><market-filter/></b-col>
-        <b-col cols="10" class="bdr-line-left pr-5 item-list ps-container ps-active-y">
+        <b-col cols="2" lg='2' sm='0' md='3' class="market-filters"><market-filter/></b-col>
+        <b-col cols="10" lg='10' sm='12' md='9' class="bdr-line-left pr-5 item-list ps-container ps-active-y">
           <div class="banner-ads pt-4">
             <div class="bg-banner"></div>
           </div>
