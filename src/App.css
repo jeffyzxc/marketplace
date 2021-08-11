@@ -62,7 +62,7 @@ body {
 }
 
 .csr-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .navs-hover ul li {
@@ -79,10 +79,14 @@ body {
 }
 
 .left-switch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
   background-color: #253148;
   padding: 10px 15px 10px 20px;
   color: #fff;
-  font-size: 14px;
+  font-size: 10px !important;
 }
 
 .sw-active {
@@ -91,9 +95,13 @@ body {
 }
 
 .left-switch-btn-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
   padding: 10px 15px 10px 20px;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   border-bottom: 3px solid #08142b;
 }
 
@@ -198,21 +206,21 @@ body {
 }
 
 .filters {
-  padding-right: 40px !important;
-  padding-left: 40px !important;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
   padding-top: 30px;
 }
 
 .filters label {
   color: #fff;
-  font-size: 13px !important;
+  font-size: 12px !important;
   margin-bottom: 8px;
   font-family: "Roboto", sans-serif;
 }
 
 .filters div .form-check-label {
   color: #fff;
-  font-size: 13px !important;
+  font-size: 11px !important;
   opacity: 0.5;
   font-weight: 400;
   font-family: "Roboto", sans-serif;
@@ -243,20 +251,28 @@ body {
 }
 
 .cstm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  /* padding: 10px 10px 10px 10px; */
   background-color: #08142b;
-  padding: 10px 15px 10px 20px;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.357);
-  width: 48%;
+  /* width: 48%; */
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 11px;
   text-align: center;
 }
 
 .cstm-btn-active {
-  width: 48%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  /* width: 48%; */
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   background-color: #1168d0;
   color: #fff;
   padding: 10px 15px 10px 20px;
