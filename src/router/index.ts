@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Buy from '../views/Buy.vue'
+import TransactionHistory from '../views/TransactionHistory.vue'
 
 Vue.use(VueRouter)
 
