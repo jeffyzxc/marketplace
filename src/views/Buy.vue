@@ -7,27 +7,8 @@
             </b-col>
          </transition>
          <transition name="fadeInUp" mode="out-in">
-            <b-col lg='10' md='9' sm='12' class="bdr-line-left item-list ps-container ps-active-y" v-if="!isMobile || (isMobile && !filterIsToggled)">
-              <div class="banner-ads pt-4 hidden-mobile-sm">
-                <div class="bg-banner"></div>
-              </div>
-              <div>
-                <sort-filter />
-              </div>
-              <div class="list-items">
-
-                  <!----- LOADER--- -->
-                  <div class="spacer flex-wrap d-flex append-weapon justify-content-center alig-items-center"  v-if="isLoading">
-                      <div class="spinner-border" style="width: 3rem; height: 3rem;color:#ffffff4a" role="status">
-                        <span class="sr-only"></span>
-                      </div>
-                  </div>
-
-                  <!-- LIST WEAPON -->
-                    <div class="spacer flex-wrap d-flex append-weapon" v-else>
-                      <weapon-item/>
-                    </div>
-                </div>
+            <b-col lg='10' md='9' sm='12' class="bdr-line-left item-list ps-container ps-active-y overflow-auto" v-if="!isMobile || (isMobile && !filterIsToggled)">
+              <buy-main></buy-main>
             </b-col>
         </transition>
       </b-row>
@@ -37,8 +18,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import MarketFilter from '../components/MarketFilter.vue';
-import SortFilter from '../components/SortFilter.vue';
-import WeaponItem from '../components/WeaponItem.vue';
+import BuyMain from '../components/BuyMain.vue'
 
 export default Vue.extend({
   name: 'Buy',
@@ -49,9 +29,8 @@ export default Vue.extend({
       }
   },
   components: {
+      BuyMain,
       MarketFilter,
-      SortFilter,
-      WeaponItem
   },
   computed:{
     isMobile() {
