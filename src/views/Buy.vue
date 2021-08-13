@@ -75,9 +75,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.buy-main {
-  height:100%;
-}
 .market-filters {
   border-right: 1px solid rgba(57, 67, 85, 1);
   height: calc(100vh - 150px)  !important;
