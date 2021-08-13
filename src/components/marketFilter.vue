@@ -1,84 +1,84 @@
 <template>
     <div class="rl">
-                <div class="d-flex flex-column">
-                    <div class="d-flex switch-btn justify-content-center align-items-center pb-4 pt-4 bdr-line-bottom ">
-                        <div class="left-switch-btn sw-active rounded-lefts csr-pointer" v-on:click="activeUpperTab='c'" :style="setActive('c','upperBtn')">CRYPTOBLADES</div>
-                        <div class="left-switch-btn rounded-rights csr-pointer"  v-on:click="activeUpperTab='o'" :style="setActive('o','upperBtn')">OPEN MARKET</div>
+        <div class="d-flex flex-column">
+            <div class="d-flex switch-btn justify-content-center align-items-center pb-4 pt-4 bdr-line-bottom plr">
+                <div class="left-switch-btn sw-active rounded-lefts csr-pointer" v-on:click="activeUpperTab='c'" :style="setActive('c','upperBtn')">CRYPTOBLADES</div>
+                <div class="left-switch-btn rounded-rights csr-pointer"  v-on:click="activeUpperTab='o'" :style="setActive('o','upperBtn')">OPEN MARKET</div>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="d-flex switch-btn justify-content-center flex-grow-1 align-items-center pt-4 plr">
+                    <div class="left-switch-btn-line line-active csr-pointer" v-on:click="activeUppderMidTab='w'" :style="setActive('w','upperMidBtn')">WEAPONS</div>
+                    <div class="left-switch-btn-line csr-pointer" v-on:click="activeUppderMidTab='c'" :style="setActive('c','upperMidBtn')">CHARACTERS</div>
+                </div>
+                <div class="d-flex justify-content-between justify-content-center filters plr">
+                    <div  v-for="data in elements" :key="data.id" :class="'element iconify '+getElement(data.isToggled, data.el)" :id="data.id" v-on:click="setElement(data.el)"></div>
+                </div>
+            </div>
+            <div class="d-flex flex-column filters">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mbl-50">
+                        <label for="form" style="color: #fff !important;">Rarity</label>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Legendary</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Mythical</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Unique</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Rare</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Normal</label>
+                        </div>
                     </div>
-                    <div class="d-flex flex-column pl-2 pr-2">
-                        <div class="d-flex switch-btn justify-content-center flex-grow-1 align-items-center pt-4">
-                            <div class="left-switch-btn-line line-active csr-pointer" v-on:click="activeUppderMidTab='w'" :style="setActive('w','upperMidBtn')">WEAPONS</div>
-                            <div class="left-switch-btn-line csr-pointer" v-on:click="activeUppderMidTab='c'" :style="setActive('c','upperMidBtn')">CHARACTERS</div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mbl-50">
+                        <label for="form" style="color: #fff !important;">Stat</label>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Strength</label>
                         </div>
-                        <div class="d-flex justify-content-between justify-content-center filters">
-                            <div  v-for="data in elements" :key="data.id" :class="'element iconify '+getElement(data.isToggled, data.el)" :id="data.id" v-on:click="setElement(data.el)"></div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Dexterity</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Intelligence</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Charisma</label>
+                        </div>
+                        <div class="form-check" id="form">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">Power</label>
                         </div>
                     </div>
-                    <div class="d-flex flex-column filters">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <label for="form" style="color: #fff !important;">Rarity</label>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Legendary</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Mythical</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Unique</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Rare</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Normal</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="form" style="color: #fff !important;">Stat</label>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Strength</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Dexterity</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Intelligence</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Charisma</label>
-                                </div>
-                                <div class="form-check" id="form">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">Power</label>
-                                </div>
-                            </div>
-                        </div>
-                       <div class="row">
-                            <div class="col-lg-12 pt-3">
-                                <label for="form" style="color: #fff !important;font-size: 11px !important;">Reforge</label> <br>
-                                <input type="range" min="1" max="100" value="50" class="slider" id="myRange" style="width: 100% !important;">
-                            </div>
-                       </div>
-                       <div class="row">
-                           <div class="col-lg-12 d-flex justify-content-between pt-4">
-                                <div class="cstm-btn-active csr-pointer mr-2" v-on:click="activeBottomTab='f'" :style="setActive('f','bottomBtn')">FILTER</div>
-                                <div style="color:#08142b">...</div>
-                                <div class="cstm-btn csr-pointer" v-on:click="activeBottomTab='c'" :style="setActive('c','bottomBtn')">CLEAR FILTER</div>
-                           </div>
-                       </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 pt-3">
+                        <label for="form" style="color: #fff !important;font-size: 11px !important;">Reforge</label> <br>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="myRange" style="width: 100% !important;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 d-flex justify-content-between pt-4">
+                        <div class="cstm-btn-active csr-pointer mr-2" v-on:click="clickedFilter('f')" :style="setActive('f','bottomBtn')">FILTER</div>
+                        <div style="color:#08142b">...</div>
+                        <div class="cstm-btn csr-pointer" v-on:click="clickedFilter('c')" :style="setActive('c','bottomBtn')">CLEAR FILTER</div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -116,6 +116,12 @@ export default Vue.extend({
         }
     },
     methods:{
+        clickedFilter(x:string){
+            if(x=='f'){
+                this.$root.$emit('set-toggle', false)
+            }
+            this.activeBottomTab=x
+        },
         setActive(tab:string,types:string){
             if(types=='upperBtn'){
                 if(tab==this.activeUpperTab){
@@ -160,5 +166,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-
+    .rl{
+        overflow-y: auto !important;
+    }
 </style>
