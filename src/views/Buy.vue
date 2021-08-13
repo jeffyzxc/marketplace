@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import MarketFilter from '../components/marketFilter.vue';
+import MarketFilter from '../components/MarketFilter.vue';
 import SortFilter from '../components/SortFilter.vue';
 import WeaponItem from '../components/WeaponItem.vue';
 
