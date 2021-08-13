@@ -1,39 +1,87 @@
 <template>
-  <div class="app">
-    <b-container class="bv-example-row" fluid>
-      <b-row class="navbar-cb-logo">
-        <b-col lg='2' md='3'  class="logo-title p-10 d-flex"><img class="cb-logo" src='./assets/logo_Text_Source@2x.png'/></b-col>
-        <b-col lg='10' md='9' class="nav-top d-flex">
-          <div class="nav justify-self-start align-items-center d-flex p-2 flex-grow-2">
-            <router-link to="/" class="navlinks" active-class="active-navlink" exact>Buy</router-link>
-            <router-link to="/sell"  class="navlinks" active-class="active-navlink">Sell</router-link>
-            <router-link to="/listings"  class="navlinks" active-class="active-navlink">My listings</router-link>
-            <router-link to="/history"  class="navlinks" active-class="active-navlink">Transaction History</router-link>
-          </div>
-          <div class="wallet-details d-flex flex-grow-1 justify-self-end align-items-center justify-content-around">
-            <div class="skill-wallet">
-              <img src="./assets/addButton.png" alt="" srcset="" class="add-wallet-icon">
-              <span>Buy Skill</span>
+  <div class="app row">
+    <div class="col-lg-2 col-md-2 col-sm-12 p-3 d-flex justify-content-center align-items-center bdr-line-bottom">
+        <img class="cb-logo" src='./assets/logo_Text_Source@2x.png' alt="">
+    </div>
+    <!-- HIDDEN MENU USED - SHOWS WHEN IN MOBILE -->
+    <transition name="right-fade" mode="out-in">
+      <div class="mobile-menu col-lg-12 hidden-desktop-lg" v-if="menuIsToggled">
+            <div class="nav-menu" v-if="menuIsToggled">
+                <ul class="navbar-nav mr-auto">
+                    <li  v-on:click="toggleMenu(false)" class="nav-item active"><a class="nav-link" href="#"><router-link to="/"  class="navlinks" active-class="active-navlink" exact>BUY</router-link></a> </li>
+                    <li  v-on:click="toggleMenu(false)" class="nav-item"><a class="nav-link" href="#"><router-link to="/sell"  class="navlinks" active-class="active-navlink">SELL</router-link></a></li>
+                    <li  v-on:click="toggleMenu(false)" class="nav-item"> <a class="nav-link" href="#"><router-link to="/listings"  class="navlinks" active-class="active-navlink">MY LISTINGS</router-link></a></li>
+                    <li  v-on:click="toggleMenu(false)" class="nav-item"> <a class="nav-link" href="#"><router-link to="/history"  class="navlinks" active-class="active-navlink">TRANSACTION HISTORY</router-link></a></li>
+                  </ul>
             </div>
-            <div class="skill-wallet">
-              <img src="./assets/skillicon.png" alt="" srcset="" class="add-wallet-icon">
-              <span>50.299</span>
+      </div>
+    </transition>
+         
+    <div class="col-lg-10 col-md-10 col-sm-12 pt-3 pb-0 pr-0 bdr-line-left bdr-line-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light bg-color pb-0">
+            <button v-on:click="toggleMenu(true)" class="navbar-toggler pb-0" type="button" data-toggle="collapse" data-target="#filters" aria-controls="filters" aria-expanded="false" aria-label="Toggle navigation">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.5em" height="1.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g transform="translate(24 0) scale(-1 1)"><g fill="#ffffff"><path d="M20.05 11H5.91l1.3-1.29a1 1 0 0 0-1.42-1.42l-3 3a1 1 0 0 0 0 1.42l3 3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42L5.91 13h14.14a1 1 0 0 0 .95-.95V12a1 1 0 0 0-.95-1z"/><rect x="3" y="17" width="18" height="2" rx=".95" ry=".95"/><rect x="3" y="5" width="18" height="2" rx=".95" ry=".95"/></g></g></svg>
+            </button>
+            <div class="collapse navbar-collapse navs-hover" id="filters">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a class="nav-link" href="#"><router-link to="/"  class="navlinks" active-class="active-navlink" exact>BUY</router-link></a> </li>
+                <li class="nav-item"><a class="nav-link" href="#"><router-link to="/sell"  class="navlinks" active-class="active-navlink">SELL</router-link></a></li>
+                <li class="nav-item"> <a class="nav-link" href="#"><router-link to="/listings"  class="navlinks" active-class="active-navlink">MY LISTINGS</router-link></a></li>
+                <li class="nav-item"> <a class="nav-link" href="#"><router-link to="/history"  class="navlinks" active-class="active-navlink">TRANSACTION HISTORY</router-link></a></li>
+              </ul>
             </div>
-            <div class="bnb-wallet">
-              <img src="./assets/binance-coin-logo@2x.png" alt="" srcset="" class="add-wallet-icon">
-              <span>10.299</span>
+            <div class="d-flex right-nav align-items-center pb-4">
+                <div class="csr-pointer d-flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#F0E2B6" stroke-width="2"/></g></svg>
+                    <span></span>
+                    <span class="hidden-mobile-sm">BUY SKILL</span>
+                </div>
+                <div class="csr-pointer">
+                    <span><img src="./assets/apple-touch-icon.png" alt=""></span>
+                    50.293
+                </div>
+                <div class="csr-pointer">
+                    <span><img src="./assets/binance-coin-logo.png" alt=""></span>
+                    50.293
+                </div>
+                <div class="csr-pointer flex-grow-1">
+                    <div class="hex-id">
+                        0X2B..61cB
+                    </div>
+                </div>
             </div>
-
-            <div class="wallet-address">
-              <span>0x2B…61cB</span>
-            </div>
-          </div>
-        </b-col>
-      </b-row>
-    </b-container>
+        </nav>
+    </div>
     <router-view class="switch-view-container"/>
   </div>
 </template>
+
+<script lang="ts">
+  import Vue from 'vue';
+  export default Vue.extend({
+      name: 'SortFilter',
+      data: function(){
+        return{
+          menuIsToggled: false
+        }
+      },
+      computed:{
+         isMobile() {
+          if( screen.width <= 600) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        }
+      },
+      methods:{
+        toggleMenu(bol:boolean){
+            this.menuIsToggled = bol
+        }
+      }
+  });
+</script>
 
 <style>
   @import './App.css';
@@ -75,8 +123,8 @@ html, body {
 </style>
 <style scoped>
     .cb-logo {
-        width: 200px !important;
-        height: 30px !important;
+        width: 180px !important;
+        height: 25px !important;
     }
 
 .app {
@@ -138,4 +186,7 @@ html, body {
 .wallet-details > * {
   color : white;
 }
+
+
+
 </style>

@@ -35,6 +35,7 @@ body {
 .bdr-line-left {
   border-left: 2px solid #0b1b38 !important;
   padding-left: 30px;
+  /* padding-right: 30px; */
 }
 
 .bdr-line-bottom {
@@ -66,7 +67,7 @@ body {
 }
 
 .navs-hover ul li {
-  margin-right: 17px !important;
+  margin-right: 5px !important;
   padding-bottom: 20px !important;
   border-bottom: 3px solid #08142b;
 }
@@ -86,7 +87,7 @@ body {
   background-color: #253148;
   padding: 10px 15px 10px 20px;
   color: #fff;
-  font-size: 10px !important;
+  font-size: 0.6vw;
 }
 
 .sw-active {
@@ -206,9 +207,14 @@ body {
 }
 
 .filters {
-  padding-right: 10px !important;
-  padding-left: 10px !important;
+  padding-right: 15px !important;
+  padding-left: 15px !important;
   padding-top: 30px;
+}
+
+.plr {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
 }
 
 .filters label {
@@ -381,7 +387,7 @@ body {
   margin-top: 30px !important;
   width: 100% !important;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .desc span {
@@ -425,4 +431,176 @@ body {
   padding: 3px 10px 3px 10px;
   border-radius: 5px;
   background-color: #253148;
+}
+
+.sort-tab {
+  display: flex;
+}
+
+.hidden-desktop-lg {
+  display: none !important;
+}
+
+/*------------ Transition Animation -----------------*/
+.right-fade-enter-active {
+  transition: all 0.2s ease;
+}
+.right-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.right-fade-enter, .right-fade-leave-to
+  /* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(-30px);
+  opacity: 0;
+}
+
+.fadeInUp-enter-active {
+  transition: all 0.3s ease;
+}
+.fadeInUp-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.fadeInUp-enter, .fadeInUp-leave-to
+  /* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .row .mbl-50 {
+    width: 50% !important;
+  }
+
+  .mobile-menu {
+    background-color: rgba(0, 0, 0, 0.494);
+    height: 100vh;
+    position: absolute;
+    z-index: 999;
+    display: inline !important;
+  }
+
+  .nav-menu {
+    background-color: #08142b;
+    width: 75% !important;
+    height: 100vh;
+    margin-left: -20px;
+    padding-top: 10%;
+    padding-left: 25px !important;
+  }
+
+  .show-mobile-sm {
+    display: inline !important;
+  }
+
+  .cost-item {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .substat {
+    padding-left: 10px !important;
+  }
+
+  .substat .stats {
+    font-size: 9px !important;
+  }
+
+  .desc {
+    padding: 2px 5px 2px 5px !important;
+  }
+
+  .imgs .label {
+    padding: 10px !important;
+  }
+
+  .imgs .label p {
+    font-size: 9px !important;
+  }
+
+  .imgs .label span {
+    font-size: 11px !important;
+  }
+
+  .item-card {
+    border: 1px solid #d16100;
+    border-radius: 5px;
+    padding: 1px 1px 1px 1px;
+    margin-right: 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .item-card .weapons {
+    margin-top: -50px;
+    width: 180px;
+  }
+
+  .cb-logo {
+    width: 300px !important;
+    height: 32px !important;
+  }
+
+  .bdr-line-left {
+    border-left: 0px !important;
+  }
+
+  .navbar-toggler {
+    border: none !important;
+    margin-top: -20px !important;
+  }
+
+  .hidden-mobile-sm {
+    display: none;
+  }
+
+  .filter-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .select-metro {
+    padding: 5px !important;
+    background-color: #08142b;
+    color: #fff;
+    border: 0px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.213);
+    font-size: 13px !important;
+    width: 100px !important;
+    font-family: Roboto;
+  }
+
+  .sort-tab {
+    display: flex;
+    width: 90vw !important;
+    flex-grow: 1;
+    justify-content: space-between !important;
+  }
+
+  .app {
+    margin: auto !important;
+  }
+  .mpb-1 {
+    padding-bottom: 20px;
+  }
+
+  .sort-tab .form-check {
+    border-right: 0px solid !important;
+  }
+
+  .filter-list svg {
+    margin-right: 20px;
+  }
+
+  .filter-list select {
+    margin-right: 2px !important;
+  }
+
+  .filter-list svg,
+  .filter-lsit input {
+    margin-right: 20px;
+  }
+
+  .left-switch-btn,
+  .left-switch-btn-line {
+    font-size: 13px !important;
+  }
 }
