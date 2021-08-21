@@ -58,5 +58,6 @@ export default Vue.extend({
   border-right: 1px solid rgba(57, 67, 85, 1);
   height: calc(100vh - 150px)  !important;
   overflow-y: auto !important;
+  padding-right: 0px !important;
 }
 </style>
