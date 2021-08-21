@@ -36,19 +36,7 @@
                     <span></span>
                     <span class="hidden-mobile-sm">BUY SKILL</span>
                 </div>
-                <div class="csr-pointer">
-                    <span><img src="./assets/apple-touch-icon.png" alt=""></span>
-                    50.293
-                </div>
-                <div class="csr-pointer">
-                    <span><img src="./assets/binance-coin-logo.png" alt=""></span>
-                    50.293
-                </div>
-                <div class="csr-pointer flex-grow-1">
-                    <div class="hex-id">
-                        0X2B..61cB
-                    </div>
-                </div>
+                <wallet-balance />
             </div>
         </nav>
     </div>
@@ -58,7 +46,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
+  import WalletBalance from './components/WalletBalance.vue'
   export default Vue.extend({
+      components: {
+        WalletBalance
+      },
       name: 'SortFilter',
       data: function(){
         return{
