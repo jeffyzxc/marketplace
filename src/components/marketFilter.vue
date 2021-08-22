@@ -83,6 +83,7 @@ export default Vue.extend({
         selectTab(tab:string){
             console.log(this)
             if(tab == 'weapon'){
+                this.$root.$emit('refresh-list', 'weapon')
                 this.weapons = 'filters'
                 this.shields = ""
                 this.character = ""
@@ -95,12 +96,14 @@ export default Vue.extend({
                 this.skill = ""
                 this.others = ""
             }else if(tab == 'character'){
+                this.$root.$emit('refresh-list', 'character')
                 this.character = 'filters'
                 this.shields = ''
                 this.weapons = ''
                 this.skill = ""
                 this.others = ""
             }else if(tab == 'skillshop'){
+                this.$root.$emit('refresh-list', 'skillshop')
                 this.skill = 'filters'
                 this.character = ''
                 this.shields = ''

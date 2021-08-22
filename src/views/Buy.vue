@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import MarketFilter from '../components/MarketFilter.vue';
+import MarketFilter from '../components/marketFilter.vue';
 import BuyMain from '../components/BuyMain.vue'
 
 export default Vue.extend({

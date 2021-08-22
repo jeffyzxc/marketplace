@@ -18,25 +18,44 @@
 
                 <!-- LIST WEAPON -->
                 <div class="spacer flex-wrap d-flex append-weapon" v-else>
-                    <weapon-list/>
+                     <transition name="fadeInUp" mode="out-in">
+                        <component v-bind:is="items" />
+                    </transition>
+                    <!-- <weapon-list/> -->
                 </div>
             </div>
     </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
+import CharacterList from '../components/CharacterList.vue';
 import WeaponList from '../components/WeaponList.vue';
+import SkillList from '../components/SkilllList.vue';
 import SortFilter from '../components/SortFilter.vue'
 export default Vue.extend({
     components:{
         SortFilter,
-        WeaponList
+        'weapon-list': WeaponList,
+        'skill-list': SkillList,
+        'character-list': CharacterList
     },
     data(){
       return{
+          items: 'weapon-list',
           filterIsToggled: false,
           isLoading: false
       }
-  },
+    },
+    mounted(){
+        this.$root.$on('refresh-list', (itemType:string) => {
+            if(itemType == 'character'){
+                this.items = 'character-list'
+            }else if(itemType == 'weapon'){
+                this.items = 'weapon-list'
+            }else if(itemType == 'skillshop'){
+                this.items = 'skill-list'
+            }
+        })
+    }
 })
 </script>
