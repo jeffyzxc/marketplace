@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Buy from '../views/Buy.vue'
+import Sell from '../views/Sell.vue'
 import TransactionHistory from '../views/TransactionHistory.vue'
 
 
@@ -11,6 +12,11 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'Buy',
     component: Buy
+  },
+  {
+    path: '/sell',
+    name: 'Sell',
+    component: Sell
   },
   {
     path: '/about',
