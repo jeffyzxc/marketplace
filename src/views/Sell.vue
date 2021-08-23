@@ -17,7 +17,7 @@
 					lg="10"
 					md="9"
 					sm="12"
-					class="bdr-line-left item-list ps-container ps-active-y "
+					class="bdr-line-left item-list ps-container ps-active-y overflow-auto"
 					v-if="!isMobile || (isMobile && !filterIsToggled)"
 				>
 					<sell-main :currentTab="currentTab"></sell-main>

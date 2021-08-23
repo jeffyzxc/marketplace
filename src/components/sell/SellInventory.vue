@@ -129,8 +129,6 @@ export default Vue.extend({
 }
 
 .list-items {
-	overflow-y: auto !important;
-	height: calc(100vh - 350px);
 	margin-left: 10px !important;
 	margin-right: 10px !important;
 }
