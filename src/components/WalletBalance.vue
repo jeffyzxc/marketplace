@@ -5,11 +5,11 @@
                 viewBox="0 0 24 24"><g fill="none">
                 <path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#F0E2B6" stroke-width="2"/></g></svg>
             </div>
-            <div class="csr-pointer" v-if="web3Connected">
+            <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span ><img src="../assets/apple-touch-icon.png" alt=""></span>
                 50.293
             </div>
-            <div class="csr-pointer" v-if="web3Connected">
+            <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span><img src="../assets/binance-coin-logo.png" alt=""></span>
                 50.293
             </div>
@@ -19,8 +19,8 @@
                         outlined
                         class="primary lighten-5" 
                         text
-                        v-on:click="connectWeb3"
-                        v-if="!web3Connected"
+                        @click="connectMetamask()"
+                        v-if="!getMetamaskConnected"
                         >
                         Connect Wallet
                     </span>
@@ -31,27 +31,82 @@
 </template>
 
 <script lang="ts">
-// declare let window: any;
-
 import Vue from 'vue';
-// import Web3 from 'web3';
+import { store } from '@/store'
+import detectEthereumProvider from '@metamask/detect-provider'
+import { mapGetters } from 'vuex'
+
+// move this out
+interface ConnectInfo {
+  chainId: string;
+}
 
 export default Vue.extend({
     name : 'WalletBalance',
-    created() {
-        // this.contractAddress = process.env.VUE_APP_CONTRACT_ADDRESS;
-        // this.contractABI = process.env.VUE_APP_CONTRACT_ABI;
+    props: {
+    msg: String,
+  },
+  data() {
+      return { 
+          metamaskConnected : false 
+    }
+  },
+  mounted () {
+    if (!this.isConnected()) {
+        this.onSetupMetamask()
+    }
+  },
+  computed: {
+    // mix the getters into computed with object spread operator
+    ...mapGetters([
+      'getMetamaskConnected',
+      'defaultAccount',
+    ])
+  },
+  methods: {
+      // cleanup using mapping
+    connectMetamask: async () => {
+      try {
+        const provider = await detectEthereumProvider() as any
+        if (provider) {
+          console.log('Ethereum successfully detected!')
+          const accounts = await provider.request({ method: 'eth_requestAccounts' }) // use for request metamask account
+          // console.log(accounts)
+          if (accounts.length > 0) {
+            // get account in array
+            // account connect success fully will get array more then 1
+            // store account to state
+            store.commit('setDefaultAaccount', accounts[0])
+            store.commit('setMetamaskConnected', true);
+          }
+        }
+      } catch (err) {
+        console.error('Connect metamask fail:', err)
+      }
     },
-    methods: {
-        connectWeb3() {
-            console.log('connect metamask');
+    isConnected : async () => {
+        const provider = await detectEthereumProvider() as any;
+        console.log('provider', provider);
+        if (provider.selectedAddress) {
+            store.commit('setMetamaskConnected', true);
         }
     },
-    data: () => {
-        return {
-            web3Connected : false
+    onSetupMetamask: async () => {
+      const provider = await detectEthereumProvider() as any
+
+      provider.on('connect', (connectInfo: ConnectInfo) => {
+        console.log(connectInfo)
+        store.commit('setChainId', connectInfo.chainId)
+      })
+
+      // watch when user change account
+      provider.on('accountsChanged', (accounts: string[]) => {
+        // console.log(accounts)
+        if (accounts.length > 0) {
+          store.commit('setDefaultAaccount', accounts[0])
         }
-    },
-    // mounted() {},
+      })
+        }
+    }
 })
 </script>
