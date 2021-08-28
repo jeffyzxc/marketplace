@@ -160,41 +160,6 @@ import WalletBalance from './components/WalletBalance.vue';
       }
   });
 
-// import Vue from 'vue';
-// import WalletBalance from './components/WalletBalance.vue';
-//   export default Vue.extend(
-//   components: { WalletBalance },{
-//       name: 'SortFilter',
-//       data: function(){
-//         return{
-//           menuIsToggled: false,
-//           isModal: false
-//         }
-//       },
-//       computed:{
-//          isMobile() {
-//           if( screen.width <= 600) {
-//             return true;
-//           }
-//           else {
-//             return false;
-//           }
-//         }
-//       },
-//       mounted(){
-//         this.$root.$on('modal', (data:boolean) => {
-//             this.isModal = data
-//         })
-//       },
-//       methods:{
-//         toggleMenu(bol:boolean){
-//             this.menuIsToggled = bol
-//         },
-//         closeModal(){
-//           this.isModal = false
-//         }
-//       }
-//   });
 </script>
 
 <style>
