@@ -43,7 +43,8 @@ export default Vue.extend({
       return{
           items: 'weapon-list',
           filterIsToggled: false,
-          isLoading: false
+          isLoading: false,
+          weaponsList : []
       }
     },
     mounted(){
