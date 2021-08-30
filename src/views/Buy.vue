@@ -22,9 +22,8 @@ import BuyMain from '../components/BuyMain.vue'
 
 export default Vue.extend({
   name: 'Buy',
-  data(){
-      return{
-          filterIsToggled: false,
+  data() {
+      return {
           isLoading: false
       }
   },
@@ -41,14 +40,6 @@ export default Vue.extend({
         return false;
       }
     }
-  },
-  mounted(){
-    this.$root.$on('set-toggle', (data:boolean) => {
-        this.filterIsToggled = data
-    })
-  },
-  methods:{
-
   }
 });
 </script>

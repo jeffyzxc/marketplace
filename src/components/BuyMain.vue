@@ -47,7 +47,7 @@ export default Vue.extend({
           weaponsList : []
       }
     },
-    mounted(){
+    mounted(){  
         this.$root.$on('refresh-list', (itemType:string) => {
             if(itemType == 'character'){
                 this.items = 'character-list'
@@ -56,7 +56,7 @@ export default Vue.extend({
             }else if(itemType == 'skillshop'){
                 this.items = 'skill-list'
             }
-        })
+        });
     }
 })
 </script>

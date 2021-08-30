@@ -1,6 +1,13 @@
+import { IMarketFilter } from '@/interface/filters.interface';
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { BASE_API_URL } from '../const/environments';
+
+import {
+  marketFilterToQueryDict,
+  objToQueryParams
+} from '../utils/route.utils';
+
 Vue.use(Vuex)
 
 interface IWeapon {
@@ -21,14 +28,30 @@ interface IWeapon {
   network:       string;
 }
 
-export const store = new Vuex.Store({
+export interface IState {
+  defaultAccount: string,
+  chainId: string,
+  metamaskConnected: boolean,
+  weaponsList : any,
+  weaponListFilter: IMarketFilter
+}
+
+
+export const store = new Vuex.Store<IState>({
   state: {
     defaultAccount: '',
     chainId: '',
     metamaskConnected: false,
-    weaponsList : []
+    weaponsList : [],
+    weaponListFilter: {
+      elementFilter: [],
+      rarityFilter: []
+    }
   },
   mutations: {
+    setWeaponListFilter(state, payload) {
+      state.weaponListFilter = payload.filter;
+    },
     setDefaultAaccount (state, payload) {
       state.defaultAccount = payload
     },
@@ -42,13 +65,19 @@ export const store = new Vuex.Store({
     getWeaponsList: function(state, payload) {
       state.weaponsList = payload
     },
-  },
+    clearWeaponListFilter(state) {
+      state.weaponListFilter = {
+        elementFilter: [],
+        rarityFilter: []
+      };
+    }
+ },
   actions: {
     async fetchWeaponsList({ commit }) {
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon?pageSize=20?pageNum=0`);
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
           const data = await response.json();
-          console.log('data', data.results);
+
           commit('setWeaponsList', data.results);
       } catch (error) {
           console.error(error);

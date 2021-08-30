@@ -2,55 +2,16 @@
     <div>
         <div class="d-flex flex-column">
             <div class="d-flex justify-content-between justify-content-center filters plr">
-                <div  v-for="data in elements" :key="data.id" :class="'element iconify '+getElement(data.isToggled, data.el)" :id="data.id" v-on:click="setElement(data.el)"></div>
+                <div  v-for="data in elements" :key="data.id" :class="'element-'+data.el+' element-filter__toggle element iconify '+getElement(data.isToggled, data.el)" :id="data.id" v-on:click="setElement(data.el)"></div>
             </div>
         </div>
         <div class="d-flex flex-column filters">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mbl-50">
                     <label for="form" style="color: #fff !important;">Rarity</label>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Legendary</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Mythical</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Unique</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Rare</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Normal</label>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mbl-50">
-                    <label for="form" style="color: #fff !important;">Stat</label>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Strength</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Dexterity</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Intelligence</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Charisma</label>
-                    </div>
-                    <div class="form-check" id="form">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">Power</label>
+                    <div class="form-check" id="form" v-for="(weapon, index) in weaponList" :key="index" >
+                        <input class="form-check-input" type="checkbox" :id="weapon.name+'-checkbox__input'">
+                        <label class="form-check-label" :for="weapon.name+'-checkbox__input'">{{ weapon.name }}</label>
                     </div>
                 </div>
             </div>
@@ -72,10 +33,30 @@
 </template>
 
 <script lang="ts">
+import { EARTH_WEAPON_ELEMENT_NAME, EARTH_WEAPON_ELEMENT_VALUE } from '@/default/element.default';
+import { store } from '@/store';
+import { 
+    marketFilterToQueryDict, 
+    queryParamsToMarketFilter 
+} from '@/utils/route.utils';
 import Vue from 'vue';
+import { 
+    WeaponRarityList 
+} from "./../default/rarity.default";
 
+import { 
+  IFilterList,
+    IMarketFilter 
+} from "./../interface/filters.interface";
+
+export const ELEMENT_FILTER_TOGGLE_CLASSNAME = "element-filter__toggle";
+export const ELEMENT_CLASSNAME = "element-";
+export const CHECKBOX_INPUT_CLASSNAME = "-checkbox__input";
+
+//@TODO add interface for this
 export default Vue.extend({
     name: 'MarketFilter',
+    store : store,
     data: function(){
         return{
             activeUppderMidTab: "w",
@@ -84,7 +65,7 @@ export default Vue.extend({
                 {
                     id: 1,
                     el: 'earth',
-                    isToggled: true
+                    isToggled: false
                 },
                 {
                     id: 2,
@@ -102,14 +83,49 @@ export default Vue.extend({
                     isToggled: false
                 }
             ],
+            weaponList: WeaponRarityList,
+            filter: {
+                elementFilter: [
+                    {
+                        name : EARTH_WEAPON_ELEMENT_NAME,
+                        value : EARTH_WEAPON_ELEMENT_VALUE  
+                    }
+                ],
+                rarityFilter: []
+            },
+            className: {
+                elementFilter: ELEMENT_FILTER_TOGGLE_CLASSNAME,
+                checkboxInput: CHECKBOX_INPUT_CLASSNAME
+            }
         }
+    },
+    mounted() {
+        const snapshotQuery = this.$route.query;
+
+        if(snapshotQuery) {
+            const filterValue: IMarketFilter = queryParamsToMarketFilter(snapshotQuery, this.filter);
+            this.filter = filterValue as any;
+        }
+
+        this.toggleAllCheckedRarityFilter();
+        this.toggleAllCheckedElementFilter();
+
+        this.$root.$emit('filter-value', this.filter);
     },
     methods:{
         clickedFilter(x:string){
-            if(x=='f'){
-                this.$root.$emit('set-toggle', false)
+            if(x=='f') {
+                const filterValue: IMarketFilter = {
+                    elementFilter: this.getElementFilterValue(),
+                    rarityFilter: this.getRarityFilterValue()
+                };
+
+                this.filter = filterValue as any;
+
+                this.$router.replace({name: "Buy", query: marketFilterToQueryDict(filterValue)});
+                this.$root.$emit('filter-value', filterValue);
             }
-            this.activeBottomTab=x
+            this.activeBottomTab=x;
         },
         setActive(tab:string,types:string){
             if(types=='upperMidBtn'){
@@ -142,6 +158,88 @@ export default Vue.extend({
             }else{
                 return el+'-off'
             }
+        },
+        getElementFilterValue() : IFilterList<string> {
+            const elementFilterList: IFilterList<string> = [];
+
+            for (let index = 0; index < this.elements.length; index++) {
+                const element = this.elements[index];
+                const el = document.querySelector(`.${ELEMENT_CLASSNAME}${element.el}.${this.className.elementFilter}`);
+                
+                if(!el?.classList.contains(`${element.el}-off`)) {
+                    elementFilterList.push(
+                        {
+                            name: element.el,
+                            value: element.el
+                        }
+                    );
+                }
+            }
+
+            return elementFilterList;
+        },
+        getRarityFilterValue() : IFilterList<number> {
+            const elementRarityList: IFilterList<number> = [];
+                
+            for (let index = 0; index < this.weaponList.length; index++) {
+                const arrElement = this.weaponList[index];
+                const el:HTMLInputElement = document.querySelector(`#${arrElement.name}${this.className.checkboxInput}`) as HTMLInputElement;
+
+                if(el.checked) {
+                    elementRarityList.push(
+                        {
+                            name: arrElement.name,
+                            value: arrElement.value
+                        }
+                    )
+                }
+            }
+
+            return elementRarityList;
+        },
+        updateFilter(filter: IMarketFilter) {
+            this.filter = filter as any;
+        },
+        toggleAllCheckedRarityFilter() {
+            for (let i = 0; i < (this.filter as IMarketFilter).rarityFilter.length; i++) {
+                const filter = (this.filter as IMarketFilter).rarityFilter[i];
+
+                this.toggleWeaponRarityChecbox(`#${filter.name}${CHECKBOX_INPUT_CLASSNAME}`, true);
+            }
+        },
+        toggleAllCheckedElementFilter() {
+            for (let i = 0; i < (this.filter as IMarketFilter).elementFilter.length; i++) {
+                const filter = (this.filter as IMarketFilter).elementFilter[i];
+
+                this.toggleWeaponElementChecbox(`.${ELEMENT_CLASSNAME}${filter.value}.${ELEMENT_FILTER_TOGGLE_CLASSNAME}`, filter.value, true);
+            }
+        },
+        toggleWeaponRarityChecbox(selector:string,isToggled: boolean) {
+            const el: HTMLInputElement = document.querySelector(selector) as HTMLInputElement;
+
+            el.checked = isToggled;
+        },
+        toggleWeaponElementChecbox(selector:string, element:string, isToggled: boolean) {
+            const el: HTMLInputElement = document.querySelector(selector) as HTMLInputElement;
+            let weaponElement = this.elements.find(x => x.el === element);
+
+            if(isToggled) {
+                el.classList.remove(`${element}-off`);
+
+                el.classList.add(`${element}`);
+
+                weaponElement!.isToggled = true;
+            } else {
+                el.classList.remove(`${element}`);
+                el.classList.add(`${element}-off`);
+
+                weaponElement!.isToggled = false;
+            }
+
+             
+
+
+            el.checked = isToggled;
         }
     }
 });

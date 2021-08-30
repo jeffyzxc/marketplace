@@ -81,7 +81,6 @@ export default Vue.extend({
     },
     methods:{
         selectTab(tab:string){
-            console.log(this)
             if(tab == 'weapon'){
                 this.$root.$emit('refresh-list', 'weapon')
                 this.weapons = 'filters'
@@ -119,7 +118,7 @@ export default Vue.extend({
         },
         clickedFilter(x:string){
             if(x=='f'){
-                this.$root.$emit('set-toggle', false)
+                this.$root.$emit('filter-value', false)
             }
             this.activeBottomTab=x
         },
