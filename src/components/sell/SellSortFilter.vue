@@ -71,7 +71,7 @@ export default Vue.extend({
 	name: 'SellSortFilter',
 	methods: {
 		showFilters() {
-			this.$root.$emit('set-toggle', true)
+			this.$root.$emit('filter-value', true)
 		},
 	},
 })

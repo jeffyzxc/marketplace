@@ -58,7 +58,7 @@ export default Vue.extend({
 		},
 	},
 	mounted() {
-		this.$root.$on('set-toggle', (data: boolean) => {
+		this.$root.$on('filter-value', (data: boolean) => {
 			this.filterIsToggled = data
 		})
 	},
