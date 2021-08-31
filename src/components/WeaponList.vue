@@ -4,14 +4,9 @@
             <weapon-item v-for="(weapon) in allWeapons" :key="'wl'+weapon.id" :weapon="weapon">
                 
             </weapon-item>
-
-            <!-- <div
-                v-for="(weapon, index) in allWeapons"
-                :key="index"
-                class="p-4 text-xl text-white bg-indigo-700"
-            >
-                Weapon {{ weapon.weaponId }}
-            </div> -->
+            <div v-if="!allWeapons.length > 0">
+                <h2>No Weapons Found...</h2>
+            </div>
         </div>
     </div>
 </template>
