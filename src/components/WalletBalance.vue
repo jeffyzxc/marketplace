@@ -24,7 +24,7 @@
                         >
                         Connect Wallet
                     </span>
-                    <span v-else> 0X2B..61cB </span>
+                    <span v-else> {{currentWalletAddress.substring(1, 4)}}...{{currentWalletAddress.substr(currentWalletAddress.length - 4)}} </span>
         </div>
             </div>
         </div>
@@ -61,6 +61,7 @@ export default Vue.extend({
     ...mapGetters([
       'getMetamaskConnected',
       'defaultAccount',
+      'currentWalletAddress'
     ])
   },
   methods: {
@@ -71,7 +72,7 @@ export default Vue.extend({
         if (provider) {
           console.log('Ethereum successfully detected!')
           const accounts = await provider.request({ method: 'eth_requestAccounts' }) // use for request metamask account
-          // console.log(accounts)
+          console.log(accounts)
           if (accounts.length > 0) {
             // get account in array
             // account connect success fully will get array more then 1
@@ -86,9 +87,10 @@ export default Vue.extend({
     },
     isConnected : async () => {
         const provider = await detectEthereumProvider() as any;
-        console.log('provider', provider);
+        console.log('provider', provider.selectedAddress);
         if (provider.selectedAddress) {
             store.commit('setMetamaskConnected', true);
+            store.commit('setCurrentWalletAddress', provider.selectedAddress);
         }
     },
     onSetupMetamask: async () => {

@@ -30,6 +30,7 @@ interface IWeapon {
 
 export interface IState {
   defaultAccount: string,
+  currentWalletAddress : string,
   chainId: string,
   metamaskConnected: boolean,
   weaponsList : any,
@@ -41,6 +42,7 @@ export const store = new Vuex.Store<IState>({
   state: {
     defaultAccount: '',
     chainId: '',
+    currentWalletAddress: '',
     metamaskConnected: false,
     weaponsList : [],
     weaponListFilter: {
@@ -51,6 +53,9 @@ export const store = new Vuex.Store<IState>({
   mutations: {
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
+    },
+    setCurrentWalletAddress (state, payload) {
+      state.currentWalletAddress = payload
     },
     setDefaultAaccount (state, payload) {
       state.defaultAccount = payload
@@ -89,6 +94,7 @@ export const store = new Vuex.Store<IState>({
   getters : {
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
+      currentWalletAddress : state => state.currentWalletAddress,
       allWeapons: (state) => state.weaponsList,
   }
 })
