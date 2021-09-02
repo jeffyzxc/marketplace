@@ -7,11 +7,11 @@
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span ><img src="../assets/apple-touch-icon.png" alt=""></span>
-                50.293
+                {{currenSkillBalance}}
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span><img src="../assets/binance-coin-logo.png" alt=""></span>
-                50.293
+                {{currentBNBBalance}}
             </div>
             <div class="csr-pointer flex-grow-1">
                 <div class="hex-id">
@@ -36,6 +36,8 @@ import { store } from '@/store'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { mapGetters } from 'vuex'
 
+
+
 // move this out
 interface ConnectInfo {
   chainId: string;
@@ -48,24 +50,30 @@ export default Vue.extend({
   },
   data() {
       return { 
-          metamaskConnected : false 
+          metamaskConnected : false,
     }
   },
   mounted () {
     if (!this.isConnected()) {
-        this.onSetupMetamask()
+        this.onSetupMetamask();
     }
+    this.getBNBBalanceSimple();
   },
   computed: {
     // mix the getters into computed with object spread operator
     ...mapGetters([
       'getMetamaskConnected',
       'defaultAccount',
-      'currentWalletAddress'
+      'currentWalletAddress',
+      'currentBNBBalance',
+      'currenSkillBalance'
     ])
   },
   methods: {
-      // cleanup using mapping
+    getBNBBalanceSimple : async() => {
+      await store.dispatch('getMetamaskProvider');
+      await store.dispatch('getMetamaskAccount');
+    },
     connectMetamask: async () => {
       try {
         const provider = await detectEthereumProvider() as any
@@ -87,10 +95,11 @@ export default Vue.extend({
     },
     isConnected : async () => {
         const provider = await detectEthereumProvider() as any;
-        console.log('provider', provider.selectedAddress);
+        console.log('provider', provider);
         if (provider.selectedAddress) {
             store.commit('setMetamaskConnected', true);
             store.commit('setCurrentWalletAddress', provider.selectedAddress);
+            // this.state.currentWalletAddress = provider.selectedAddress;
         }
     },
     onSetupMetamask: async () => {
@@ -105,10 +114,14 @@ export default Vue.extend({
       provider.on('accountsChanged', (accounts: string[]) => {
         // console.log(accounts)
         if (accounts.length > 0) {
-          store.commit('setDefaultAaccount', accounts[0])
+          store.commit('setDefaultAaccount', accounts[0]);
+        } else {
+          return;
         }
-      })
-        }
+      });
+      await store.dispatch('getMetamaskProvider');
+      await store.dispatch('getMetamaskAccount');
+    }
     }
 })
 </script>
