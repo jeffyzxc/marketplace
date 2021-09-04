@@ -365,6 +365,19 @@ body {
   padding-right: 10px !important;
 }
 
+.title-bar {
+  display: flex;
+  border-radius: 5px;
+  background-color: #1e293c;
+  padding-left: 20px;
+  width: 100% !important;
+  align-items: center !important;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  color: #fff;
+}
+
 .filter-list {
   display: flex;
   border-radius: 5px;
@@ -452,6 +465,12 @@ body {
 
 .item-card .weapons {
   margin-top: -50px;
+  width: 180px;
+}
+
+.item-card .nft {
+  margin-top: 5px;
+  margin-bottom: 15px;
   width: 180px;
 }
 
@@ -564,6 +583,80 @@ body {
   justify-content: space-between;
 }
 
+.vl-bot {
+  border-left: 1px solid #404857;
+  height: 40px;
+}
+
+.vl-bot-fade {
+  border-left: 1px solid #40485700;
+  height: 40px;
+}
+
+.vl-top {
+  border-left: 1px solid #404857;
+  height: 40px;
+}
+
+.vl-top-fade {
+  border-left: 1px solid #40485700;
+  height: 40px;
+}
+
+.history {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 70px;
+}
+
+.history .content .details {
+  display: flex;
+  align-items: center;
+}
+
+.history .content .details .imgs > img {
+  width: 50px;
+}
+
+.history .content .details .imgs {
+  padding: 5px;
+  border: 1px solid #43506a;
+  border-radius: 5px;
+  margin-left: 27px;
+  margin-right: 27px;
+}
+
+.history .content > h5 {
+  font-size: 15px;
+  color: #fff;
+  font-family: Roboto;
+}
+
+.history .content .details .time-format {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.history .content .details .time-format .time {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.487);
+  font-family: Roboto;
+}
+
+.history .content .details .desc {
+  font-size: 12px;
+  color: #b9bfcc;
+  font-family: Roboto;
+}
+
+.history .content .details .desc > span {
+  font-size: 12px;
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-family: Roboto;
+}
+
 .cost-item span {
   font-family: Roboto;
   font-size: 13px;
@@ -584,6 +677,32 @@ body {
   padding: 3px 10px 3px 10px;
   border-radius: 5px;
   background-color: #253148;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px !important;
+  text-align: center;
+}
+
+.buttons .btn-active {
+  font-family: Roboto;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 10px 3px 10px;
+  border-radius: 5px;
+  background-color: #3997f5;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px !important;
+  text-align: center;
+}
+
+.buttons .btn-sold {
+  font-family: Roboto;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 10px 3px 10px;
+  border-radius: 5px;
+  background-color: #7ba224;
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px !important;

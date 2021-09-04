@@ -17,20 +17,16 @@ import SellWeaponItem from './SellWeaponItem.vue'
 export default Vue.extend({
 	components: { SellWeaponItem },
 	//passing the filters on props for now...
+	// sellStatus --> 0 = Not Listed, 1 = Listed (Active), 2 - Listed (Sold)
 	props: ['rarity', 'element', 'stat', 'reforge'],
 	data() {
 		return {
 			weaponList: [
-				{ rarity: 'legendary' },
-				{ rarity: 'legendary' },
-				{ rarity: 'legendary' },
-				{ rarity: 'mythical' },
-				{ rarity: 'mythical' },
-				{ rarity: 'unique' },
-				{ rarity: 'rare' },
-				{ rarity: 'rare' },
-				{ rarity: 'normal' },
-				{ rarity: 'normal' },
+				{ rarity: 'legendary', sellStatus: 0 },
+				{ rarity: 'unique', sellStatus: 1 },
+				{ rarity: 'rare', sellStatus: 1 },
+				{ rarity: 'normal', sellStatus: 2 },
+				{ rarity: 'normal', sellStatus: 2 },
 			],
 		}
 	},

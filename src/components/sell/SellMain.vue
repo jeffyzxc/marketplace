@@ -1,10 +1,5 @@
 <template>
 	<div class="w-100 pl-4 pr-4" style="height: calc(100vh - 100px);">
-		<div class="banner-ads pt-4 hidden-mobile-sm">
-			<!----- BANNER--- -->
-			<div class="bg-banner-left"></div>
-			<div class="bg-banner-right"></div>
-		</div>
 		<transition name="fadeInUp" mode="out-in">
 			<div
 				v-bind:is="this.tabs.find((t) => t.name === this.currentTab).component"
@@ -16,10 +11,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import SellInventory from './SellInventory.vue'
+import SellMyListings from './SellMyListings.vue'
+import SellTransactionHistory from './SellTransactionHistory.vue'
 
 export default Vue.extend({
 	components: {
 		'sell-inventory': SellInventory,
+		'sell-mylistings': SellMyListings,
+		'sell-transaction-history': SellTransactionHistory,
 	},
 	props: ['currentTab'],
 	data() {
@@ -31,11 +30,11 @@ export default Vue.extend({
 				},
 				{
 					name: 'My Listings',
-					component: '',
+					component: 'sell-mylistings',
 				},
 				{
 					name: 'Transaction History',
-					component: '',
+					component: 'sell-transaction-history',
 				},
 			],
 		}
