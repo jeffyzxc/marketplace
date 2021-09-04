@@ -2,7 +2,7 @@
 	<div>
 		<div class="sell-header">
 			<!---- HEADER ---->
-			<h3 class="bdr-line-bottom">INVENTORY</h3>
+			<h4 class="bdr-line-bottom">INVENTORY</h4>
 		</div>
 		<div class="tab-list d-flex justify-content-between">
 			<button
@@ -123,7 +123,7 @@ export default Vue.extend({
 	color: white;
 }
 
-.sell-header h3 {
+.sell-header h4 {
 	padding-bottom: 15px;
 	margin: 1em 10px;
 }
