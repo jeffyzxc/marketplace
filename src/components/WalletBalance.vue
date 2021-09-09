@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-items-center right-nav pb-4 pl-4 bdr-line-left pt-3">
             <div class="csr-pointer d-flex">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" 
+                <svg v-if="!isMobile" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" 
                 viewBox="0 0 24 24"><g fill="none">
                 <path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#F0E2B6" stroke-width="2"/></g></svg>
             </div>
@@ -25,7 +25,7 @@
                         Connect Wallet
                     </span>
                     <span v-else> {{currentWalletAddress.substring(1, 4)}}...{{currentWalletAddress.substr(currentWalletAddress.length - 4)}} </span>
-        </div>
+                </div>
             </div>
         </div>
 </template>
@@ -62,7 +62,15 @@ export default Vue.extend({
       'getMetamaskConnected',
       'defaultAccount',
       'currentWalletAddress'
-    ])
+    ]),
+    isMobile() {
+      if( screen.width <= 600) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
   },
   methods: {
       // cleanup using mapping

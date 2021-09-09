@@ -1,9 +1,9 @@
 <template>
     <div class="w-100 pl-4 pr-4" style="height: calc(100vh - 100px);">
-        <div class="banner-ads pt-4 hidden-mobile-sm">
+        <div class="banner-ads pt-4">
             <!----- BANNER--- -->
-            <div class="bg-banner-left"></div>
-            <div class="bg-banner-right"></div>
+            <div class="bg-banner-left"></div> 
+            <div class="bg-banner-right"></div> <!----- Hidden in Mobile--- -->
         </div>
         <div class="filtered">
             <sort-filter />
