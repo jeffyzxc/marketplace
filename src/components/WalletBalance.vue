@@ -7,11 +7,11 @@
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span ><img src="../assets/apple-touch-icon.png" alt=""></span>
-                {{currenSkillBalance}}
+                {{currenSkillBalance || '0.00' }}
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span><img src="../assets/binance-coin-logo.png" alt=""></span>
-                {{currentBNBBalance}}
+                {{currentBNBBalance || '0.00' }}
             </div>
             <div class="csr-pointer flex-grow-1">
                 <div class="hex-id">

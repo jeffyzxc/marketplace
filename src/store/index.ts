@@ -65,8 +65,8 @@ export const store = new Vuex.Store<IState>({
     defaultAccount: '',
     chainId: '',
     currentWalletAddress: '',
-    currentBNBBalance : 0,
-    currenSkillBalance : 0,
+    currentBNBBalance : 0.00,
+    currenSkillBalance : 0.00,
     metamaskConnected: false,
     weaponsList : [],
     weaponListFilter: {
