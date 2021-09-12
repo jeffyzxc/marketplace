@@ -5,12 +5,17 @@ import Vuex from 'vuex'
 import { BASE_API_URL } from '../const/environments';
 import Web3 from 'web3';
 import createKeccakHash from 'keccak';
+import _, { isUndefined } from 'lodash';
+
+import { Contracts } from '../interface/Contracts';
+import { INTERFACE_ID_TRANSFER_COOLDOWNABLE, setUpContracts } from '../contracts';
 
 import {
   marketFilterToQueryDict,
   objToQueryParams
 } from '../utils/route.utils';
 let web3Instance : IWeb3Instance;
+let tmpHax: Web3;
 
 Vue.use(Vuex);
 
@@ -30,7 +35,6 @@ function toChecksumAddress(address: string) {
   return ret
 }
 
-
 interface IWeapon {
   id:            string;
   price:         number;
@@ -49,6 +53,7 @@ interface IWeapon {
   network:       string;
 }
 export interface IState {
+  contracts: Contracts,
   defaultAccount: string,
   currentWalletAddress : string,
   currenSkillBalance: number,
@@ -62,6 +67,7 @@ export interface IState {
 
 export const store = new Vuex.Store<IState>({
   state: {
+    contracts: null!,
     defaultAccount: '',
     chainId: '',
     currentWalletAddress: '',
@@ -105,16 +111,25 @@ export const store = new Vuex.Store<IState>({
         elementFilter: [],
         rarityFilter: []
       };
-    }
+    },
+    setContracts(state: IState, payload) {
+      state.contracts = payload;
+    },
  },
   actions: {
+    async initialize({ dispatch }) {
+      console.log('inside initialize');
+      await dispatch('setUpContracts');
+    },
     async getMetamaskProvider() {
       // check window ethereum provider
       if (window.ethereum) {
-        const web3 = new Web3(window.ethereum)
+        const web3 = new Web3(window.ethereum);
+        tmpHax = web3;
         try {
           await window.ethereum.enable()
-          web3Instance = web3
+          web3Instance = web3;
+          
         } catch(error) {
           console.log('error',error);
         }
@@ -171,7 +186,24 @@ export const store = new Vuex.Store<IState>({
           throw error
         })
     },
+    async setUpContracts({ commit }) {
+      const contracts = await setUpContracts(tmpHax);
+      console.log(contracts);
+      commit('setContracts', contracts);
+    },
+    async purchaseWeaponListing({ state, dispatch }, { nftContractAddr, tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
+      const {  NFTMarket } = state.contracts;
+      if(NFTMarket) console.log('found market');
+      else console.log('no market');
+      
+      const seller = '';
+      const nftID = '';
+      const price = '';
+   
+      return { seller, nftID, price } as { seller: string, nftID: string, price: string };
+    }
   },
+  
   modules: {
   },
   getters : {
@@ -180,5 +212,10 @@ export const store = new Vuex.Store<IState>({
       currentWalletAddress : state => state.currentWalletAddress,
       currentBNBBalance : state => state.currentBNBBalance,
       allWeapons: (state) => state.weaponsList,
+      contracts(state: IState) {
+        // our root component prevents the app from being active if contracts
+        // are not set up, so we never need to worry about it being null anywhere else
+        return _.isFunction(state.contracts) ? state.contracts : null!;
+      }
   }
 })

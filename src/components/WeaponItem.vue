@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2">Purchase</p>
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
         </div>
 
@@ -67,6 +67,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
+
+interface StoreMappedActions {
+    purchaseWeaponListing(payload: { nftContractAddr: string, tokenId: string, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
+}
 
 export default Vue.extend({
     name: 'SortFilter',
@@ -77,6 +82,9 @@ export default Vue.extend({
             }
         },
     methods:{
+        ...(mapActions([
+            'purchaseWeaponListing'
+        ]) as StoreMappedActions),
         elementIcons(num : number) {
             switch (num) {
                 case 0:
@@ -106,6 +114,14 @@ export default Vue.extend({
         },
         openModal(bol:boolean){
             this.$root.$emit('modal',bol)
+        },
+        async purchaseWeapon(weaponId: number){
+            console.log(weaponId); 
+            await this.purchaseWeaponListing({
+        nftContractAddr: '',
+        tokenId: '',
+        maxPrice: ''
+      });
         }
     }
 });

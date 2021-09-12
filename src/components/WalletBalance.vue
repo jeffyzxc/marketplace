@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
 import { store } from '@/store'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { mapGetters } from 'vuex'
@@ -78,6 +79,7 @@ export default Vue.extend({
     }
   },
   methods: {
+    ...mapActions(['initialize'] ),
     getBNBBalanceSimple : async() => {
       await store.dispatch('getMetamaskProvider');
       await store.dispatch('getMetamaskAccount');
@@ -95,6 +97,7 @@ export default Vue.extend({
             // store account to state
             store.commit('setDefaultAaccount', accounts[0])
             store.commit('setMetamaskConnected', true);
+            store.dispatch('initialize');
           }
         }
       } catch (err) {

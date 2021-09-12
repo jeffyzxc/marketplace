@@ -152,6 +152,7 @@
 <script lang="ts">
 
 import Vue from 'vue';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import WalletBalance from './components/WalletBalance.vue';
   export default Vue.extend({
       components: { WalletBalance },
@@ -179,6 +180,7 @@ import WalletBalance from './components/WalletBalance.vue';
         })
       },
       methods:{
+        ...mapActions({ initializeStore: 'initialize' }),
         toggleFilter(bol:boolean){
           this.$root.$emit('toggle', bol)
         },
@@ -190,7 +192,7 @@ import WalletBalance from './components/WalletBalance.vue';
         },
         closeModal(){
           this.isModal = false
-        }
+        },
       }
   });
 
