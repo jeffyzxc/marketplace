@@ -19,6 +19,8 @@ let tmpHax: Web3;
 
 Vue.use(Vuex);
 
+const defaultCallOptions = (state: IState) => ({ from: state.defaultAccount });
+
 function toChecksumAddress(address: string) {
   address = address.toLowerCase().replace('0x', '')
   const hash = createKeccakHash('keccak256').update(address).digest('hex')
@@ -187,20 +189,51 @@ export const store = new Vuex.Store<IState>({
         })
     },
     async setUpContracts({ commit }) {
+      console.log('before setup');
       const contracts = await setUpContracts(tmpHax);
+      console.log('help');
       console.log(contracts);
+      console.log('me');
       commit('setContracts', contracts);
     },
-    async purchaseWeaponListing({ state, dispatch }, { nftContractAddr, tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
-      const {  NFTMarket } = state.contracts;
+    async purchaseWeaponListing({ state, dispatch }, { tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
+      console.log('help');
+      console.log(state.contracts);
+      console.log('me');
+      const { SkillToken,  NFTMarket, Weapons } = state.contracts;
       if(NFTMarket) console.log('found market');
       else console.log('no market');
+
+      if(Weapons) console.log('found Weapons');
+      else console.log('no Weapons');
+
+      if(Weapons) console.log('found SkillToken');
+      else console.log('no SkillToken');
       
-      const seller = '';
-      const nftID = '';
-      const price = '';
-   
-      return { seller, nftID, price } as { seller: string, nftID: string, price: string };
+      if(!SkillToken || !Weapons || !NFTMarket) return;
+
+      const weiPrice = tmpHax.utils.toWei('' + maxPrice, 'ether');
+      console.log('approving ' + weiPrice);
+
+      
+      await SkillToken.methods
+      .approve(NFTMarket.options.address, weiPrice)
+      .send(defaultCallOptions(state));
+      console.log('after approving ' + weiPrice);
+       const res = await NFTMarket.methods
+           .purchaseListing(Weapons.options.address, tokenId, weiPrice)
+           .send({
+             from: state.defaultAccount,
+           });
+
+        const {
+           seller,
+           nftID,
+           price
+         } = res.events.PurchasedListing.returnValues;
+
+     console.log('sold =D');
+        return { seller, nftID, price } as { seller: string, nftID: string, price: string };
     }
   },
   

@@ -1,6 +1,6 @@
 import { Contract as Web3EthContract } from 'web3-eth-contract';
 import type {
-  NFTMarket
+  IERC20, NFTMarket, Weapons
 } from '../../build/abi-interfaces';
 
 
@@ -14,4 +14,6 @@ export type Contract<Abi> = Omit<Web3EthContract, 'methods'> & TypeSafeContract<
 
 export interface Contracts {
   NFTMarket?: Contract<NFTMarket>;
+  Weapons?: Contract<Weapons>;
+  SkillToken?: Contract<IERC20>;
 }

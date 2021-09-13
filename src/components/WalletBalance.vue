@@ -58,6 +58,10 @@ export default Vue.extend({
     if (!this.isConnected()) {
         this.onSetupMetamask();
     }
+    else {
+      console.log('dispatched initialize');
+      store.dispatch('initialize');
+    }
     this.getBNBBalanceSimple();
   },
   computed: {
@@ -118,7 +122,8 @@ export default Vue.extend({
 
       provider.on('connect', (connectInfo: ConnectInfo) => {
         console.log(connectInfo)
-        store.commit('setChainId', connectInfo.chainId)
+        store.commit('setChainId', connectInfo.chainId);
+        store.dispatch('initialize');
       })
 
       // watch when user change account
