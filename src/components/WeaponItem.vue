@@ -71,6 +71,7 @@ import { mapActions } from 'vuex';
 
 interface StoreMappedActions {
     purchaseWeaponListing(payload: { tokenId: string, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
+    fetchWeaponsNftPrice(payload: { tokenId: number }): Promise<string>;
 }
 
 export default Vue.extend({
@@ -83,7 +84,8 @@ export default Vue.extend({
         },
     methods:{
         ...(mapActions([
-            'purchaseWeaponListing'
+            'purchaseWeaponListing',
+            'fetchWeaponsNftPrice'
         ]) as StoreMappedActions),
         elementIcons(num : number) {
             switch (num) {
@@ -116,11 +118,19 @@ export default Vue.extend({
             this.$root.$emit('modal',bol)
         },
         async purchaseWeapon(weaponId: number, displayPrice: number){
+             const price = await this.lookupWeaponPrice(weaponId);
+            if(!price) return;
+            
             await this.purchaseWeaponListing({
-        tokenId: weaponId,
-        maxPrice: displayPrice
-      });
-        }
+                tokenId: weaponId,
+                maxPrice: price
+            });
+        },
+        async lookupWeaponPrice(id: number) {
+            return await this.fetchWeaponsNftPrice({
+                tokenId: id
+            });
+        },
     }
 });
 

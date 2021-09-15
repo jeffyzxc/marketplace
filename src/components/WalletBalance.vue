@@ -60,7 +60,6 @@ export default Vue.extend({
     }
     else {
       console.log('dispatched initialize');
-      store.dispatch('initialize');
     }
     this.getBNBBalanceSimple();
   },
@@ -115,6 +114,8 @@ export default Vue.extend({
             store.commit('setMetamaskConnected', true);
             store.commit('setCurrentWalletAddress', provider.selectedAddress);
             // this.state.currentWalletAddress = provider.selectedAddress;
+             store.commit('setDefaultAaccount', provider.selectedAddress)
+            store.dispatch('initialize');
         }
     },
     onSetupMetamask: async () => {

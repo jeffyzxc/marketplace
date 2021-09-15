@@ -212,16 +212,13 @@ export const store = new Vuex.Store<IState>({
       
       if(!SkillToken || !Weapons || !NFTMarket) return;
 
-      const weiPrice = tmpHax.utils.toWei('' + maxPrice, 'ether');
-      console.log('approving ' + weiPrice);
-
-      
+    
       await SkillToken.methods
-      .approve(NFTMarket.options.address, weiPrice)
+      .approve(NFTMarket.options.address, maxPrice)
       .send(defaultCallOptions(state));
-      console.log('after approving ' + weiPrice);
+      
        const res = await NFTMarket.methods
-           .purchaseListing(Weapons.options.address, tokenId, weiPrice)
+           .purchaseListing(Weapons.options.address, tokenId, maxPrice)
            .send({
              from: state.defaultAccount,
            });
@@ -234,6 +231,18 @@ export const store = new Vuex.Store<IState>({
 
      console.log('sold =D');
         return { seller, nftID, price } as { seller: string, nftID: string, price: string };
+    },
+    async fetchWeaponsNftPrice({ state }, { tokenId }) {
+      const { Weapons, NFTMarket } = state.contracts;
+      if(!Weapons || !NFTMarket) return;
+
+      // returns the listing's price in skill wei
+      return await NFTMarket.methods
+        .getFinalPrice(
+          Weapons.options.address,
+          tokenId
+        )
+        .call(defaultCallOptions(state));
     }
   },
   
