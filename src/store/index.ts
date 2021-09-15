@@ -15,6 +15,7 @@ import {
   objToQueryParams
 } from '../utils/route.utils';
 let web3Instance : IWeb3Instance;
+let web3: Web3;
 
 Vue.use(Vuex);
 
@@ -125,7 +126,8 @@ export const store = new Vuex.Store<IState>({
     async getMetamaskProvider() {
       // check window ethereum provider
       if (window.ethereum) {
-        const web3 = new Web3(window.ethereum);
+        web3 = new Web3(window.ethereum);
+
         try {
           await window.ethereum.enable()
           web3Instance = web3;
@@ -161,7 +163,7 @@ export const store = new Vuex.Store<IState>({
       }
     },
     async getMetamaskAccount({ commit, dispatch }) {
-      const web3 = new Web3(window.ethereum);
+      web3 = new Web3(window.ethereum);
       web3Instance = web3;
       await web3Instance.eth.getAccounts()
         .then(async accounts => {
@@ -188,7 +190,7 @@ export const store = new Vuex.Store<IState>({
     },
     async setUpContracts({ commit }) {
       console.log('before setup');
-      const contracts = await setUpContracts(web3Instance as Web3);
+      const contracts = await setUpContracts(web3);
       console.log('help');
       console.log(contracts);
       console.log('me');
