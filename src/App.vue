@@ -180,7 +180,6 @@ import WalletBalance from './components/WalletBalance.vue';
         })
       },
       methods:{
-        ...mapActions({ initializeStore: 'initialize' }),
         toggleFilter(bol:boolean){
           this.$root.$emit('toggle', bol)
         },

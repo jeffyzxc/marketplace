@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId, weapon.price)">Purchase</p>
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
         </div>
 
@@ -70,7 +70,7 @@ import Vue from 'vue';
 import { mapActions } from 'vuex';
 
 interface StoreMappedActions {
-    purchaseWeaponListing(payload: { tokenId: string, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
+    purchaseWeaponListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
     fetchWeaponsNftPrice(payload: { tokenId: number }): Promise<string>;
 }
 
@@ -117,7 +117,7 @@ export default Vue.extend({
         openModal(bol:boolean){
             this.$root.$emit('modal',bol)
         },
-        async purchaseWeapon(weaponId: number, displayPrice: number){
+        async purchaseWeapon(weaponId: number){
              const price = await this.lookupWeaponPrice(weaponId);
             if(!price) return;
             

@@ -58,10 +58,12 @@ export default Vue.extend({
     if (!this.isConnected()) {
         this.onSetupMetamask();
     }
-    else {
-      console.log('dispatched initialize');
-    }
+   
     this.getBNBBalanceSimple();
+    setTimeout(async () => {
+        store.dispatch('initialize');
+      }, 3000);
+
   },
   computed: {
     // mix the getters into computed with object spread operator
@@ -100,7 +102,7 @@ export default Vue.extend({
             // store account to state
             store.commit('setDefaultAaccount', accounts[0])
             store.commit('setMetamaskConnected', true);
-            store.dispatch('initialize');
+            //store.dispatch('initialize');
           }
         }
       } catch (err) {
@@ -115,7 +117,7 @@ export default Vue.extend({
             store.commit('setCurrentWalletAddress', provider.selectedAddress);
             // this.state.currentWalletAddress = provider.selectedAddress;
              store.commit('setDefaultAaccount', provider.selectedAddress)
-            store.dispatch('initialize');
+            //store.dispatch('initialize');
         }
     },
     onSetupMetamask: async () => {
@@ -124,7 +126,7 @@ export default Vue.extend({
       provider.on('connect', (connectInfo: ConnectInfo) => {
         console.log(connectInfo)
         store.commit('setChainId', connectInfo.chainId);
-        store.dispatch('initialize');
+        //store.dispatch('initialize');
       })
 
       // watch when user change account

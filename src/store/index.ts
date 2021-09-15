@@ -15,7 +15,6 @@ import {
   objToQueryParams
 } from '../utils/route.utils';
 let web3Instance : IWeb3Instance;
-let tmpHax: Web3;
 
 Vue.use(Vuex);
 
@@ -127,7 +126,6 @@ export const store = new Vuex.Store<IState>({
       // check window ethereum provider
       if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
-        tmpHax = web3;
         try {
           await window.ethereum.enable()
           web3Instance = web3;
@@ -190,7 +188,7 @@ export const store = new Vuex.Store<IState>({
     },
     async setUpContracts({ commit }) {
       console.log('before setup');
-      const contracts = await setUpContracts(tmpHax);
+      const contracts = await setUpContracts(web3Instance as Web3);
       console.log('help');
       console.log(contracts);
       console.log('me');
