@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="spacer flex-wrap d-flex">
-            <weapon-item v-for="(weapon) in allWeapons" :key="'wl'+weapon.id" :weapon="weapon">
+            <weapon-item v-for="weapon in allWeapons" :key="'wl'+weapon._id" :weapon="weapon">
+            <!-- <weapon-item v-for="weapon in allWeapons" :key="'wl'+weapon.id" :weapon="weapon"> -->
+
                 
             </weapon-item>
             <div v-if="!allWeapons.length > 0">
@@ -45,6 +47,9 @@ export default Vue.extend({
         });
 
     },
+    // mounted(){
+    //     console.log(this.allWeapons)
+    // }
 });
 </script>
 <style scoped>

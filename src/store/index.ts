@@ -3,17 +3,17 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { BASE_API_URL } from '../const/environments';
 
-import {
-  marketFilterToQueryDict,
-  objToQueryParams
-} from '../utils/route.utils';
+// import {
+//   marketFilterToQueryDict,
+//   objToQueryParams
+// } from '../utils/route.utils';
 
 Vue.use(Vuex)
 
 interface IWeapon {
   id:            string;
   price:         number;
-  weaponID:      string;
+  weaponId:      string;
   weaponStars:   number;
   weaponElement: string;
   stat1Element:  string;
@@ -27,6 +27,7 @@ interface IWeapon {
   buyerAddress:  null;
   network:       string;
 }
+
 
 export interface IState {
   defaultAccount: string,
@@ -80,12 +81,15 @@ export const store = new Vuex.Store<IState>({
   actions: {
     async fetchWeaponsList({ commit }) {
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
-          const data = await response.json();
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon`);
+          // const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
 
+          // console.log(response)
+          const data = await response.json();
+       
           commit('setWeaponsList', data.results);
       } catch (error) {
-          console.error(error);
+          console.log(error);
       }
   },
   },
