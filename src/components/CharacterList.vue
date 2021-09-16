@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="spacer flex-wrap d-flex">
-            <character-item v-for="(cl,index) in characterList" :key="'cl'+index">
+            <character-item v-for="(cl,index) in characterList" :key="'cl'+index" :character="cl">
 
             </character-item>
         </div>

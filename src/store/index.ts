@@ -123,7 +123,7 @@ export const store = new Vuex.Store<IState>({
       console.log('inside initialize');
       await dispatch('setUpContracts');
     },
-    async getMetamaskProvider() {
+    async getMetamaskProvider({ dispatch }) {
       // check window ethereum provider
       if (window.ethereum) {
         web3 = new Web3(window.ethereum);
@@ -131,7 +131,7 @@ export const store = new Vuex.Store<IState>({
         try {
           await window.ethereum.enable()
           web3Instance = web3;
-          
+          await dispatch('initialize');
         } catch(error) {
           console.log('error',error);
         }
@@ -189,30 +189,14 @@ export const store = new Vuex.Store<IState>({
         })
     },
     async setUpContracts({ commit }) {
-      console.log('before setup');
       const contracts = await setUpContracts(web3);
-      console.log('help');
       console.log(contracts);
-      console.log('me');
       commit('setContracts', contracts);
     },
     async purchaseWeaponListing({ state, dispatch }, { tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
-      console.log('help');
-      console.log(state.contracts);
-      console.log('me');
       const { SkillToken,  NFTMarket, Weapons } = state.contracts;
-      if(NFTMarket) console.log('found market');
-      else console.log('no market');
-
-      if(Weapons) console.log('found Weapons');
-      else console.log('no Weapons');
-
-      if(Weapons) console.log('found SkillToken');
-      else console.log('no SkillToken');
-      
       if(!SkillToken || !Weapons || !NFTMarket) return;
 
-    
       await SkillToken.methods
       .approve(NFTMarket.options.address, maxPrice)
       .send(defaultCallOptions(state));
@@ -229,17 +213,81 @@ export const store = new Vuex.Store<IState>({
            price
          } = res.events.PurchasedListing.returnValues;
 
-     console.log('sold =D');
         return { seller, nftID, price } as { seller: string, nftID: string, price: string };
     },
     async fetchWeaponsNftPrice({ state }, { tokenId }) {
       const { Weapons, NFTMarket } = state.contracts;
       if(!Weapons || !NFTMarket) return;
 
-      // returns the listing's price in skill wei
       return await NFTMarket.methods
         .getFinalPrice(
           Weapons.options.address,
+          tokenId
+        )
+        .call(defaultCallOptions(state));
+    },
+    async purchaseCharactersListing({ state, dispatch }, { tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
+      const { SkillToken,  NFTMarket, Characters } = state.contracts;
+      if(!SkillToken || !Characters || !NFTMarket) return;
+
+      await SkillToken.methods
+      .approve(NFTMarket.options.address, maxPrice)
+      .send(defaultCallOptions(state));
+      
+       const res = await NFTMarket.methods
+           .purchaseListing(Characters.options.address, tokenId, maxPrice)
+           .send({
+             from: state.defaultAccount,
+           });
+
+        const {
+           seller,
+           nftID,
+           price
+         } = res.events.PurchasedListing.returnValues;
+
+        return { seller, nftID, price } as { seller: string, nftID: string, price: string };
+    },
+    async fetchCharactersNftPrice({ state }, { tokenId }) {
+      const { Characters, NFTMarket } = state.contracts;
+      if(!Characters || !NFTMarket) return;
+
+      return await NFTMarket.methods
+        .getFinalPrice(
+          Characters.options.address,
+          tokenId
+        )
+        .call(defaultCallOptions(state));
+    },
+    async purchaseShieldListing({ state, dispatch }, { tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
+      const { SkillToken,  NFTMarket, Shields } = state.contracts;
+      if(!SkillToken || !Shields || !NFTMarket) return;
+
+      await SkillToken.methods
+      .approve(NFTMarket.options.address, maxPrice)
+      .send(defaultCallOptions(state));
+      
+       const res = await NFTMarket.methods
+           .purchaseListing(Shields.options.address, tokenId, maxPrice)
+           .send({
+             from: state.defaultAccount,
+           });
+
+        const {
+           seller,
+           nftID,
+           price
+         } = res.events.PurchasedListing.returnValues;
+
+        return { seller, nftID, price } as { seller: string, nftID: string, price: string };
+    },
+    async fetchShieldsNftPrice({ state }, { tokenId }) {
+      const { Shields, NFTMarket } = state.contracts;
+      if(!Shields || !NFTMarket) return;
+
+      return await NFTMarket.methods
+        .getFinalPrice(
+          Shields.options.address,
           tokenId
         )
         .call(defaultCallOptions(state));

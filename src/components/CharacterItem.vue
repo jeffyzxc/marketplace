@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2">Purchase</p>
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseCharacter(character.characterId)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
         </div>
 
@@ -64,10 +64,27 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
+
+interface StoreMappedActions {
+    purchaseCharactersListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
+    fetchCharactersNftPrice(payload: { tokenId: number }): Promise<string>;
+}
 
 export default Vue.extend({
     name: 'SortFilter',
+     props: {
+            character: {
+                type: Object,
+                required: false
+            }
+        },
     methods:{
+        ...(mapActions([
+            'purchaseCharactersListing',
+            'fetchCharactersNftPrice'
+        ]) as StoreMappedActions),
+
         setRarityColor(rarity:string){
             if(rarity == 'Mythical'){
                 return 'background-color:#D16100 !important'
@@ -83,7 +100,22 @@ export default Vue.extend({
         },
         openModal(bol:boolean){
             this.$root.$emit('modal',bol)
-        }
+        },
+          async purchaseCharacter(characterId: number){
+              characterId = 1; // for testing purposes. API not finished yet just finishing ABI
+             const price = await this.lookupCharactersPrice(characterId);
+            if(!price) return;
+            
+            await this.purchaseCharactersListing({
+                tokenId: characterId,
+                maxPrice: price
+            });
+        },
+        async lookupCharactersPrice(id: number) {
+            return await this.fetchCharactersNftPrice({
+                tokenId: id
+            }); 
+        },
     }
 });
 

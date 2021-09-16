@@ -60,11 +60,8 @@ export default Vue.extend({
     }
    
     this.getBNBBalanceSimple();
-    setTimeout(async () => {
-        store.dispatch('initialize');
-      }, 3000);
-
   },
+ 
   computed: {
     // mix the getters into computed with object spread operator
     ...mapGetters([
@@ -102,7 +99,6 @@ export default Vue.extend({
             // store account to state
             store.commit('setDefaultAaccount', accounts[0])
             store.commit('setMetamaskConnected', true);
-            //store.dispatch('initialize');
           }
         }
       } catch (err) {
@@ -117,7 +113,6 @@ export default Vue.extend({
             store.commit('setCurrentWalletAddress', provider.selectedAddress);
             // this.state.currentWalletAddress = provider.selectedAddress;
              store.commit('setDefaultAaccount', provider.selectedAddress)
-            //store.dispatch('initialize');
         }
     },
     onSetupMetamask: async () => {
