@@ -27,14 +27,31 @@ interface IWeapon {
   buyerAddress:  null;
   network:       string;
 }
-
+interface IShield {
+  id:             string;
+  shieldId:       string;
+  shieldStars:    number;
+  shieldElement:  string;
+  stat1Element:   string;
+  stat2Element:   string;
+  stat3Element:   string;
+  stat1Value:     number;
+  stat2Value:     number;
+  stat3Value:     number;
+  price:          number;
+  timestamp:      number;
+  sellerAddress:  string;
+  network:        string;
+}
 export interface IState {
   defaultAccount: string,
   currentWalletAddress : string,
   chainId: string,
   metamaskConnected: boolean,
   weaponsList : any,
-  weaponListFilter: IMarketFilter
+  weaponListFilter: IMarketFilter,
+  shieldListFilter: IMarketFilter,
+  shieldList: Array<IShield>
 }
 
 
@@ -48,9 +65,17 @@ export const store = new Vuex.Store<IState>({
     weaponListFilter: {
       elementFilter: [],
       rarityFilter: []
-    }
+    },
+    shieldListFilter: {
+      elementFilter: [],
+      rarityFilter: []
+    },
+    shieldList: []
   },
   mutations: {
+    setShieldListFilter(state, payload) {
+      state.shieldListFilter = payload.filter;
+    },
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
     },
@@ -66,7 +91,11 @@ export const store = new Vuex.Store<IState>({
     setMetamaskConnected (state, payload) {
         state.metamaskConnected = payload;
     },
+    setShieldsList: (state, shieldList) => (state.shieldList = shieldList),
     setWeaponsList: (state, weapons) => (state.weaponsList = weapons),
+    getShieldsList: function(state, payload) {
+      state.shieldList = payload
+    },
     getWeaponsList: function(state, payload) {
       state.weaponsList = payload
     },
@@ -87,7 +116,19 @@ export const store = new Vuex.Store<IState>({
       } catch (error) {
           console.error(error);
       }
-  },
+    },
+    async fetchShieldsList({commit}){
+      try {
+          const response = await fetch(`${BASE_API_URL}/static/market/shield${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
+          
+          const data = await response.json();
+          console.log(data.results)
+          commit('setShieldsList', data.results);
+      } catch (error) {
+          console.error(error);
+      }
+      
+    }
   },
   modules: {
   },
@@ -96,5 +137,6 @@ export const store = new Vuex.Store<IState>({
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,
       allWeapons: (state) => state.weaponsList,
+      allShields: (state) => state.shieldList,
   }
 })

@@ -44,6 +44,7 @@
 import Vue from 'vue'
 import SellWeaponList from './SellWeaponList.vue'
 import SellSortFilter from './SellSortFilter.vue'
+import SellShieldsAndArmorsList from './SellShieldsAndArmorsList.vue'
 
 var tabs = [
 	{
@@ -52,9 +53,7 @@ var tabs = [
 	},
 	{
 		name: 'Shields & Armors',
-		component: {
-			template: '<sell-weapon-list />',
-		},
+		component: 'sell-shields-and-armors-list',
 	},
 	{
 		name: 'Characters',
@@ -75,6 +74,7 @@ export default Vue.extend({
 	components: {
 		SellSortFilter,
 		'sell-weapon-list': SellWeaponList,
+		'sell-shields-and-armors-list': SellShieldsAndArmorsList
 	},
 	data() {
 		return {
