@@ -152,6 +152,7 @@
 <script lang="ts">
 
 import Vue from 'vue';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import WalletBalance from './components/WalletBalance.vue';
   export default Vue.extend({
       components: { WalletBalance },
@@ -190,7 +191,7 @@ import WalletBalance from './components/WalletBalance.vue';
         },
         closeModal(){
           this.isModal = false
-        }
+        },
       }
   });
 
