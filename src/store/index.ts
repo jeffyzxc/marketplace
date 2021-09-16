@@ -58,7 +58,7 @@ export interface IState {
   contracts: Contracts,
   defaultAccount: string,
   currentWalletAddress : string,
-  currenSkillBalance: number,
+  currentSkillBalance: number,
   currentBNBBalance  : number,
   chainId: string,
   metamaskConnected: boolean,
@@ -74,7 +74,7 @@ export const store = new Vuex.Store<IState>({
     chainId: '',
     currentWalletAddress: '',
     currentBNBBalance : 0.00,
-    currenSkillBalance : 0.00,
+    currentSkillBalance : 0.00,
     metamaskConnected: false,
     weaponsList : [],
     weaponListFilter: {
@@ -86,8 +86,8 @@ export const store = new Vuex.Store<IState>({
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
     },
-    setCurrenSkillBalance(state, payload) {
-      state.currenSkillBalance = payload
+    setCurrentSkillBalance(state, payload) {
+      state.currentSkillBalance = payload
     }, 
     setCurrentBNBBalance(state, payload) {
       state.currentBNBBalance = payload
@@ -178,11 +178,17 @@ export const store = new Vuex.Store<IState>({
           throw error
         })
     },
-    async getAccountBalance({ commit }, account) {
+    async getAccountBalance({ state, dispatch, commit }, account) {
+      await dispatch('initialize');
       await web3Instance.eth.getBalance(toChecksumAddress(account))
-        .then((balance: number) => {
+        .then(async (balance: number) => {
           commit('setCurrentBNBBalance', Math.round(balance / (Math.pow(10, 18)) * 100) / 100);
-          console.log(Math.round(balance / (Math.pow(10, 18)) * 100) / 100);
+          const skillBalance = await state.contracts.SkillToken?.methods
+          .balanceOf(account)
+          .call(defaultCallOptions(state));
+          if (skillBalance) {
+            commit('setCurrentSkillBalance',skillBalance);
+          }
         })
         .catch((error: string) => {
           throw error
@@ -253,6 +259,7 @@ export const store = new Vuex.Store<IState>({
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,
       currentBNBBalance : state => state.currentBNBBalance,
+      currentSkillBalance : state => state.currentSkillBalance,
       allWeapons: (state) => state.weaponsList,
       contracts(state: IState) {
         // our root component prevents the app from being active if contracts
