@@ -11,7 +11,7 @@
 				</div>
 			</div>
 			<!-------------- WEAPON IMAGE------------>
-			<img class="weapons" src="../../assets/weapons/weapon1.png" alt="" />
+			<img class="weapons" src="../../assets/shields/weapon1.png" alt="" />
 		</div>
 		<div class="desc">
 			<img width="20" src="../../assets/nav-icons/fire.png" alt="" />
