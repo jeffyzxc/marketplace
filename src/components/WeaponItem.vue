@@ -14,8 +14,8 @@
         </div>
         <div class="desc">
             <!-- <img width="20" :src=`../assets/nav-icons/${elementIcons(weapon.weaponElement)}+.png` alt=""> -->
-            <img width="20" :src="require(`../assets/nav-icons/${elementIcons(weapon.weaponElement)}.png`)" alt="">
-            <p class="image-name">MALIGNANT SWIFT BLADE</p>
+            <!-- <img width="20" :src="require(`../assets/nav-icons/${elementIcons(weapon.weaponElement)}.png`)" alt=""> -->
+            <p class="image-name">MALIGNANT SWIFT BLADE ({{weapon.weaponElement}})</p>
             <p class="battle-power csr-pointer"  id="popover-reactive-1">Batte Power: 11,302 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z"/><path d="M12 6a3.5 3.5 0 0 0-3.5 3.5a1 1 0 0 0 2 0A1.5 1.5 0 1 1 12 11a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.16A3.49 3.49 0 0 0 12 6z"/><circle cx="12" cy="17" r="1"/></g></svg></p>
             
         </div>
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2">Purchase</p>
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
         </div>
 
@@ -67,6 +67,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
+
+interface StoreMappedActions {
+    purchaseWeaponListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
+    fetchWeaponsNftPrice(payload: { tokenId: number }): Promise<string>;
+}
 
 export default Vue.extend({
     name: 'SortFilter',
@@ -77,6 +83,10 @@ export default Vue.extend({
             }
         },
     methods:{
+        ...(mapActions([
+            'purchaseWeaponListing',
+            'fetchWeaponsNftPrice'
+        ]) as StoreMappedActions),
         elementIcons(num : number) {
             switch (num) {
                 case 0:
@@ -106,7 +116,21 @@ export default Vue.extend({
         },
         openModal(bol:boolean){
             this.$root.$emit('modal',bol)
-        }
+        },
+        async purchaseWeapon(weaponId: number){
+             const price = await this.lookupWeaponPrice(weaponId);
+            if(!price) return;
+            
+            await this.purchaseWeaponListing({
+                tokenId: weaponId,
+                maxPrice: price
+            });
+        },
+        async lookupWeaponPrice(id: number) {
+            return await this.fetchWeaponsNftPrice({
+                tokenId: id
+            });
+        },
     }
 });
 

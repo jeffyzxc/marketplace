@@ -1,9 +1,9 @@
 <template>
   <div class="app row">
-    <div class="col-lg-2 col-md-2 col-sm-12 p-3 d-flex justify-content-center align-items-center bdr-line-bottom">
+    <div class="col-lg-2 top-navs col-md-2 col-sm-6 p-3 d-flex justify-content-center align-items-center bdr-line-bottom">
         <img class="cb-logo" src='./assets/logo_Text_Source@2x.png' alt="">
     </div>
-    <!-- HIDDEN MENU USED - SHOWS WHEN IN MOBILE -->
+    <!-- HIDDEN MENU - SHOWS WHEN IN MOBILE -->
     <transition name="right-fade" mode="out-in">
       <div class="mobile-menu col-lg-12 hidden-desktop-lg" v-if="menuIsToggled">
             <div class="nav-menu" v-if="menuIsToggled">
@@ -17,12 +17,9 @@
       </div>
     </transition>
          
-    <div class="col-lg-10 col-md-10 col-sm-12 pb-0 pr-0 bdr-line-left bdr-line-bottom">
-        <nav class="navbar navbar-expand-lg navbar-light bg-color pb-0  d-flex">
-            <div class="left-nav">
-              <!-- <button v-on:click="toggleMenu(true)" class="navbar-toggler pb-0" type="button" data-toggle="collapse" data-target="#filters" aria-controls="filters" aria-expanded="false" aria-label="Toggle navigation">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.5em" height="1.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g transform="translate(24 0) scale(-1 1)"><g fill="#ffffff"><path d="M20.05 11H5.91l1.3-1.29a1 1 0 0 0-1.42-1.42l-3 3a1 1 0 0 0 0 1.42l3 3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42L5.91 13h14.14a1 1 0 0 0 .95-.95V12a1 1 0 0 0-.95-1z"/><rect x="3" y="17" width="18" height="2" rx=".95" ry=".95"/><rect x="3" y="5" width="18" height="2" rx=".95" ry=".95"/></g></g></svg>
-              </button> -->
+    <div class="col-lg-10 top-navs col-md-10 col-sm-6 pb-0 pr-0 bdr-line-left bdr-line-bottom">
+        <nav :class="isMobile ? 'bg-color pb-0 d-flex':'navbar navbar-expand-lg navbar-light bg-color pb-0 d-flex'">
+            <div class="left-nav" v-if="!isMobile">
               <div class="search">
                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.3em" height="1.3em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="#8f949e" d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8a7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6a6 6 0 0 1-6-6z"/></svg>
                   <input type="text" class="form-control search-input" placeholder="Search ID, Name, Etc.">
@@ -41,6 +38,36 @@
             </div>
         </nav>
     </div>
+
+    <!-- HIDDEN MENU - SHOWS WHEN IN MOBILE -->
+    <div class="col-sm-12 mobile-navigation" v-if="isMobile" :style="isSearch ? 'padding-top:16px': 'padding-top:30px' ">
+       <div class="search" v-if="isSearch">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.3em" height="1.3em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="#8f949e" d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8a7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6a6 6 0 0 1-6-6z"/></svg>
+          <input type="text" class="form-control search-input" placeholder="Search ID, Name, Etc.">
+          <svg @click="showSearch(false)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.5em" height="1.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="#FFFFFF" d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29l-4.3 4.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4.29-4.3l4.29 4.3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42z"/></svg>
+      </div>
+      <div class="d-flex justify-content-between" v-else>
+         <button @click="toggleFilter(true)" class="navbar-toggler pb-0" type="button" data-toggle="collapse" data-target="#filters" aria-controls="filters" aria-expanded="false" aria-label="Toggle navigation">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.5em" height="1.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M9 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2zM6.17 5a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 0 1 0-2h1.17zM15 11a1 1 0 1 0 0 2a1 1 0 0 0 0-2zm-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2h7.17zM9 17a1 1 0 1 0 0 2a1 1 0 0 0 0-2zm-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2h1.17z" fill="currentColor"/></g></svg>
+          Filter
+        </button>
+        <button @click="showSearch(true)" class="navbar-toggler pb-0" type="button" data-toggle="collapse" data-target="#filters" aria-controls="filters" aria-expanded="false" aria-label="Toggle navigation">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.5em" height="1.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8a7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6a6 6 0 0 1-6-6z"/></svg>
+          Search
+        </button>
+        <button  @click="toggleMenu(true)" class="navbar-toggler pb-0" type="button" data-toggle="collapse" data-target="#filters" aria-controls="filters" aria-expanded="false" aria-label="Toggle navigation">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1.5em" height="1.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none"><path d="M4 6h16M4 12h8m-8 6h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+          Menu
+        </button>
+        <div class="navbar-toggler hex-id">
+            <span class="primary lighten-5">
+             0x28...61cB
+            </span>
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal-details" v-if="isModal">
         <div class="modal-contianer">
             <svg class='close' @click="closeModal" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="2.4em" height="2.4em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2zm0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12z" fill="#43506A"/><path d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z" fill="#FFFFFF"/></svg>
@@ -125,6 +152,7 @@
 <script lang="ts">
 
 import Vue from 'vue';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import WalletBalance from './components/WalletBalance.vue';
   export default Vue.extend({
       components: { WalletBalance },
@@ -132,6 +160,7 @@ import WalletBalance from './components/WalletBalance.vue';
       data: function(){
         return{
           menuIsToggled: false,
+          isSearch: false,
           isModal: false
         }
       },
@@ -151,12 +180,18 @@ import WalletBalance from './components/WalletBalance.vue';
         })
       },
       methods:{
+        toggleFilter(bol:boolean){
+          this.$root.$emit('toggle', bol)
+        },
         toggleMenu(bol:boolean){
             this.menuIsToggled = bol
         },
+        showSearch(bol:boolean){
+          this.isSearch = bol
+        },
         closeModal(){
           this.isModal = false
-        }
+        },
       }
   });
 
@@ -201,10 +236,10 @@ html, body {
 
 </style>
 <style scoped>
-    .cb-logo {
+    /* .cb-logo {
         width: 180px !important;
         height: 25px !important;
-    }
+    } */
 
 .app {
   background-color: rgb(8,20,43);

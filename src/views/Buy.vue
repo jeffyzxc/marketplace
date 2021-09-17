@@ -24,12 +24,19 @@ export default Vue.extend({
   name: 'Buy',
   data() {
       return {
-          isLoading: false
+          isLoading: false,
+          filterIsToggled: false
       }
   },
   components: {
       BuyMain,
       MarketFilter,
+  },
+  mounted(){
+    this.$root.$on('toggle', (bol:boolean) => {
+          console.log(bol)
+        this.filterIsToggled = bol
+    })
   },
   computed:{
     isMobile() {

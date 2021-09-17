@@ -1,17 +1,17 @@
 <template>
     <div class="d-flex align-items-center right-nav pb-4 pl-4 bdr-line-left pt-3">
             <div class="csr-pointer d-flex">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" 
+                <svg v-if="!isMobile" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" 
                 viewBox="0 0 24 24"><g fill="none">
                 <path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#F0E2B6" stroke-width="2"/></g></svg>
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span ><img src="../assets/apple-touch-icon.png" alt=""></span>
-                50.293
+                <CurrencyConverter :skill="convertWeiToSkill(currentSkillBalance)" :skillMaxDecimals="6" :showValueInSkillOnly="true"/>
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span><img src="../assets/binance-coin-logo.png" alt=""></span>
-                50.293
+                {{currentBNBBalance || '0.00' }}
             </div>
             <div class="csr-pointer flex-grow-1">
                 <div class="hex-id">
@@ -25,16 +25,20 @@
                         Connect Wallet
                     </span>
                     <span v-else> {{currentWalletAddress.substring(1, 4)}}...{{currentWalletAddress.substr(currentWalletAddress.length - 4)}} </span>
-        </div>
+                </div>
             </div>
         </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
 import { store } from '@/store'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { mapGetters } from 'vuex'
+import CurrencyConverter from '../components/CurrencyConverter.vue';
+import { fromWeiEther } from '@/utils/common';
+
 
 // move this out
 interface ConnectInfo {
@@ -48,24 +52,44 @@ export default Vue.extend({
   },
   data() {
       return { 
-          metamaskConnected : false 
+          metamaskConnected : false,
     }
   },
   mounted () {
+    setTimeout(async () => {
+        store.dispatch('initialize');
+      }, 3000);
     if (!this.isConnected()) {
-        this.onSetupMetamask()
+        this.onSetupMetamask();
     }
+   
+    this.getBNBBalanceSimple();
+
   },
   computed: {
     // mix the getters into computed with object spread operator
     ...mapGetters([
       'getMetamaskConnected',
       'defaultAccount',
-      'currentWalletAddress'
-    ])
+      'currentWalletAddress',
+      'currentBNBBalance',
+      'currentSkillBalance'
+    ]),
+    isMobile() {
+      if( screen.width <= 600) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
   },
   methods: {
-      // cleanup using mapping
+    ...mapActions(['initialize'] ),
+    getBNBBalanceSimple : async() => {
+      await store.dispatch('getMetamaskProvider');
+      await store.dispatch('getMetamaskAccount');
+    },
     connectMetamask: async () => {
       try {
         const provider = await detectEthereumProvider() as any
@@ -79,6 +103,7 @@ export default Vue.extend({
             // store account to state
             store.commit('setDefaultAaccount', accounts[0])
             store.commit('setMetamaskConnected', true);
+            //store.dispatch('initialize');
           }
         }
       } catch (err) {
@@ -87,10 +112,13 @@ export default Vue.extend({
     },
     isConnected : async () => {
         const provider = await detectEthereumProvider() as any;
-        console.log('provider', provider.selectedAddress);
+        console.log('provider', provider);
         if (provider.selectedAddress) {
             store.commit('setMetamaskConnected', true);
             store.commit('setCurrentWalletAddress', provider.selectedAddress);
+            // this.state.currentWalletAddress = provider.selectedAddress;
+             store.commit('setDefaultAaccount', provider.selectedAddress)
+            //store.dispatch('initialize');
         }
     },
     onSetupMetamask: async () => {
@@ -98,17 +126,26 @@ export default Vue.extend({
 
       provider.on('connect', (connectInfo: ConnectInfo) => {
         console.log(connectInfo)
-        store.commit('setChainId', connectInfo.chainId)
+        store.commit('setChainId', connectInfo.chainId);
+        //store.dispatch('initialize');
       })
 
       // watch when user change account
       provider.on('accountsChanged', (accounts: string[]) => {
         // console.log(accounts)
         if (accounts.length > 0) {
-          store.commit('setDefaultAaccount', accounts[0])
+          store.commit('setDefaultAaccount', accounts[0]);
+        } else {
+          return;
         }
-      })
-        }
-    }
+      });
+      await store.dispatch('getMetamaskProvider');
+      await store.dispatch('getMetamaskAccount');
+    },
+    convertWeiToSkill(wei: string) {
+      return fromWeiEther(wei);
+    },
+  },
+  components: { CurrencyConverter }
 })
 </script>
