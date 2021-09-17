@@ -54,6 +54,22 @@ interface IWeapon {
   buyerAddress:  null;
   network:       string;
 }
+interface IShield {
+  id:             string;
+  shieldId:       string;
+  shieldStars:    number;
+  shieldElement:  string;
+  stat1Element:   string;
+  stat2Element:   string;
+  stat3Element:   string;
+  stat1Value:     number;
+  stat2Value:     number;
+  stat3Value:     number;
+  price:          number;
+  timestamp:      number;
+  sellerAddress:  string;
+  network:        string;
+}
 export interface IState {
   contracts: Contracts,
   defaultAccount: string,
@@ -63,7 +79,9 @@ export interface IState {
   chainId: string,
   metamaskConnected: boolean,
   weaponsList : any,
-  weaponListFilter: IMarketFilter
+  weaponListFilter: IMarketFilter,
+  shieldListFilter: IMarketFilter,
+  shieldList: Array<IShield>
 }
 
 
@@ -80,9 +98,17 @@ export const store = new Vuex.Store<IState>({
     weaponListFilter: {
       elementFilter: [],
       rarityFilter: []
-    }
+    },
+    shieldListFilter: {
+      elementFilter: [],
+      rarityFilter: []
+    },
+    shieldList: []
   },
   mutations: {
+    setShieldListFilter(state, payload) {
+      state.shieldListFilter = payload.filter;
+    },
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
     },
@@ -104,7 +130,11 @@ export const store = new Vuex.Store<IState>({
     setMetamaskConnected (state, payload) {
         state.metamaskConnected = payload;
     },
+    setShieldsList: (state, shieldList) => (state.shieldList = shieldList),
     setWeaponsList: (state, weapons) => (state.weaponsList = weapons),
+    getShieldsList: function(state, payload) {
+      state.shieldList = payload
+    },
     getWeaponsList: function(state, payload) {
       state.weaponsList = payload
     },
@@ -161,6 +191,18 @@ export const store = new Vuex.Store<IState>({
       } catch (error) {
           console.error(error);
       }
+    },
+    async fetchShieldsList({commit}){
+      try {
+          const response = await fetch(`${BASE_API_URL}/static/market/shield${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
+          
+          const data = await response.json();
+          console.log(data.results)
+          commit('setShieldsList', data.results);
+      } catch (error) {
+          console.error(error);
+      }
+      
     },
     async getMetamaskAccount({ commit, dispatch }) {
       web3 = new Web3(window.ethereum);
@@ -251,16 +293,14 @@ export const store = new Vuex.Store<IState>({
         .call(defaultCallOptions(state));
     }
   },
-  
-  modules: {
-  },
-  getters : {
+    getters : {
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,
       currentBNBBalance : state => state.currentBNBBalance,
       currentSkillBalance : state => state.currentSkillBalance,
       allWeapons: (state) => state.weaponsList,
+      allShields: (state) => state.shieldList,
       contracts(state: IState) {
         // our root component prevents the app from being active if contracts
         // are not set up, so we never need to worry about it being null anywhere else
