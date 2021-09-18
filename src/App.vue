@@ -76,7 +76,9 @@
 <script lang="ts">
 
 import Vue from 'vue';
+
 import ItemModal from './components/ItemModal.vue'
+import { mapState, mapActions, mapGetters } from 'vuex';
 import WalletBalance from './components/WalletBalance.vue';
   export default Vue.extend({
       components: { WalletBalance, 'item-modal': ItemModal },

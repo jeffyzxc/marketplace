@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2">Purchase</p>
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal('item-modal', weapon)">View</p>
         </div>
 
@@ -72,6 +72,11 @@
 import Vue from 'vue';
 import { getWeaponNameFromSeed } from '../weapon-names';
 import { getWeaponArt } from '../weapon-arts-placeholder'
+import { mapActions } from 'vuex';
+interface StoreMappedActions {
+    purchaseWeaponListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
+    fetchWeaponsNftPrice(payload: { tokenId: number }): Promise<string>;
+}
 
 export default Vue.extend({
     name: 'SortFilter',
@@ -87,6 +92,10 @@ export default Vue.extend({
         elementIcons(element : string) {
             return element.toLowerCase
         },
+        ...(mapActions([
+            'purchaseWeaponListing',
+            'fetchWeaponsNftPrice'
+        ]) as StoreMappedActions),
         setRarityName(rarity:number){
             if(rarity == 4){
                 return 'Mythical'
@@ -98,6 +107,7 @@ export default Vue.extend({
             }
             else if(rarity == 1){
                  return 'Rare'
+
             }
             else if(rarity == 0){
                  return 'Normal'
@@ -138,13 +148,22 @@ export default Vue.extend({
                 x1 = x1.replace(rgx, '$1' + ',' + '$2');
             }
             return x1 + x2;
-        }
-    },
-    // mounted(){
-    //     console.log((this.getWeaponArt(this.$props.weapon))?.substring(0,7))
-    //     console.log(this.$props.weapon)
-    //     console.log(getWeaponNameFromSeed(2,2))
-    // }
+        },
+        async purchaseWeapon(weaponId: number){
+             const price = await this.lookupWeaponPrice(weaponId);
+            if(!price) return;
+            
+            await this.purchaseWeaponListing({
+                tokenId: weaponId,
+                maxPrice: price
+            });
+        },
+        async lookupWeaponPrice(id: number) {
+            return await this.fetchWeaponsNftPrice({
+                tokenId: id
+            });
+        },
+    }
 });
 
 </script>
