@@ -40,7 +40,7 @@ function toChecksumAddress(address: string) {
 interface IWeapon {
   id:            string;
   price:         number;
-  weaponID:      string;
+  weaponId:      string;
   weaponStars:   number;
   weaponElement: string;
   stat1Element:  string;
@@ -54,6 +54,7 @@ interface IWeapon {
   buyerAddress:  null;
   network:       string;
 }
+
 interface IShield {
   id:             string;
   shieldId:       string;
@@ -70,6 +71,7 @@ interface IShield {
   sellerAddress:  string;
   network:        string;
 }
+
 export interface IState {
   contracts: Contracts,
   defaultAccount: string,
@@ -184,12 +186,15 @@ export const store = new Vuex.Store<IState>({
     },
     async fetchWeaponsList({ commit }) {
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
-          const data = await response.json();
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon`);
+          // const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
 
+          // console.log(response)
+          const data = await response.json();
+       
           commit('setWeaponsList', data.results);
       } catch (error) {
-          console.error(error);
+          console.log(error);
       }
     },
     async fetchShieldsList({commit}){
