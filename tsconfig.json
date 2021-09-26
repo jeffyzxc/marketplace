@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-   "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "noImplicitThis": true,
     "esModuleInterop": true,

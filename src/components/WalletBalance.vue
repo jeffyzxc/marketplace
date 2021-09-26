@@ -7,7 +7,7 @@
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span ><img src="../assets/apple-touch-icon.png" alt=""></span>
-                {{currenSkillBalance || '0.00' }}
+                <CurrencyConverter :skill="convertWeiToSkill(currentSkillBalance)" :skillMaxDecimals="6" :showValueInSkillOnly="true"/>
             </div>
             <div class="csr-pointer" v-if="getMetamaskConnected">
                 <span><img src="../assets/binance-coin-logo.png" alt=""></span>
@@ -36,7 +36,8 @@ import { mapActions } from 'vuex';
 import { store } from '@/store'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { mapGetters } from 'vuex'
-
+import CurrencyConverter from '../components/CurrencyConverter.vue';
+import { fromWeiEther } from '@/utils/common';
 
 
 // move this out
@@ -55,6 +56,7 @@ export default Vue.extend({
     }
   },
   mounted () {
+
     if (!this.isConnected()) {
         this.onSetupMetamask();
     }
@@ -69,7 +71,7 @@ export default Vue.extend({
       'defaultAccount',
       'currentWalletAddress',
       'currentBNBBalance',
-      'currenSkillBalance'
+      'currentSkillBalance'
     ]),
     isMobile() {
       if( screen.width <= 600) {
@@ -135,7 +137,11 @@ export default Vue.extend({
       });
       await store.dispatch('getMetamaskProvider');
       await store.dispatch('getMetamaskAccount');
-    }
-    }
+    },
+    convertWeiToSkill(wei: string) {
+      return fromWeiEther(wei);
+    },
+  },
+  components: { CurrencyConverter }
 })
 </script>

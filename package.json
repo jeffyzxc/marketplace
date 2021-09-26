@@ -13,15 +13,16 @@
     "bootstrap": "^5.1.0",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
-    "keccak": "^3.0.2",
-    "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "seedrandom": "^3.0.5",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.6.2",
     "web3": "^1.5.2"
   },
   "devDependencies": {
+    "@types/keccak": "^3.0.1",
+    "@types/seedrandom": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",

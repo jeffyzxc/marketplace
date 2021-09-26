@@ -40,7 +40,7 @@ function toChecksumAddress(address: string) {
 interface IWeapon {
   id:            string;
   price:         number;
-  weaponID:      string;
+  weaponId:      string;
   weaponStars:   number;
   weaponElement: string;
   stat1Element:  string;
@@ -54,16 +54,36 @@ interface IWeapon {
   buyerAddress:  null;
   network:       string;
 }
+
+interface IShield {
+  id:             string;
+  shieldId:       string;
+  shieldStars:    number;
+  shieldElement:  string;
+  stat1Element:   string;
+  stat2Element:   string;
+  stat3Element:   string;
+  stat1Value:     number;
+  stat2Value:     number;
+  stat3Value:     number;
+  price:          number;
+  timestamp:      number;
+  sellerAddress:  string;
+  network:        string;
+}
+
 export interface IState {
   contracts: Contracts,
   defaultAccount: string,
   currentWalletAddress : string,
-  currenSkillBalance: number,
+  currentSkillBalance: number,
   currentBNBBalance  : number,
   chainId: string,
   metamaskConnected: boolean,
   weaponsList : any,
-  weaponListFilter: IMarketFilter
+  weaponListFilter: IMarketFilter,
+  shieldListFilter: IMarketFilter,
+  shieldList: Array<IShield>
 }
 
 
@@ -74,20 +94,28 @@ export const store = new Vuex.Store<IState>({
     chainId: '',
     currentWalletAddress: '',
     currentBNBBalance : 0.00,
-    currenSkillBalance : 0.00,
+    currentSkillBalance : 0.00,
     metamaskConnected: false,
     weaponsList : [],
     weaponListFilter: {
       elementFilter: [],
       rarityFilter: []
-    }
+    },
+    shieldListFilter: {
+      elementFilter: [],
+      rarityFilter: []
+    },
+    shieldList: []
   },
   mutations: {
+    setShieldListFilter(state, payload) {
+      state.shieldListFilter = payload.filter;
+    },
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
     },
-    setCurrenSkillBalance(state, payload) {
-      state.currenSkillBalance = payload
+    setCurrentSkillBalance(state, payload) {
+      state.currentSkillBalance = payload
     }, 
     setCurrentBNBBalance(state, payload) {
       state.currentBNBBalance = payload
@@ -104,7 +132,11 @@ export const store = new Vuex.Store<IState>({
     setMetamaskConnected (state, payload) {
         state.metamaskConnected = payload;
     },
+    setShieldsList: (state, shieldList) => (state.shieldList = shieldList),
     setWeaponsList: (state, weapons) => (state.weaponsList = weapons),
+    getShieldsList: function(state, payload) {
+      state.shieldList = payload
+    },
     getWeaponsList: function(state, payload) {
       state.weaponsList = payload
     },
@@ -154,13 +186,28 @@ export const store = new Vuex.Store<IState>({
     },
     async fetchWeaponsList({ commit }) {
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
-          const data = await response.json();
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon`);
+          // const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
 
+          // console.log(response)
+          const data = await response.json();
+       
           commit('setWeaponsList', data.results);
+      } catch (error) {
+          console.log(error);
+      }
+    },
+    async fetchShieldsList({commit}){
+      try {
+          const response = await fetch(`${BASE_API_URL}/static/market/shield${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
+          
+          const data = await response.json();
+          console.log(data.results)
+          commit('setShieldsList', data.results);
       } catch (error) {
           console.error(error);
       }
+      
     },
     async getMetamaskAccount({ commit, dispatch }) {
       web3 = new Web3(window.ethereum);
@@ -178,11 +225,17 @@ export const store = new Vuex.Store<IState>({
           throw error
         })
     },
-    async getAccountBalance({ commit }, account) {
+    async getAccountBalance({ state, dispatch, commit }, account) {
+      await dispatch('initialize');
       await web3Instance.eth.getBalance(toChecksumAddress(account))
-        .then((balance: number) => {
+        .then(async (balance: number) => {
           commit('setCurrentBNBBalance', Math.round(balance / (Math.pow(10, 18)) * 100) / 100);
-          console.log(Math.round(balance / (Math.pow(10, 18)) * 100) / 100);
+          const skillBalance = await state.contracts.SkillToken?.methods
+          .balanceOf(account)
+          .call(defaultCallOptions(state));
+          if (skillBalance) {
+            commit('setCurrentSkillBalance',skillBalance);
+          }
         })
         .catch((error: string) => {
           throw error
@@ -293,15 +346,14 @@ export const store = new Vuex.Store<IState>({
         .call(defaultCallOptions(state));
     }
   },
-  
-  modules: {
-  },
-  getters : {
+    getters : {
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,
       currentBNBBalance : state => state.currentBNBBalance,
+      currentSkillBalance : state => state.currentSkillBalance,
       allWeapons: (state) => state.weaponsList,
+      allShields: (state) => state.shieldList,
       contracts(state: IState) {
         // our root component prevents the app from being active if contracts
         // are not set up, so we never need to worry about it being null anywhere else
