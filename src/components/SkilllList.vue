@@ -10,9 +10,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import SkillItem from './SkillItem.vue';
+import Pagination from './../components/dumb/crypblades-pagination.vue';
 
 export default Vue.extend({
-  components: { SkillItem },
+    components: { 
+      SkillItem
+    },
     name: 'SortFilter',
     data (){
         return {

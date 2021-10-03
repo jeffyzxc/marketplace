@@ -72,6 +72,12 @@ interface IShield {
   network:        string;
 }
 
+export interface IWeaponListPagination {
+  currentPage: number,
+  pageSize: number,
+  totalItems: number
+}
+
 export interface IState {
   contracts: Contracts,
   defaultAccount: string,
@@ -83,9 +89,9 @@ export interface IState {
   weaponsList : any,
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
+  weaponListPagination: IWeaponListPagination,
   shieldList: Array<IShield>
 }
-
 
 export const store = new Vuex.Store<IState>({
   state: {
@@ -105,7 +111,12 @@ export const store = new Vuex.Store<IState>({
       elementFilter: [],
       rarityFilter: []
     },
-    shieldList: []
+    shieldList: [],
+    weaponListPagination: {
+      currentPage: 1,
+      pageSize: 60,
+      totalItems: 205887
+    }
   },
   mutations: {
     setShieldListFilter(state, payload) {
@@ -117,6 +128,16 @@ export const store = new Vuex.Store<IState>({
     setCurrentSkillBalance(state, payload) {
       state.currentSkillBalance = payload
     }, 
+    setWeaponListCurrentPage(state, payload) {
+      state.weaponListPagination.currentPage = payload
+    },
+    setWeaponListPagination(state, payload) {
+      state.weaponListPagination = {
+        ...state.weaponListPagination,
+        pageSize: payload.pageSize,
+        totalItems: payload.totalItems
+      }
+    },
     setCurrentBNBBalance(state, payload) {
       state.currentBNBBalance = payload
     }, 
@@ -186,13 +207,17 @@ export const store = new Vuex.Store<IState>({
     },
     async fetchWeaponsList({ commit }) {
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon`);
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon?pageNum=${this.state.weaponListPagination.currentPage - 1}`);
           // const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
 
           // console.log(response)
           const data = await response.json();
        
           commit('setWeaponsList', data.results);
+          commit('setWeaponListPagination', {
+            pageSize: data.page.pageSize,
+            totalItems:  data.page.total
+          });
       } catch (error) {
           console.log(error);
       }
@@ -347,6 +372,7 @@ export const store = new Vuex.Store<IState>({
     }
   },
     getters : {
+      getWeaponListPagination: state => state.weaponListPagination,
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,
