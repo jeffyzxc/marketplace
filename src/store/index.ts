@@ -116,7 +116,8 @@ export const store = new Vuex.Store<IState>({
       currentPage: 1,
       pageSize: 60,
       totalItems: 205887
-    }
+    },
+    isFetchWeaponListLoading: true
   },
   mutations: {
     setShieldListFilter(state, payload) {
@@ -128,6 +129,9 @@ export const store = new Vuex.Store<IState>({
     setCurrentSkillBalance(state, payload) {
       state.currentSkillBalance = payload
     }, 
+    setFetchWeaponListLoadingState(state, payload) {
+      state.isFetchWeaponListLoading = payload;
+    },
     setWeaponListCurrentPage(state, payload) {
       state.weaponListPagination.currentPage = payload
     },
@@ -206,7 +210,9 @@ export const store = new Vuex.Store<IState>({
       await dispatch('getMetamaskAccount')
     },
     async fetchWeaponsList({ commit }) {
+      commit('setFetchWeaponListLoadingState', true);
       try {
+
           const response = await fetch(`${BASE_API_URL}/static/market/weapon?pageNum=${this.state.weaponListPagination.currentPage - 1}`);
           // const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
 
@@ -218,8 +224,12 @@ export const store = new Vuex.Store<IState>({
             pageSize: data.page.pageSize,
             totalItems:  data.page.total
           });
+
+          commit('setFetchWeaponListLoadingState', false);
+          
       } catch (error) {
           console.log(error);
+          commit('setFetchWeaponListLoadingState', false);
       }
     },
     async fetchShieldsList({commit}){
@@ -372,6 +382,7 @@ export const store = new Vuex.Store<IState>({
     }
   },
     getters : {
+      getFetchWeaponlistLoadingState: state => state.isFetchWeaponListLoading,
       getWeaponListPagination: state => state.weaponListPagination,
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
