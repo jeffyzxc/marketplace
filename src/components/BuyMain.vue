@@ -21,7 +21,6 @@
                      <transition name="fadeInUp" mode="out-in">
                         <component v-bind:is="items" />
                     </transition>
-                    <!-- <weapon-list/> -->
                 </div>
             </div>
     </div>
@@ -32,6 +31,8 @@ import CharacterList from '../components/CharacterList.vue';
 import WeaponList from '../components/WeaponList.vue';
 import SkillList from '../components/SkilllList.vue';
 import SortFilter from '../components/SortFilter.vue'
+
+
 export default Vue.extend({
     components:{
         SortFilter,
@@ -40,7 +41,7 @@ export default Vue.extend({
         'character-list': CharacterList
     },
     data(){
-      return{
+      return {
           items: 'weapon-list',
           filterIsToggled: false,
           isLoading: false,
