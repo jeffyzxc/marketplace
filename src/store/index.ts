@@ -218,12 +218,12 @@ export const store = new Vuex.Store<IState>({
     },
     async getMetamaskProvider({ dispatch }) {
       // check window ethereum provider
-      if ((window as any).ethereum) {
-        web3 = new Web3((window as any).ethereum);
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
 
         try {
-          await (window as any).ethereum.enable()
-          web3Instance = web3 as any;
+          await window.ethereum.enable()
+          web3Instance = web3;
           await dispatch('initialize');
         } catch(error) {
           console.log('error',error);
@@ -307,10 +307,10 @@ export const store = new Vuex.Store<IState>({
       
     },
     async getMetamaskAccount({ commit, dispatch }) {
-      web3 = new Web3((window as any).ethereum);
-      web3Instance = web3 as any;
+      web3 = new Web3(window.ethereum);
+      web3Instance = web3;
       await web3Instance.eth.getAccounts()
-        .then(async (accounts:any) => {
+        .then(async accounts) => {
           if (accounts.length > 0) {
             await dispatch('getAccountBalance', accounts[0])
             // 'Success to connect account'
