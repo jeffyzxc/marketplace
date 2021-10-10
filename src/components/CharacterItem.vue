@@ -14,7 +14,7 @@
             <img width="20" :src="require(`../assets/nav-icons/${character.charElement.toLowerCase()}.png`)" alt="">
             <p class="image-name">
                 <!-- GARETH BALE BENZEMA -->
-                {{ getCleanCharacterName(character.charId) }} {{ getCharacterStamina(character.charId)}}
+                {{ getCleanCharacterName(character.charId) }}
             </p>
             <p class="battle-power csr-pointer"  id="popover-reactive-1">Level {{ character.charLevel }}</p>
             

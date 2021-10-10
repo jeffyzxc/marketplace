@@ -73,7 +73,13 @@ interface IShield {
   network:        string;
 }
 
-export interface IWeaponListPagination {
+export interface IWeaponListPaginationState {
+  currentPage: number,
+  pageSize: number,
+  totalItems: number
+}
+
+export interface ICharacterListPaginationState {
   currentPage: number,
   pageSize: number,
   totalItems: number
@@ -91,10 +97,13 @@ export interface IState {
   characterList: any,
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
-  weaponListPagination: IWeaponListPagination,
+  weaponListPagination: IWeaponListPaginationState,
+  characterListPagination: ICharacterListPaginationState,
   shieldList: Array<IShield>,
   characterRenames: any,
-  isFetchWeaponListLoading: boolean
+  isFetchWeaponListLoading: boolean,
+  isCharacterListLoading: boolean,
+  characterStaminas: any
 }
 
 export const store = new Vuex.Store<IState>({
@@ -120,10 +129,17 @@ export const store = new Vuex.Store<IState>({
     weaponListPagination: {
       currentPage: 1,
       pageSize: 60,
-      totalItems: 205887
+      totalItems: 0
     },
-    isFetchWeaponListLoading: true,
-    characterRenames: {}
+    characterListPagination: {
+      currentPage: 1,
+      pageSize: 60,
+      totalItems: 0
+    },
+    isFetchWeaponListLoading: false,
+    isCharacterListLoading: false,
+    characterRenames: {},
+    characterStaminas: {},
   },
   mutations: {
     setShieldListFilter(state, payload) {
@@ -138,6 +154,12 @@ export const store = new Vuex.Store<IState>({
     setFetchWeaponListLoadingState(state, payload) {
       state.isFetchWeaponListLoading = payload;
     },
+    setFetchCharacterListLoadingState(state, payload) {
+      state.isCharacterListLoading = payload;
+    },
+    setCharacterListCurrentPage(state, payload) {
+      state.characterListPagination.currentPage = payload
+    },
     setWeaponListCurrentPage(state, payload) {
       state.weaponListPagination.currentPage = payload
     },
@@ -146,6 +168,13 @@ export const store = new Vuex.Store<IState>({
         ...state.weaponListPagination,
         pageSize: payload.pageSize,
         totalItems: payload.totalItems
+      }
+    },
+    setCharacterListPagination(state, payload) {
+      state.characterListPagination = {
+        ...state.characterListPagination,
+        pageSize: payload.pageSize,
+        totalItems: payload.totalItems,
       }
     },
     setCurrentBNBBalance(state, payload) {
@@ -217,13 +246,29 @@ export const store = new Vuex.Store<IState>({
       await dispatch('getMetamaskAccount')
     },
     async fetchCharacterList({ commit }) {
+      commit('setFetchCharacterListLoadingState', true);
+
       try {
-        const response = await fetch(`${BASE_API_URL}/static/market/character`);
+        const response = await fetch(`${BASE_API_URL}/static/market/character?pageNum=${this.state.characterListPagination.currentPage - 1}`);
         const data = await response.json();
 
         commit('setCharacterList', data.results);
+        
+        console.log({
+          pageSize: data.page.pageSize,
+          totalItems: data.page.total - 1
+        });
+
+        commit('setCharacterListPagination', {
+          pageSize: data.page.pageSize,
+          totalItems: 31352
+        });
+
+        commit('setFetchCharacterListLoadingState', false);
       } catch (error) {
         console.log(error);
+
+        commit('setFetchCharacterListLoadingState', false);
       }
     },
     async fetchWeaponsList({ commit }) {
@@ -239,7 +284,7 @@ export const store = new Vuex.Store<IState>({
           commit('setWeaponsList', data.results);
           commit('setWeaponListPagination', {
             pageSize: data.page.pageSize,
-            totalItems:  data.page.total
+            totalItems: data.page.total - 1
           });
 
           commit('setFetchWeaponListLoadingState', false);
@@ -399,6 +444,11 @@ export const store = new Vuex.Store<IState>({
     }
   },
     getters : {
+      getCharacterStamina(state: IState) {
+        return (characterId: number) => {
+          return state.characterStaminas[characterId] || 0;
+        };
+      },
       getCharacterName(state: IState) {
         return (characterId: number) => {
           if(state.characterRenames[characterId] !== undefined){
@@ -408,7 +458,9 @@ export const store = new Vuex.Store<IState>({
         };
       },
       getFetchWeaponlistLoadingState: state => state.isFetchWeaponListLoading,
+      getFetchCharacterlistLoadingState: state => state.isCharacterListLoading,
       getWeaponListPagination: state => state.weaponListPagination,
+      getCharacterListPagination: state => state.characterListPagination,
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,
