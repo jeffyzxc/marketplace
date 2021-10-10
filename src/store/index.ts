@@ -310,7 +310,7 @@ export const store = new Vuex.Store<IState>({
       web3 = new Web3(window.ethereum);
       web3Instance = web3;
       await web3Instance.eth.getAccounts()
-        .then(async accounts) => {
+        .then(async (accounts:any) => {
           if (accounts.length > 0) {
             await dispatch('getAccountBalance', accounts[0])
             // 'Success to connect account'
