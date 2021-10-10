@@ -1,20 +1,20 @@
 <template>
     <div class="item-card">
         <div class="imgs text-center">
-            <div class="label">
+            <!-- <div class="label"> -->
                 <!------------ FOR RARITY ---------->
-                <div>
+                <!-- <div>
                     <p class="rarity" :style="setRarityColor('Mythical')">Mythical</p>
-                </div>
-            </div>
+                </div> -->
+            <!-- </div> -->
             <!-------------- CHARACTER IMAGE------------>
-            <img class="characters" width="80" src="../assets/characters/char-1.png" alt="">
+            <img class="characters" width="80" :src="getCharacterArt(character.charId)" style="height: 151px" alt="">
         </div>
         <div class="desc">
-            <img width="20" src="../assets/nav-icons/fire.png" alt="">
+            <img width="20" :src="require(`../assets/nav-icons/${character.charElement.toLowerCase()}.png`)" alt="">
             <p class="image-name">
                 <!-- GARETH BALE BENZEMA -->
-                {{ getCleanCharacterName(character.charId) }}
+                {{ getCleanCharacterName(character.charId) }} {{ getCharacterStamina(character.charId)}}
             </p>
             <p class="battle-power csr-pointer"  id="popover-reactive-1">Level {{ character.charLevel }}</p>
             
@@ -70,6 +70,7 @@
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 import { getCleanName } from './../utils/rename-censor';
+import { getCharacterArt } from './../utils/character-arts-placeholder';
 
 interface StoreMappedActions {
     purchaseCharactersListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
@@ -90,6 +91,8 @@ export default Vue.extend({
             'purchaseCharactersListing',
             'fetchCharactersNftPrice',
         ]) as StoreMappedActions),
+
+        getCharacterArt,
 
         setRarityColor(rarity:string){
             if(rarity == 'Mythical'){
@@ -118,9 +121,6 @@ export default Vue.extend({
             });
         },
         getCleanCharacterName(id:number) {
-            console.log(`clean name -> `,getCleanName(this.getCharacterName(id)));
-            console.log(`id -> `, id);
-
             return getCleanName(this.getCharacterName(id));
         },
         async lookupCharactersPrice(id: number) {
@@ -132,7 +132,8 @@ export default Vue.extend({
     computed: {
         ...mapGetters(
             [
-                'getCharacterName'
+                'getCharacterName',
+                'getCharacterStamina'
             ]
         )
     }
