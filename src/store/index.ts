@@ -14,6 +14,7 @@ import {
   marketFilterToQueryDict,
   objToQueryParams
 } from '../utils/route.utils';
+import { getCharacterNameFromSeed } from '@/utils/character-name';
 let web3Instance : IWeb3Instance;
 let web3: Web3;
 
@@ -87,10 +88,13 @@ export interface IState {
   chainId: string,
   metamaskConnected: boolean,
   weaponsList : any,
+  characterList: any,
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
   weaponListPagination: IWeaponListPagination,
-  shieldList: Array<IShield>
+  shieldList: Array<IShield>,
+  characterRenames: any,
+  isFetchWeaponListLoading: boolean
 }
 
 export const store = new Vuex.Store<IState>({
@@ -103,6 +107,7 @@ export const store = new Vuex.Store<IState>({
     currentSkillBalance : 0.00,
     metamaskConnected: false,
     weaponsList : [],
+    characterList: [],
     weaponListFilter: {
       elementFilter: [],
       rarityFilter: []
@@ -117,7 +122,8 @@ export const store = new Vuex.Store<IState>({
       pageSize: 60,
       totalItems: 205887
     },
-    isFetchWeaponListLoading: true
+    isFetchWeaponListLoading: true,
+    characterRenames: {}
   },
   mutations: {
     setShieldListFilter(state, payload) {
@@ -159,6 +165,7 @@ export const store = new Vuex.Store<IState>({
     },
     setShieldsList: (state, shieldList) => (state.shieldList = shieldList),
     setWeaponsList: (state, weapons) => (state.weaponsList = weapons),
+    setCharacterList: (state, characters) => (state.characterList = characters),
     getShieldsList: function(state, payload) {
       state.shieldList = payload
     },
@@ -182,12 +189,12 @@ export const store = new Vuex.Store<IState>({
     },
     async getMetamaskProvider({ dispatch }) {
       // check window ethereum provider
-      if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
+      if ((window as any).ethereum) {
+        web3 = new Web3((window as any).ethereum);
 
         try {
-          await window.ethereum.enable()
-          web3Instance = web3;
+          await (window as any).ethereum.enable()
+          web3Instance = web3 as any;
           await dispatch('initialize');
         } catch(error) {
           console.log('error',error);
@@ -208,6 +215,16 @@ export const store = new Vuex.Store<IState>({
   
       // step 2: get account
       await dispatch('getMetamaskAccount')
+    },
+    async fetchCharacterList({ commit }) {
+      try {
+        const response = await fetch(`${BASE_API_URL}/static/market/character`);
+        const data = await response.json();
+
+        commit('setCharacterList', data.results);
+      } catch (error) {
+        console.log(error);
+      }
     },
     async fetchWeaponsList({ commit }) {
       commit('setFetchWeaponListLoadingState', true);
@@ -245,10 +262,10 @@ export const store = new Vuex.Store<IState>({
       
     },
     async getMetamaskAccount({ commit, dispatch }) {
-      web3 = new Web3(window.ethereum);
-      web3Instance = web3;
+      web3 = new Web3((window as any).ethereum);
+      web3Instance = web3 as any;
       await web3Instance.eth.getAccounts()
-        .then(async accounts => {
+        .then(async (accounts:any) => {
           if (accounts.length > 0) {
             await dispatch('getAccountBalance', accounts[0])
             // 'Success to connect account'
@@ -382,6 +399,14 @@ export const store = new Vuex.Store<IState>({
     }
   },
     getters : {
+      getCharacterName(state: IState) {
+        return (characterId: number) => {
+          if(state.characterRenames[characterId] !== undefined){
+            return state.characterRenames[characterId];
+          }
+          return getCharacterNameFromSeed(characterId);
+        };
+      },
       getFetchWeaponlistLoadingState: state => state.isFetchWeaponListLoading,
       getWeaponListPagination: state => state.weaponListPagination,
       getMetamaskConnected : state => state.metamaskConnected,
@@ -389,6 +414,7 @@ export const store = new Vuex.Store<IState>({
       currentWalletAddress : state => state.currentWalletAddress,
       currentBNBBalance : state => state.currentBNBBalance,
       currentSkillBalance : state => state.currentSkillBalance,
+      allCharacters: state => state.characterList,
       allWeapons: (state) => state.weaponsList,
       allShields: (state) => state.shieldList,
       contracts(state: IState) {

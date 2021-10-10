@@ -12,8 +12,11 @@
         </div>
         <div class="desc">
             <img width="20" src="../assets/nav-icons/fire.png" alt="">
-            <p class="image-name">GARETH BALE BENZEMA</p>
-            <p class="battle-power csr-pointer"  id="popover-reactive-1">Level 31</p>
+            <p class="image-name">
+                <!-- GARETH BALE BENZEMA -->
+                {{ getCleanCharacterName(character.charId) }}
+            </p>
+            <p class="battle-power csr-pointer"  id="popover-reactive-1">Level {{ character.charLevel }}</p>
             
         </div>
 
@@ -21,17 +24,18 @@
         <div class="progress-bar p-0 m-0">
             <div><div class="progress" style="width: 70% !important;"></div></div>
         </div>
+        
         <div class="cost-item">
             <div>
                 <img width="15" src="../assets/apple-touch-icon.png" alt="">
-                <span>&nbsp; 5.13</span>
+                <span>&nbsp; {{ character.price }}</span>
             </div>
             <div>
-                 <span>#976122</span>
+                 <span>#{{character.charId}}</span>
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseCharacter(character.characterId)">Purchase</p>
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseCharacter(character.charId)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
         </div>
 
@@ -64,7 +68,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { getCleanName } from './../utils/rename-censor';
 
 interface StoreMappedActions {
     purchaseCharactersListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
@@ -73,16 +78,17 @@ interface StoreMappedActions {
 
 export default Vue.extend({
     name: 'SortFilter',
-     props: {
-            character: {
-                type: Object,
-                required: false
-            }
-        },
+    props: {
+        character: {
+            type: Object,
+            required: false
+        }
+    },
     methods:{
-        ...(mapActions([
+        ...(
+        mapActions([
             'purchaseCharactersListing',
-            'fetchCharactersNftPrice'
+            'fetchCharactersNftPrice',
         ]) as StoreMappedActions),
 
         setRarityColor(rarity:string){
@@ -111,11 +117,24 @@ export default Vue.extend({
                 maxPrice: price
             });
         },
+        getCleanCharacterName(id:number) {
+            console.log(`clean name -> `,getCleanName(this.getCharacterName(id)));
+            console.log(`id -> `, id);
+
+            return getCleanName(this.getCharacterName(id));
+        },
         async lookupCharactersPrice(id: number) {
             return await this.fetchCharactersNftPrice({
                 tokenId: id
             }); 
         },
+    },
+    computed: {
+        ...mapGetters(
+            [
+                'getCharacterName'
+            ]
+        )
     }
 });
 

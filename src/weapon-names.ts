@@ -43,7 +43,7 @@ const owned = (rng: any): string => {
 
 
 export const getWeaponNameFromSeed = (seed: number, stars: number) => {
-  const rng = seedrandom(seed.toString());
+  const rng = seedrandom(seed?.toString());
 
   const roll = Math.floor(rng() * 100);
 
