@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.1.0",
     "bootstrap-vue": "^2.21.2",
+    "censor-sensor": "^1.0.6",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "seedrandom": "^3.0.5",

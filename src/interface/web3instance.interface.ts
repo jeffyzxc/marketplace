@@ -10,7 +10,7 @@ export interface IWeb3Instance {
     extend:            string;
     version:           string;
     utils:             string;
-    eth:               string;
+    eth:               any;
     shh:               string;
     bzz:               string;
 }

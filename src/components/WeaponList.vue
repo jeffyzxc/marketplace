@@ -1,15 +1,16 @@
 <template>
     <div>
 
-        <div class="spacer flex-wrap d-flex" v-if="getFetchWeaponlistLoadingState">
+        <div class="spacer flex-wrap mb-5 mt-5 d-flex"  v-if="getFetchWeaponlistLoadingState">
             <spinner class="m-5"> 
             </spinner>
         </div>
+        
         <div class="spacer flex-wrap d-flex" v-if="!getFetchWeaponlistLoadingState">
                 <weapon-item v-for="weapon in allWeapons" :key="'wl'+weapon._id" :weapon="weapon" >
                 </weapon-item>
 
-            <div v-if="!allWeapons.length > 0">
+            <div v-if="!allWeapons.length > 0" class="mb-5 mt-5">
                 <h2>No Weapons Found...</h2>
             </div>
         </div>
@@ -60,11 +61,6 @@ export default Vue.extend({
            }
         }
     },
-    watch: {
-        getWeaponListPagination: (e) => {
-            console.log(e);
-        }
-    },
     computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
     created() {
         this.$root.$on('filter-value', (data: IMarketFilter) => {
@@ -75,6 +71,7 @@ export default Vue.extend({
                 filter: this.filterIsToggled
             });
 
+            store.commit('setWeaponListCurrentPage', 1);
             this.fetchWeaponsList();
         });
     }
