@@ -2,6 +2,7 @@ import { getElementNameByValue } from "@/default/element.default";
 import { getRarityNameByValue } from "@/default/rarity.default";
 import { IMarketFilter } from "@/interface/filters.interface";
 import { Dictionary } from "vue-router/types/router";
+import { Capatitalize } from "./string.util";
 
 export function isPathMatch(a:string, b:string) : boolean {
     return a === b;
@@ -55,10 +56,10 @@ export function marketFilterToQueryDict(filter: IMarketFilter) : Dictionary<stri
     const queryDict:Dictionary<string | (string | null)[] | null | undefined> = {};
 
     filter.elementFilter.some((res) => {
-        queryDict["element"] = res.value;
+        queryDict["element"] = Capatitalize(res.value);
     });
 
-    filter.rarityFilter.some((res) => {
+    filter.rarityFilter.some((res) => { 
         queryDict["minStar"] = res.value.toString();
     });
 

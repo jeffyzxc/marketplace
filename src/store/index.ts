@@ -278,9 +278,13 @@ export const store = new Vuex.Store<IState>({
     async fetchWeaponsList({ commit }) {
       commit('setFetchWeaponListLoadingState', true);
       try {
+          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`;
 
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon?pageNum=${this.state.weaponListPagination.currentPage - 1}`);
-          // const response = await fetch(`${BASE_API_URL}/static/market/weapon${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
+          let filterParams = objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter));
+          filterParams += filterParams ? `&${paginationFilter}` : `?${paginationFilter}`;
+
+          //const response = await fetch(`${BASE_API_URL}/static/market/weapon?pageNum=${this.state.weaponListPagination.currentPage - 1}`);
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon${filterParams}`);
 
           // console.log(response)
           const data = await response.json();
