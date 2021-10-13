@@ -108,6 +108,7 @@ export default Vue.extend({
             const filterValue: IMarketFilter = queryParamsToMarketFilter(snapshotQuery, this.filter);
             this.filter = filterValue as any;
         }
+        
         this.$root.$emit('filter-value', this.filter);
         this.toggleAllCheckedRarityFilter();
         this.toggleAllCheckedElementFilter();
@@ -115,12 +116,13 @@ export default Vue.extend({
         this.$root.$on('refresh-list', this.refreshListHandler);
     },
     destroyed() {
+        this.$router.replace({name: "Buy", query: {}});
         this.$root.$off('refresh-list', this.refreshListHandler);
     },
     methods:{
         refreshListHandler(itemType: string) {
             this.resetFilterValue();
-            
+                
             this.$root.$emit('filter-value', this.filter);
 
             this.toggleAllCheckedRarityFilter();
@@ -182,8 +184,8 @@ export default Vue.extend({
 
             for (let index = 0; index < this.elements.length; index++) {
                 const element = this.elements[index];
-                const el = document.querySelector(`.${ELEMENT_CLASSNAME}${element.el}.${this.className.elementFilter}`);
-                
+                const el = document.querySelector(`.${ELEMENT_CLASSNAME}${element.el}.${this.className.elementFilter}`);        
+
                 if(!el?.classList.contains(`${element.el}-off`)) {
                     elementFilterList.push(
                         {
@@ -239,7 +241,10 @@ export default Vue.extend({
         },
         toggleWeaponElementChecbox(selector:string, element:string, isToggled: boolean) {
             const el: HTMLInputElement = document.querySelector(selector) as HTMLInputElement;
+
             let weaponElement = this.elements.find(x => x.el === element);
+
+            if(!weaponElement) return;
 
             if(isToggled) {
                 el.classList.remove(`${element}-off`);
