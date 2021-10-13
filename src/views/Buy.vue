@@ -3,7 +3,7 @@
       <b-row class="buy-main">
         <transition name="fadeInUp" mode="out-in">
             <b-col lg='2'  md='3' sm='12' class="market-filters" v-if="!isMobile || (isMobile && filterIsToggled)">
-                  <market-filter/>
+              <market-filter/>
             </b-col>
          </transition>
          <transition name="fadeInUp" mode="out-in">
@@ -34,7 +34,6 @@ export default Vue.extend({
   },
   mounted(){
     this.$root.$on('toggle', (bol:boolean) => {
-          console.log(bol)
         this.filterIsToggled = bol
     })
   },

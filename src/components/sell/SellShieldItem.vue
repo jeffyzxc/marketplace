@@ -1,61 +1,61 @@
 <template>
 	<div class="item-card">
 		<div class="imgs">
-			<!------------ FOR LB/4B/5B ---------->
-			<!-- <div class="label">
+			<div class="label">
+				<!------------ FOR LB/4B/5B ---------->
 				<div>
 					<p class="rarity" :style="setRarityColor(shield.rarity)">
 						{{ shield.rarity }}
 					</p>
 					<p>LB:30/100</p>
 				</div>
-			</div> -->
+			</div>
 			<!-------------- shield IMAGE------------>
-			<img class="placeholder-shield" src="../assets/shields/shield-01.png" v-if="+shield.shieldId < 10000" />
-			<img class="placeholder-shield" src="../assets/shields/shield-02.png" v-if="+shield.shieldId >= 10000 && +shield.shieldId < 25000" />
+			<img class="shields" src="../../assets/shields/shield-02.png" alt="" />
 		</div>
 		<div class="desc">
-			<img width="20" :src="require(`../assets/nav-icons/${shield.shieldElement.toLowerCase()}.png`)" alt="" />
-			<!-- <p class="image-name">MALIGNANT SWIFT BLADE</p>
+			<img width="20" src="../../assets/nav-icons/fire.png" alt="" />
+			<p class="image-name">MALIGNANT SWIFT BLADE</p>
 			<p class="battle-power csr-pointer" id="popover-reactive-1">
 				Battle Power: 11,302
 				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z"/><path d="M12 6a3.5 3.5 0 0 0-3.5 3.5a1 1 0 0 0 2 0A1.5 1.5 0 1 1 12 11a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.16A3.49 3.49 0 0 0 12 6z" /><circle cx="12" cy="17" r="1" /></g></svg>
-			</p> -->
+			</p>
 		</div>
 
 		<!-------------- PROGRESS BAR (User style width percentage (%))------------>
-		<!-- <div class="progress-bar p-0 m-0">
+		<div class="progress-bar p-0 m-0">
 			<div><div class="progress" style="width: 70% !important;"></div></div>
-		</div> -->
-		<div class="cost-item">
-            <div>
-                <img width="15" src="../assets/apple-touch-icon.png" alt="">
+		</div>
+		 <div class="cost-item">
+            <div v-if="shield.sellStatus != 0">
+                <img width="15" src="../../assets/apple-touch-icon.png" alt="">
                 <span>&nbsp; {{shield.price}}</span>
             </div>
             <div>
                  <span>#{{shield.shieldId}}</span>
             </div>
         </div>
-		<div class="buttons">
-			<p class="btn-purchase right csr-pointer mr-2">Purchase</p>
-			<p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">
+		<div class="buttons" v-if="shield.sellStatus == 0">
+			<p class="btn-sell right csr-pointer mr-2">Sell</p>
+			<p class="btn-sell left csr-pointer ml-2" @click="openModal(true)">
 				View
 			</p>
 		</div>
-		<!-- <div class="buttons">
+		<div class="buttons">
 			<p class="btn-active right csr-pointer mr-2">Active</p>
 			<p class="btn-sold right csr-pointer mr-2">Sold</p>
-		</div> -->
+			<!-- <p class="btn-sell left csr-pointer ml-2">Cancel</p> -->
+		</div>
 		<b-popover target="popover-reactive-1" triggers="click" placement="left" container="my-container">
 			<div class="popover-design">
 				<p>Total Battle Power</p>
 				<h4>11,302</h4>
 				<div class="traits">
-					<img width="10" src="../assets/nav-icons/fire.png" alt="" />
+					<img width="10" src="../../assets/nav-icons/fire.png" alt="" />
 					&nbsp;<span>Power</span><br />
-					<img width="10" src="../assets/nav-icons/lightning.png" alt="" />
+					<img width="10" src="../../assets/nav-icons/lightning.png" alt="" />
 					&nbsp;<span>Strength</span><br />
-					<img width="10" src="../assets/nav-icons/water.png" alt="" />
+					<img width="10" src="../../assets/nav-icons/water.png" alt="" />
 					&nbsp;<span>Intelligence</span>
 				</div>
 				<div class="learn">
@@ -68,7 +68,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
 
 export default Vue.extend({
 	props: ['shield'],
@@ -92,13 +91,6 @@ export default Vue.extend({
 			this.$root.$emit('modal', bol)
 		},
 	},
-	computed: {
-		...mapGetters(
-			[
-				'getShieldListFilterState'
-			]
-		)
-	}
 })
 </script>
 

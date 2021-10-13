@@ -119,11 +119,15 @@ export const store = new Vuex.Store<IState>({
     characterList: [],
     weaponListFilter: {
       elementFilter: [],
-      rarityFilter: []
+      rarityFilter: [],
+      maxPrice: Number.MAX_SAFE_INTEGER,
+      minPrice: 0
     },
     shieldListFilter: {
       elementFilter: [],
-      rarityFilter: []
+      rarityFilter: [],
+      maxPrice: Number.MAX_SAFE_INTEGER,
+      minPrice: 0
     },
     shieldList: [],
     weaponListPagination: {
@@ -143,7 +147,10 @@ export const store = new Vuex.Store<IState>({
   },
   mutations: {
     setShieldListFilter(state, payload) {
-      state.shieldListFilter = payload.filter;
+      state.shieldListFilter = {
+        ...state.shieldListFilter,
+        ...payload.filter
+      };
     },
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
@@ -204,7 +211,9 @@ export const store = new Vuex.Store<IState>({
     clearWeaponListFilter(state) {
       state.weaponListFilter = {
         elementFilter: [],
-        rarityFilter: []
+        rarityFilter: [],
+        maxPrice: Number.MAX_SAFE_INTEGER,
+        minPrice: 0
       };
     },
     setContracts(state: IState, payload) {
@@ -218,12 +227,12 @@ export const store = new Vuex.Store<IState>({
     },
     async getMetamaskProvider({ dispatch }) {
       // check window ethereum provider
-      if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
+      if ((window as any).ethereum) {
+        web3 = new Web3((window as any).ethereum);
 
         try {
-          await window.ethereum.enable()
-          web3Instance = web3;
+          await (window as any).ethereum.enable()
+          web3Instance = web3 as any;
           await dispatch('initialize');
         } catch(error) {
           console.log('error',error);
@@ -253,11 +262,6 @@ export const store = new Vuex.Store<IState>({
         const data = await response.json();
 
         commit('setCharacterList', data.results);
-        
-        console.log({
-          pageSize: data.page.pageSize,
-          totalItems: data.page.total - 1
-        });
 
         commit('setCharacterListPagination', {
           pageSize: data.page.pageSize,
@@ -296,19 +300,18 @@ export const store = new Vuex.Store<IState>({
     },
     async fetchShieldsList({commit}){
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/shield${objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter))}`);
+          const response = await fetch(`${BASE_API_URL}/static/market/shield${objToQueryParams(marketFilterToQueryDict(this.state.shieldListFilter))}`);
           
           const data = await response.json();
-          console.log(data.results)
+
           commit('setShieldsList', data.results);
       } catch (error) {
           console.error(error);
       }
-      
     },
     async getMetamaskAccount({ commit, dispatch }) {
-      web3 = new Web3(window.ethereum);
-      web3Instance = web3;
+      web3 = new Web3((window as any).ethereum);
+      web3Instance = web3 as any;
       await web3Instance.eth.getAccounts()
         .then(async (accounts:any) => {
           if (accounts.length > 0) {
@@ -457,6 +460,7 @@ export const store = new Vuex.Store<IState>({
           return getCharacterNameFromSeed(characterId);
         };
       },
+      getShieldListFilterState: state => state.shieldListFilter,
       getFetchWeaponlistLoadingState: state => state.isFetchWeaponListLoading,
       getFetchCharacterlistLoadingState: state => state.isCharacterListLoading,
       getWeaponListPagination: state => state.weaponListPagination,

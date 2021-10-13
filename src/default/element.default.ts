@@ -29,7 +29,7 @@ export const WeaponElementList: Array<INameValue<string>> = [
     }
 ];
 
-export function getWeaponElementNameByValue(val: string) {
+export function getElementNameByValue(val: string) {
     if(val === EARTH_WEAPON_ELEMENT_VALUE) {
         return EARTH_WEAPON_ELEMENT_NAME;
     } else if(val === FIRE_WEAPON_ELEMENT_VALUE) {

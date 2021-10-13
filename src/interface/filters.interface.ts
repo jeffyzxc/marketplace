@@ -9,5 +9,7 @@ export interface IFilterList<T> extends Array<IFilter<T>> {
 
 export interface IMarketFilter {
     elementFilter: IFilterList<string>,
-    rarityFilter: IFilterList<number>
+    rarityFilter: IFilterList<number>,
+    minPrice: number,
+    maxPrice: number,
 }
