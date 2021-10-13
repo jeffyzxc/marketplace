@@ -141,7 +141,7 @@ export default Vue.extend({
 
                 this.$router.replace({name: "Buy", query: marketFilterToQueryDict(filterValue)});
 
-                this.$root.$emit('filter-value', filterValue);
+                this.$root.$emit('filter-value', filterValue, true);
                 this.$root.$emit('toggle', false)
             }
             this.activeBottomTab=x;

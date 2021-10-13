@@ -57,26 +57,29 @@ const s = Vue.extend({
     methods: {
     ...mapActions(['fetchWeaponsList']),
         onCurrentPageChange(page: number) {
-           if(page) {
-              let snapshotQuery = this.$route.query as Dictionary<string>;
-              
-              this.$router.replace({name: "Buy", query: {...snapshotQuery, page: page.toString()} });
+            if(page) {
+                let snapshotQuery = this.$route.query as Dictionary<string>;
+                
+                this.$router.replace({name: "Buy", query: {...snapshotQuery, page: page.toString()} });
 
-              store.commit('setWeaponListCurrentPage', page);
-              this.fetchWeaponsList();
-           }
+                store.commit('setWeaponListCurrentPage', page);
+                this.fetchWeaponsList();
+            }
         },
-        filterValueHandler(data: IMarketFilter) {
+        filterValueHandler(data: IMarketFilter, resetToPage: boolean) {
             this.filterIsToggled = data;
             
+            if(resetToPage) {
+                this.curPage = 1;
+                store.commit('setWeaponListCurrentPage', this.curPage);
+            }
+
             store.commit({
                 type: 'setWeaponListFilter',
                 filter: this.filterIsToggled
             });
-            
-            store.commit('setWeaponListCurrentPage', this.curPage);
+
             this.fetchWeaponsList();
-            this.isFirstLoad = false;
         }
     },
     computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
@@ -87,7 +90,10 @@ const s = Vue.extend({
         if(pageQuery)
             this.curPage = +pageQuery;
 
+        store.commit('setWeaponListCurrentPage', this.curPage);
+
         this.$root.$on('filter-value', this.filterValueHandler);
+        this.isFirstLoad = false;
     },
     destroyed() {
         this.$root.$off('filter-value', this.filterValueHandler);
