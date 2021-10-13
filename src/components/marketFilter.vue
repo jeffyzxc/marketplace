@@ -1,9 +1,6 @@
 <template>
     <div class="rl">
         <div class="d-flex flex-column">
-            <!-- <div class="upper-label">
-               WEAPONS
-            </div> -->
              <div class="tabs"  v-bind:class="{ upperLabel: !weapons == '' }" id="weapon" @click="selectTab('weapon')">
                WEAPONS
             </div>

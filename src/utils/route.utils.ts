@@ -17,11 +17,11 @@ export function queryParamsToMarketFilter(dict:Dictionary<string | (string | nul
     };
 
     if(dict["element"]) {
-        marketFilter.elementFilter.push({name: getElementNameByValue(dict["element"] as string), value: dict["element"] as string || ""});
+        marketFilter.elementFilter = [({name: getElementNameByValue(dict["element"] as string), value: dict["element"] as string || ""})];
     }
     
     if(dict["minStar"]) {
-        marketFilter.rarityFilter.push({name: getRarityNameByValue(+dict["minStar"]), value: +dict["minStar"] || 0});
+        marketFilter.rarityFilter = [({name: getRarityNameByValue(+dict["minStar"]), value: +dict["minStar"] || 0})];
     }
 
     if(dict["maxPrice"]) {

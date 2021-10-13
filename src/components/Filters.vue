@@ -142,7 +142,6 @@ export default Vue.extend({
                 this.$router.replace({name: "Buy", query: marketFilterToQueryDict(filterValue)});
 
                 this.$root.$emit('filter-value', filterValue);
-
                 this.$root.$emit('toggle', false)
             }
             this.activeBottomTab=x;
@@ -231,7 +230,7 @@ export default Vue.extend({
             for (let i = 0; i < this.filter.elementFilter.length; i++) {
                 const filter = this.filter.elementFilter[i];
 
-                this.toggleWeaponElementChecbox(`.${ELEMENT_CLASSNAME}${filter.value}.${ELEMENT_FILTER_TOGGLE_CLASSNAME}`, filter.value, true);
+                this.toggleWeaponElementChecbox(`.${ELEMENT_CLASSNAME}${filter.value.toLowerCase()}.${ELEMENT_FILTER_TOGGLE_CLASSNAME}`, filter.value.toLowerCase(), true);
             }
         },
         toggleWeaponRarityChecbox(selector:string,isToggled: boolean) {
