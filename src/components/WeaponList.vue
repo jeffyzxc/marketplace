@@ -59,11 +59,8 @@ export default Vue.extend({
               store.commit('setWeaponListCurrentPage', page);
               store.dispatch('fetchWeaponsList');
            }
-        }
-    },
-    computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
-    created() {
-        this.$root.$on('filter-value', (data: IMarketFilter) => {
+        },
+        filterValueHandler(data: IMarketFilter) {
             this.filterIsToggled = data;
 
             store.commit({
@@ -73,7 +70,14 @@ export default Vue.extend({
 
             store.commit('setWeaponListCurrentPage', 1);
             this.fetchWeaponsList();
-        });
+        }
+    },
+    computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
+    created() {
+        this.$root.$on('filter-value', this.filterValueHandler);
+    },
+    destroyed() {
+        this.$root.$off('filter-value', this.filterValueHandler);
     }
 });
 </script>
