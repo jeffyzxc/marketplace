@@ -95,6 +95,7 @@ const s = Vue.extend({
     },
     destroyed() {
         this.$root.$off('filter-value', this.filterValueHandler);
+        store.commit('setWeaponListCurrentPage', 1);
     }
 });
 

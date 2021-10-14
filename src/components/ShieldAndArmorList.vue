@@ -70,6 +70,7 @@ export default Vue.extend({
 	},
 	destroyed() {
 		this.$root.$off('filter-value', this.filterValueHandler);
+        store.commit('setShieldAndArmorListCurrentPage', 1);
 	},
     computed: mapGetters(['allShields', 'getFetchShieldAndArmorListLoadingState', 'getShieldAndArmorListPagination']),
 	methods: {
