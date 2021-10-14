@@ -1,10 +1,11 @@
 <template>
-	<b-pagination
-	v-model="curPage"
-	:total-rows="totalItems"
-	:per-page="itemsPerPage"
-	v-on:change="onChangePage($event)">
-	</b-pagination>
+		<b-pagination
+			v-model="page"
+			:total-rows="totalItems"
+			:per-page="itemsPerPage"
+			v-on:change="onChangePage($event)"
+		>
+		</b-pagination>
 </template>
 
 <script lang="ts">
@@ -13,15 +14,18 @@ import Vue from 'vue'
 export default Vue.extend({
 	props: [
 		'totalRows', 
-		'perPage'
+		'perPage',
+		'page'
 	],
 	name: 'CryptobladesPagination',
 	components: {},
 	data() {
+
+	this.$forceUpdate();
       return { 
           itemsPerPage : this.perPage,
 		  totalItems: this.totalRows,
-		  curPage: 1
+		  curPage: this.page
 	  }
     },
 	watch: {

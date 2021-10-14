@@ -10,40 +10,38 @@
 		</div>
 	</div>
 </template>
+
 <script lang="ts">
 import Vue from 'vue'
-import SellShieldItem from './SellShieldItem.vue'
-import { store } from '../../store/index';
+import ShieldItem from './ShieldItem.vue'
+import { store } from '../store/index';
 import  { mapActions, mapGetters } from 'vuex';
 import { IMarketFilter } from '@/interface/filters.interface';
 export default Vue.extend({
-	components: { SellShieldItem },
+	components: { 'shield-item': ShieldItem },
 	//passing the filters on props for now...
 	// sellStatus --> 0 = Not Listed, 1 = Listed (Active), 2 - Listed (Sold)
 	props: ['rarity', 'element', 'stat', 'reforge'],
-	data() {
-		return {
-			filterIsToggled: {},
-		}
-	},
 	mounted(){
         this.fetchShieldsList();
 	},
 	created(){
-		this.$root.$on('filter-value', (data: IMarketFilter) => {
-            this.filterIsToggled = data;
-
-            store.commit({
-                type: 'setShieldListFilter',
-                filter: this.filterIsToggled
-            });
-
-            this.fetchShieldsList();
-        });
+		this.$root.$on('filter-value', this.filterValueHandler);
+	},
+	destroyed() {
+		this.$root.$off('filter-value', this.filterValueHandler);
 	},
     computed: mapGetters(['allShields']),
 	methods: {
 		...mapActions(['fetchShieldsList']),
+		filterValueHandler(data: IMarketFilter) {
+            store.commit({
+                type: 'setShieldListFilter',
+                filter: data
+            });
+
+            this.fetchShieldsList();
+		}
 	},
 	
 })

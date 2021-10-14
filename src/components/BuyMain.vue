@@ -31,14 +31,15 @@ import CharacterList from '../components/CharacterList.vue';
 import WeaponList from '../components/WeaponList.vue';
 import SkillList from '../components/SkilllList.vue';
 import SortFilter from '../components/SortFilter.vue'
-
+import ShieldsAndArmorsList from '../components/ShieldAndArmorList.vue';
 
 export default Vue.extend({
     components:{
         SortFilter,
         'weapon-list': WeaponList,
         'skill-list': SkillList,
-        'character-list': CharacterList
+        'character-list': CharacterList,
+        'shield-and-armor-list': ShieldsAndArmorsList
     },
     data(){
       return {
@@ -50,12 +51,14 @@ export default Vue.extend({
     },
     mounted(){  
         this.$root.$on('refresh-list', (itemType:string) => {
-            if(itemType == 'character'){
-                this.items = 'character-list'
-            }else if(itemType == 'weapon'){
-                this.items = 'weapon-list'
-            }else if(itemType == 'skillshop'){
-                this.items = 'skill-list'
+            if(itemType == 'character') {
+                this.items = 'character-list';
+            } else if(itemType == 'weapon'){
+                this.items = 'weapon-list';
+            } else if(itemType == 'skillshop') {
+                this.items = 'skill-list';
+            } else if(itemType == 'shield') {
+                this.items = 'shield-and-armor-list';
             }
         });
     }

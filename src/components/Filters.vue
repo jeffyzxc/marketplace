@@ -9,9 +9,9 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mbl-50">
                     <label for="form" style="color: #fff !important;">Rarity</label>
-                    <div class="form-check" id="form" v-for="(weapon, index) in weaponList" :key="index" >
-                        <input class="form-check-input" type="checkbox" :id="weapon.name+'-checkbox__input'">
-                        <label class="form-check-label" :for="weapon.name+'-checkbox__input'">{{ weapon.name }}</label>
+                    <div class="form-check" id="form" v-for="(item, index) in itemList" :key="index" >
+                        <input class="form-check-input" type="checkbox" :id="item.name+'-checkbox__input'">
+                        <label class="form-check-label" :for="item.name+'-checkbox__input'">{{ item.name }}</label>
                     </div>
                 </div>
             </div>
@@ -41,12 +41,12 @@ import {
 } from '@/utils/route.utils';
 import Vue from 'vue';
 import { 
-    WeaponRarityList 
+    ItemRarityList 
 } from "./../default/rarity.default";
 
 import { 
   IFilterList,
-    IMarketFilter 
+  IMarketFilter 
 } from "./../interface/filters.interface";
 
 export const ELEMENT_FILTER_TOGGLE_CLASSNAME = "element-filter__toggle";
@@ -83,7 +83,7 @@ export default Vue.extend({
                     isToggled: false
                 }
             ],
-            weaponList: WeaponRarityList,
+            itemList: ItemRarityList,
             filter: {
                 elementFilter: [
                     {
@@ -91,7 +91,9 @@ export default Vue.extend({
                         value : EARTH_WEAPON_ELEMENT_VALUE  
                     }
                 ],
-                rarityFilter: []
+                rarityFilter: [],
+                minPrice: 0,
+                maxPrice: Number.MAX_SAFE_INTEGER,
             },
             className: {
                 elementFilter: ELEMENT_FILTER_TOGGLE_CLASSNAME,
@@ -106,25 +108,40 @@ export default Vue.extend({
             const filterValue: IMarketFilter = queryParamsToMarketFilter(snapshotQuery, this.filter);
             this.filter = filterValue as any;
         }
-
+        
+        this.$root.$emit('filter-value', this.filter);
         this.toggleAllCheckedRarityFilter();
         this.toggleAllCheckedElementFilter();
-
-        this.$root.$emit('filter-value', this.filter);
+        
+        this.$root.$on('refresh-list', this.refreshListHandler);
+    },
+    destroyed() {
+        this.$router.replace({name: "Buy", query: {}});
+        this.$root.$off('refresh-list', this.refreshListHandler);
     },
     methods:{
+        refreshListHandler(itemType: string) {
+            this.resetFilterValue();
+                
+            this.$root.$emit('filter-value', this.filter);
+
+            this.toggleAllCheckedRarityFilter();
+            this.toggleAllCheckedElementFilter();
+        },
         clickedFilter(x:string){
             if(x=='f') {
                 const filterValue: IMarketFilter = {
                     elementFilter: this.getElementFilterValue(),
-                    rarityFilter: this.getRarityFilterValue()
+                    rarityFilter: this.getRarityFilterValue(),
+                    minPrice: 0,
+                    maxPrice: Number.MAX_SAFE_INTEGER,
                 };
-
+                
                 this.filter = filterValue as any;
 
                 this.$router.replace({name: "Buy", query: marketFilterToQueryDict(filterValue)});
-                this.$root.$emit('filter-value', filterValue);
 
+                this.$root.$emit('filter-value', filterValue, true);
                 this.$root.$emit('toggle', false)
             }
             this.activeBottomTab=x;
@@ -138,9 +155,9 @@ export default Vue.extend({
                 }
             }else if(types=='bottomBtn'){
                 if(tab==this.activeBottomTab){
-                    return '  background-color: #1168d0;color: #fff;'
+                    return 'background-color: #1168d0;color: #fff;'
                 }else{
-                    return ' background-color: #08142b; color: #fff; border: 1px solid rgba(255, 255, 255, 0.357);'
+                    return 'background-color: #08142b; color: #fff; border: 1px solid rgba(255, 255, 255, 0.357);'
                 }
             }
             
@@ -166,8 +183,8 @@ export default Vue.extend({
 
             for (let index = 0; index < this.elements.length; index++) {
                 const element = this.elements[index];
-                const el = document.querySelector(`.${ELEMENT_CLASSNAME}${element.el}.${this.className.elementFilter}`);
-                
+                const el = document.querySelector(`.${ELEMENT_CLASSNAME}${element.el}.${this.className.elementFilter}`);        
+
                 if(!el?.classList.contains(`${element.el}-off`)) {
                     elementFilterList.push(
                         {
@@ -183,8 +200,8 @@ export default Vue.extend({
         getRarityFilterValue() : IFilterList<number> {
             const elementRarityList: IFilterList<number> = [];
                 
-            for (let index = 0; index < this.weaponList.length; index++) {
-                const arrElement = this.weaponList[index];
+            for (let index = 0; index < this.itemList.length; index++) {
+                const arrElement = this.itemList[index];
                 const el:HTMLInputElement = document.querySelector(`#${arrElement.name}${this.className.checkboxInput}`) as HTMLInputElement;
 
                 if(el.checked) {
@@ -210,10 +227,10 @@ export default Vue.extend({
             }
         },
         toggleAllCheckedElementFilter() {
-            for (let i = 0; i < (this.filter as IMarketFilter).elementFilter.length; i++) {
-                const filter = (this.filter as IMarketFilter).elementFilter[i];
+            for (let i = 0; i < this.filter.elementFilter.length; i++) {
+                const filter = this.filter.elementFilter[i];
 
-                this.toggleWeaponElementChecbox(`.${ELEMENT_CLASSNAME}${filter.value}.${ELEMENT_FILTER_TOGGLE_CLASSNAME}`, filter.value, true);
+                this.toggleWeaponElementChecbox(`.${ELEMENT_CLASSNAME}${filter.value.toLowerCase()}.${ELEMENT_FILTER_TOGGLE_CLASSNAME}`, filter.value.toLowerCase(), true);
             }
         },
         toggleWeaponRarityChecbox(selector:string,isToggled: boolean) {
@@ -223,7 +240,10 @@ export default Vue.extend({
         },
         toggleWeaponElementChecbox(selector:string, element:string, isToggled: boolean) {
             const el: HTMLInputElement = document.querySelector(selector) as HTMLInputElement;
+
             let weaponElement = this.elements.find(x => x.el === element);
+
+            if(!weaponElement) return;
 
             if(isToggled) {
                 el.classList.remove(`${element}-off`);
@@ -237,11 +257,21 @@ export default Vue.extend({
 
                 weaponElement!.isToggled = false;
             }
-
-             
-
-
+            
             el.checked = isToggled;
+        },
+        resetFilterValue() {
+            this.filter = {
+                elementFilter: [
+                    {
+                        name : EARTH_WEAPON_ELEMENT_NAME,
+                        value : EARTH_WEAPON_ELEMENT_VALUE  
+                    }
+                ],
+                rarityFilter: [],
+                minPrice: 0,
+                maxPrice: Number.MAX_SAFE_INTEGER,
+            };
         }
     }
 });

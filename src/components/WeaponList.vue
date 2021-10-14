@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div class="spacer flex-wrap mb-5 mt-5 d-flex"  v-if="getFetchWeaponlistLoadingState">
+        <div class="spacer flex-wrap mb-5 mt-5 d-flex" v-if="getFetchWeaponlistLoadingState">
             <spinner class="m-5"> 
             </spinner>
         </div>
@@ -15,12 +15,12 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center" v-if="!getFetchWeaponlistLoadingState && !isFirstLoad">
             <pagination 
-                :current-page.sync="getWeaponListPagination.currentPage"
+                :page="getWeaponListPagination.currentPage"
                 :total-rows="getWeaponListPagination.totalItems"
                 :per-page="getWeaponListPagination.pageSize"
-
+                
                 v-on:changes="onCurrentPageChange($event)"
             >
             </pagination>
@@ -35,8 +35,9 @@ import  { mapActions , mapGetters } from 'vuex';
 import { IMarketFilter } from '@/interface/filters.interface';
 import Pagination from './../components/dumb/crypblades-pagination.vue';
 import Spinner from './../components/dumb/crypbolades-spinner.vue';
+import { Dictionary } from 'vue-router/types/router';
 
-export default Vue.extend({
+const s = Vue.extend({
     components: { 
        'pagination': Pagination ,
        'spinner': Spinner,
@@ -45,37 +46,62 @@ export default Vue.extend({
     //passing the filters on props for now...
     data() {
         return {
-            filterIsToggled: {}
+            filterIsToggled: {},
+            curPage: 1,
+            isFirstLoad: true
         }
     },
-
     props: ['rarity','element','stat','reforge'],
     name: 'SortFilter',
     store : store,
     methods: {
     ...mapActions(['fetchWeaponsList']),
-        onCurrentPageChange: (page: number) => {
-           if(page) {
-              store.commit('setWeaponListCurrentPage', page);
-              store.dispatch('fetchWeaponsList');
-           }
-        }
-    },
-    computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
-    created() {
-        this.$root.$on('filter-value', (data: IMarketFilter) => {
+        onCurrentPageChange(page: number) {
+            if(page) {
+                let snapshotQuery = this.$route.query as Dictionary<string>;
+                
+                this.$router.replace({name: "Buy", query: {...snapshotQuery, page: page.toString()} });
+
+                store.commit('setWeaponListCurrentPage', page);
+                this.fetchWeaponsList();
+            }
+        },
+        filterValueHandler(data: IMarketFilter, resetToPage: boolean) {
             this.filterIsToggled = data;
+            
+            if(resetToPage) {
+                this.curPage = 1;
+                store.commit('setWeaponListCurrentPage', this.curPage);
+            }
 
             store.commit({
                 type: 'setWeaponListFilter',
                 filter: this.filterIsToggled
             });
 
-            store.commit('setWeaponListCurrentPage', 1);
             this.fetchWeaponsList();
-        });
+        }
+    },
+    computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
+    created() {
+        const snapshotQuery = this.$route.query;
+        const pageQuery = snapshotQuery['page'];
+
+        if(pageQuery)
+            this.curPage = +pageQuery;
+
+        store.commit('setWeaponListCurrentPage', this.curPage);
+
+        this.$root.$on('filter-value', this.filterValueHandler);
+        this.isFirstLoad = false;
+    },
+    destroyed() {
+        this.$root.$off('filter-value', this.filterValueHandler);
     }
 });
+
+export default s;
+
 </script>
 <style scoped>
 

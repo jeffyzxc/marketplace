@@ -1,9 +1,6 @@
 <template>
     <div class="rl">
         <div class="d-flex flex-column">
-            <!-- <div class="upper-label">
-               WEAPONS
-            </div> -->
              <div class="tabs"  v-bind:class="{ upperLabel: !weapons == '' }" id="weapon" @click="selectTab('weapon')">
                WEAPONS
             </div>
@@ -81,8 +78,8 @@ export default Vue.extend({
     },
     methods:{
         selectTab(tab:string){
+            this.$root.$emit('refresh-list', tab);
             if(tab == 'weapon'){
-                this.$root.$emit('refresh-list', 'weapon')
                 this.weapons = 'filters'
                 this.shields = ""
                 this.character = ""
@@ -95,14 +92,12 @@ export default Vue.extend({
                 this.skill = ""
                 this.others = ""
             }else if(tab == 'character'){
-                this.$root.$emit('refresh-list', 'character')
                 this.character = 'filters'
                 this.shields = ''
                 this.weapons = ''
                 this.skill = ""
                 this.others = ""
             }else if(tab == 'skillshop'){
-                this.$root.$emit('refresh-list', 'skillshop')
                 this.skill = 'filters'
                 this.character = ''
                 this.shields = ''
@@ -117,9 +112,6 @@ export default Vue.extend({
             }
         },
         clickedFilter(x:string){
-            if(x=='f'){
-                this.$root.$emit('filter-value', false)
-            }
             this.activeBottomTab=x
         },
         setActive(tab:string,types:string){
