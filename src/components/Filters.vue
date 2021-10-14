@@ -85,12 +85,7 @@ export default Vue.extend({
             ],
             itemList: ItemRarityList,
             filter: {
-                elementFilter: [
-                    {
-                        name : EARTH_WEAPON_ELEMENT_NAME,
-                        value : EARTH_WEAPON_ELEMENT_VALUE  
-                    }
-                ],
+                elementFilter: [],
                 rarityFilter: [],
                 minPrice: 0,
                 maxPrice: Number.MAX_SAFE_INTEGER,
@@ -108,26 +103,14 @@ export default Vue.extend({
             const filterValue: IMarketFilter = queryParamsToMarketFilter(snapshotQuery, this.filter);
             this.filter = filterValue as any;
         }
-        
-        this.$root.$emit('filter-value', this.filter);
+
         this.toggleAllCheckedRarityFilter();
         this.toggleAllCheckedElementFilter();
-        
-        this.$root.$on('refresh-list', this.refreshListHandler);
     },
     destroyed() {
         this.$router.replace({name: "Buy", query: {}});
-        this.$root.$off('refresh-list', this.refreshListHandler);
     },
     methods:{
-        refreshListHandler(itemType: string) {
-            this.resetFilterValue();
-                
-            this.$root.$emit('filter-value', this.filter);
-
-            this.toggleAllCheckedRarityFilter();
-            this.toggleAllCheckedElementFilter();
-        },
         clickedFilter(x:string){
             if(x=='f') {
                 const filterValue: IMarketFilter = {
@@ -228,7 +211,7 @@ export default Vue.extend({
         },
         toggleAllCheckedElementFilter() {
             for (let i = 0; i < this.filter.elementFilter.length; i++) {
-                const filter = this.filter.elementFilter[i];
+                const filter = this.filter.elementFilter[i] as any;
 
                 this.toggleWeaponElementChecbox(`.${ELEMENT_CLASSNAME}${filter.value.toLowerCase()}.${ELEMENT_FILTER_TOGGLE_CLASSNAME}`, filter.value.toLowerCase(), true);
             }
@@ -263,10 +246,6 @@ export default Vue.extend({
         resetFilterValue() {
             this.filter = {
                 elementFilter: [
-                    {
-                        name : EARTH_WEAPON_ELEMENT_NAME,
-                        value : EARTH_WEAPON_ELEMENT_VALUE  
-                    }
                 ],
                 rarityFilter: [],
                 minPrice: 0,
