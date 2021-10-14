@@ -50,7 +50,7 @@ export default Vue.extend({
       }
     },
     mounted(){  
-        this.$root.$on('refresh-list', (itemType:string) => {
+        this.$root.$on('tab-changed', (itemType:string) => {
             if(itemType == 'character') {
                 this.items = 'character-list';
             } else if(itemType == 'weapon'){

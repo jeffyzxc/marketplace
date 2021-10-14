@@ -73,13 +73,7 @@ interface IShield {
   network:        string;
 }
 
-export interface IWeaponListPaginationState {
-  currentPage: number,
-  pageSize: number,
-  totalItems: number
-}
-
-export interface ICharacterListPaginationState {
+export interface IBasePagination {
   currentPage: number,
   pageSize: number,
   totalItems: number
@@ -97,11 +91,13 @@ export interface IState {
   characterList: any,
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
-  weaponListPagination: IWeaponListPaginationState,
-  characterListPagination: ICharacterListPaginationState,
+  weaponListPagination: IBasePagination,
+  shieldAndArmorListPagination: IBasePagination,
+  characterListPagination: IBasePagination,
   shieldList: Array<IShield>,
   characterRenames: any,
   isFetchWeaponListLoading: boolean,
+  isFetchShieldAndArmorListLoading: boolean,
   isCharacterListLoading: boolean,
   characterStaminas: any
 }
@@ -135,6 +131,11 @@ export const store = new Vuex.Store<IState>({
       pageSize: 60,
       totalItems: 0
     },
+    shieldAndArmorListPagination: {
+      currentPage: 1,
+      pageSize: 60,
+      totalItems: 0
+    },
     characterListPagination: {
       currentPage: 1,
       pageSize: 60,
@@ -142,6 +143,7 @@ export const store = new Vuex.Store<IState>({
     },
     isFetchWeaponListLoading: false,
     isCharacterListLoading: false,
+    isFetchShieldAndArmorListLoading: false,
     characterRenames: {},
     characterStaminas: {},
   },
@@ -164,8 +166,14 @@ export const store = new Vuex.Store<IState>({
     setFetchCharacterListLoadingState(state, payload) {
       state.isCharacterListLoading = payload;
     },
+    setFetchShieldAndArmorListLoadingState(state, payload) {
+      state.isFetchShieldAndArmorListLoading = payload;
+    },
     setCharacterListCurrentPage(state, payload) {
       state.characterListPagination.currentPage = payload
+    },
+    setShieldAndArmorListCurrentPage(state, payload) {
+      state.shieldAndArmorListPagination.currentPage = payload
     },
     setWeaponListCurrentPage(state, payload) {
       state.weaponListPagination.currentPage = payload
@@ -173,6 +181,13 @@ export const store = new Vuex.Store<IState>({
     setWeaponListPagination(state, payload) {
       state.weaponListPagination = {
         ...state.weaponListPagination,
+        pageSize: payload.pageSize,
+        totalItems: payload.totalItems
+      }
+    },
+    setShieldAndArmorListPagination(state, payload) {
+      state.shieldAndArmorListPagination = {
+        ...state.shieldAndArmorListPagination,
         pageSize: payload.pageSize,
         totalItems: payload.totalItems
       }
@@ -301,13 +316,29 @@ export const store = new Vuex.Store<IState>({
       }
     },
     async fetchShieldsList({commit}){
+      commit('setFetchShieldAndArmorListLoadingState', true);
+
       try {
-          const response = await fetch(`${BASE_API_URL}/static/market/shield${objToQueryParams(marketFilterToQueryDict(this.state.shieldListFilter))}`);
+          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`;
+
+          let filterParams = objToQueryParams(marketFilterToQueryDict(this.state.shieldListFilter));
+          filterParams += filterParams ? `&${paginationFilter}` : `?${paginationFilter}`;
+
+          const response = await fetch(`${BASE_API_URL}/static/market/shield${filterParams}`);
           
           const data = await response.json();
 
           commit('setShieldsList', data.results);
+
+          commit('setShieldAndArmorListPagination', {
+            pageSize: data.page.pageSize,
+            totalItems: data.page.total - 1
+          });
+
+          commit('setFetchShieldAndArmorListLoadingState', false);
       } catch (error) {
+          commit('setFetchShieldAndArmorListLoadingState', false);
+
           console.error(error);
       }
     },
@@ -465,8 +496,10 @@ export const store = new Vuex.Store<IState>({
       getShieldListFilterState: state => state.shieldListFilter,
       getFetchWeaponlistLoadingState: state => state.isFetchWeaponListLoading,
       getFetchCharacterlistLoadingState: state => state.isCharacterListLoading,
+      getFetchShieldAndArmorListLoadingState: state => state.isFetchShieldAndArmorListLoading,
       getWeaponListPagination: state => state.weaponListPagination,
       getCharacterListPagination: state => state.characterListPagination,
+      getShieldAndArmorListPagination: state => state.shieldAndArmorListPagination,
       getMetamaskConnected : state => state.metamaskConnected,
       defaultAccount : state => state.defaultAccount,
       currentWalletAddress : state => state.currentWalletAddress,

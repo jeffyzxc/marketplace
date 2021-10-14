@@ -47,7 +47,6 @@ const s = Vue.extend({
     data() {
         return {
             filterIsToggled: {},
-            curPage: 1,
             isFirstLoad: true
         }
     },
@@ -70,8 +69,7 @@ const s = Vue.extend({
             this.filterIsToggled = data;
             
             if(resetToPage) {
-                this.curPage = 1;
-                store.commit('setWeaponListCurrentPage', this.curPage);
+                store.commit('setWeaponListCurrentPage', 1);
             }
 
             store.commit({
@@ -83,20 +81,21 @@ const s = Vue.extend({
         }
     },
     computed: mapGetters(['allWeapons', 'getWeaponListPagination', 'getFetchWeaponlistLoadingState']),
-    created() {
+    created() {  
         const snapshotQuery = this.$route.query;
         const pageQuery = snapshotQuery['page'];
 
         if(pageQuery)
-            this.curPage = +pageQuery;
+            store.commit('setWeaponListCurrentPage',  +pageQuery);
 
-        store.commit('setWeaponListCurrentPage', this.curPage);
+        this.fetchWeaponsList();
 
         this.$root.$on('filter-value', this.filterValueHandler);
         this.isFirstLoad = false;
     },
     destroyed() {
         this.$root.$off('filter-value', this.filterValueHandler);
+        store.commit('setWeaponListCurrentPage', 1);
     }
 });
 

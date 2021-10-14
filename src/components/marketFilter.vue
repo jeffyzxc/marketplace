@@ -78,7 +78,7 @@ export default Vue.extend({
     },
     methods:{
         selectTab(tab:string){
-            this.$root.$emit('refresh-list', tab);
+            this.$root.$emit('tab-changed', tab);
             if(tab == 'weapon'){
                 this.weapons = 'filters'
                 this.shields = ""
