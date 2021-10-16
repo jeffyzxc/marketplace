@@ -1,28 +1,28 @@
 <template>
     <div class="rl">
         <div class="d-flex flex-column">
-             <div class="tabs"  v-bind:class="{ upperLabel: !weapons == '' }" id="weapon" @click="selectTab('weapon')">
+             <div class="tabs"  v-bind:class="{ upperLabel: !weapons == '' }" id="weapon" @click="selectTab(`${BuyPageRouteParamEnum.weapon}`, true)">
                WEAPONS
             </div>
             <transition name="fadeInUp" mode="out-in">
                 <component v-bind:is="weapons" />
             </transition>
-            <div class="tabs"  v-bind:class="{ upperLabel: !shields == '' }" id="shield" @click="selectTab('shield')">
+            <div class="tabs"  v-bind:class="{ upperLabel: !shields == '' }" id="shield" @click="selectTab(`${BuyPageRouteParamEnum.shield}`, true)">
                SHIELDS & ARMORS
             </div>
             <transition name="fadeInUp" mode="out-in">
                 <component v-bind:is="shields" />
             </transition>
-            <div class="tabs"  v-bind:class="{ upperLabel: !character == '' }" id="character" @click="selectTab('character')">
+            <div class="tabs"  v-bind:class="{ upperLabel: !character == '' }" id="character" @click="selectTab(`${BuyPageRouteParamEnum.character}`, true)">
                CHARACTERS
             </div>
             <transition name="fadeInUp" mode="out-in">
                 <component v-bind:is="character" />
             </transition>
-            <div class="tabs"  v-bind:class="{ upperLabel: !skill == '' }" id="skillshop" @click="selectTab('skillshop')">
+            <div class="tabs"  v-bind:class="{ upperLabel: !skill == '' }" id="skillshop" @click="selectTab(`${BuyPageRouteParamEnum.skills}`, true)">
                SKILL SHOP
             </div>
-            <div class="tabs"  v-bind:class="{ upperLabel: !others == '' }" id="others" @click="selectTab('others')">
+            <div class="tabs"  v-bind:class="{ upperLabel: !others == '' }" id="others" @click="selectTab(`${BuyPageRouteParamEnum.others}`, true)">
                OTHER NFT
             </div>
             <transition name="fadeInUp" mode="out-in">
@@ -39,13 +39,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import Filters from '../components/Filters.vue'
+import { BuyTabsRouteMap, BuyPageRouteParamEnum } from '../utils/buy-page-routes';
 
 export default Vue.extend({
     name: 'MarketFilter',
     components:{'filters':Filters},
     data: function(){
         return{
-            weapons: 'filters',
+            BuyPageRouteParamEnum: BuyPageRouteParamEnum,
+            weapons: "",
             shields: "",
             character: "",
             skill: "",
@@ -76,40 +78,51 @@ export default Vue.extend({
             ],
         }
     },
+    mounted() {
+        const curParams = this.$route.params["tabName"];
+        this.selectTab(curParams, false);
+    },
     methods:{
-        selectTab(tab:string){
-            this.$root.$emit('tab-changed', tab);
-            if(tab == 'weapon'){
+        selectTab(tab:string, tabChanged:boolean) {
+
+            if(tabChanged)
+                this.$router.replace({name : "Buy", params: {tabName: BuyTabsRouteMap(tab)}});
+            else 
+                this.$router.replace({name : "Buy", params: {tabName: BuyTabsRouteMap(tab)}, query: this.$route.query});
+
+            if(tab == BuyPageRouteParamEnum.weapon){
                 this.weapons = 'filters'
                 this.shields = ""
                 this.character = ""
                 this.skill = ""
                 this.others = ""
-            }else if(tab == 'shield'){
+            }else if(tab == BuyPageRouteParamEnum.shield){
                 this.shields = 'filters'
                 this.weapons = ''
                 this.character = ""
                 this.skill = ""
                 this.others = ""
-            }else if(tab == 'character'){
+            }else if(tab == BuyPageRouteParamEnum.character){
                 this.character = 'filters'
                 this.shields = ''
                 this.weapons = ''
                 this.skill = ""
                 this.others = ""
-            }else if(tab == 'skillshop'){
+            }else if(tab == BuyPageRouteParamEnum.skills){
                 this.skill = 'filters'
                 this.character = ''
                 this.shields = ''
                 this.weapons = ''
                 this.others = ""
-            }else if(tab == 'others'){
+            }else if(tab == BuyPageRouteParamEnum.others){
                 this.others = 'filters'
                 this.skill = ''
                 this.character = ''
                 this.shields = ''
                 this.weapons = ''
             }
+            
+            this.$root.$emit('tab-changed', tab);
         },
         clickedFilter(x:string){
             this.activeBottomTab=x
@@ -156,3 +169,11 @@ export default Vue.extend({
         overflow-y: auto !important;
     }
 </style>
+
+function BuyTabsRouteMap(tab: string): string {
+  throw new Error('Function not implemented.');
+}
+
+function BuyTabsRouteMap(tab: string): string {
+  throw new Error('Function not implemented.');
+}

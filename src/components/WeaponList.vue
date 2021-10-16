@@ -59,7 +59,7 @@ const s = Vue.extend({
             if(page) {
                 let snapshotQuery = this.$route.query as Dictionary<string>;
                 
-                this.$router.replace({name: "Buy", query: {...snapshotQuery, page: page.toString()} });
+                this.$router.replace({name: "Buy", params: this.$route.params, query: {...snapshotQuery, page: page.toString()} });
 
                 store.commit('setWeaponListCurrentPage', page);
                 this.fetchWeaponsList();
