@@ -2,14 +2,12 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Buy from '../views/Buy.vue'
 import Sell from '../views/Sell.vue'
-import TransactionHistory from '../views/TransactionHistory.vue'
-
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/',
+    path: '/buy/:tabName',
     name: 'Buy',
     component: Buy
   },
@@ -25,6 +23,10 @@ const routes: Array<RouteConfig> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/',
+    redirect: '/buy/weapon'
   }
 ]
 

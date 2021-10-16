@@ -17,7 +17,7 @@ import { store } from '../../store/index';
 import  { mapActions, mapGetters } from 'vuex';
 import { IMarketFilter } from '@/interface/filters.interface';
 export default Vue.extend({
-	components: { SellShieldItem },
+	components: { 'shield-item': SellShieldItem },
 	//passing the filters on props for now...
 	// sellStatus --> 0 = Not Listed, 1 = Listed (Active), 2 - Listed (Sold)
 	props: ['rarity', 'element', 'stat', 'reforge'],

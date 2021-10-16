@@ -107,9 +107,6 @@ export default Vue.extend({
         this.toggleAllCheckedRarityFilter();
         this.toggleAllCheckedElementFilter();
     },
-    destroyed() {
-        this.$router.replace({name: "Buy", query: {}});
-    },
     methods:{
         clickedFilter(x:string){
             if(x=='f') {
@@ -122,7 +119,7 @@ export default Vue.extend({
                 
                 this.filter = filterValue as any;
 
-                this.$router.replace({name: "Buy", query: marketFilterToQueryDict(filterValue)});
+                this.$router.replace({name: "Buy", params: this.$route.params, query: { ...this.$route.query, ...marketFilterToQueryDict(filterValue) } });
 
                 this.$root.$emit('filter-value', filterValue, true);
                 this.$root.$emit('toggle', false)
