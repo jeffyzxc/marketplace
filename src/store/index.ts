@@ -15,6 +15,7 @@ import {
   objToQueryParams
 } from '../utils/route.utils';
 import { getCharacterNameFromSeed } from '@/utils/character-name';
+import { mergeQueryParams } from '@/utils/query-params';
 let web3Instance : IWeb3Instance;
 let web3: Web3;
 
@@ -79,6 +80,13 @@ export interface IBasePagination {
   totalItems: number
 }
 
+export interface IGlobalFilter {
+  minPrice?: number,
+  maxPrice?: number,
+  sortBy?: string,
+  dortDir?: number
+}
+
 export interface IState {
   contracts: Contracts,
   defaultAccount: string,
@@ -89,6 +97,7 @@ export interface IState {
   metamaskConnected: boolean,
   weaponsList : any,
   characterList: any,
+  globalBuyMarketFilter: IGlobalFilter,
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
   weaponListPagination: IBasePagination,
@@ -113,6 +122,7 @@ export const store = new Vuex.Store<IState>({
     metamaskConnected: false,
     weaponsList : [],
     characterList: [],
+    globalBuyMarketFilter: {},
     weaponListFilter: {
       elementFilter: [],
       rarityFilter: [],
@@ -154,6 +164,12 @@ export const store = new Vuex.Store<IState>({
         ...payload.filter
       };
     },
+    setGlobalFilter(state, payload: IGlobalFilter) {
+      state.globalBuyMarketFilter = {
+        ...state.globalBuyMarketFilter,
+        ...payload
+      }
+    },
     setWeaponListFilter(state, payload) {
       state.weaponListFilter = payload.filter;
     },
@@ -170,13 +186,13 @@ export const store = new Vuex.Store<IState>({
       state.isFetchShieldAndArmorListLoading = payload;
     },
     setCharacterListCurrentPage(state, payload) {
-      state.characterListPagination.currentPage = payload
+      state.characterListPagination.currentPage = Math.max(payload, 1)
     },
     setShieldAndArmorListCurrentPage(state, payload) {
-      state.shieldAndArmorListPagination.currentPage = payload
+      state.shieldAndArmorListPagination.currentPage = Math.max(payload, 1)
     },
     setWeaponListCurrentPage(state, payload) {
-      state.weaponListPagination.currentPage = payload
+      state.weaponListPagination.currentPage = Math.max(payload, 1)
     },
     setWeaponListPagination(state, payload) {
       state.weaponListPagination = {
@@ -293,12 +309,13 @@ export const store = new Vuex.Store<IState>({
     async fetchWeaponsList({ commit }) {
       commit('setFetchWeaponListLoadingState', true);
       try {
-          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`;
+          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`
+          const weaponfilterParams = objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter));
+          const marketFilter = objToQueryParams(this.state.globalBuyMarketFilter);
 
-          let filterParams = objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter));
-          filterParams += filterParams ? `&${paginationFilter}` : `?${paginationFilter}`;
-
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon${filterParams}`);
+          const queryParams = mergeQueryParams(weaponfilterParams, paginationFilter, marketFilter);
+          
+          const response = await fetch(`${BASE_API_URL}/static/market/weapon${queryParams}`);
   
           const data = await response.json();
        
@@ -319,12 +336,12 @@ export const store = new Vuex.Store<IState>({
       commit('setFetchShieldAndArmorListLoadingState', true);
 
       try {
-          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`;
+          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`
+          const filterParams = objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter));
+          
+          const queryParams = mergeQueryParams(filterParams, paginationFilter);
 
-          let filterParams = objToQueryParams(marketFilterToQueryDict(this.state.shieldListFilter));
-          filterParams += filterParams ? `&${paginationFilter}` : `?${paginationFilter}`;
-
-          const response = await fetch(`${BASE_API_URL}/static/market/shield${filterParams}`);
+          const response = await fetch(`${BASE_API_URL}/static/market/shield${queryParams}`);
           
           const data = await response.json();
 
