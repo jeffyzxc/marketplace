@@ -35,6 +35,7 @@
 <script lang="ts">
 import { EARTH_WEAPON_ELEMENT_NAME, EARTH_WEAPON_ELEMENT_VALUE } from '@/default/element.default';
 import { store } from '@/store';
+import { removeEmptyQueryParams } from '@/utils/query-params';
 import { 
     marketFilterToQueryDict, 
     queryParamsToMarketFilter 
@@ -119,7 +120,7 @@ export default Vue.extend({
                 
                 this.filter = filterValue as any;
 
-                this.$router.replace({name: "Buy", params: this.$route.params, query: { ...this.$route.query, ...marketFilterToQueryDict(filterValue) } });
+                this.$router.replace({name: "Buy", params: this.$route.params, query: removeEmptyQueryParams({  ...this.$route.query, ...marketFilterToQueryDict(filterValue) }) });
 
                 this.$root.$emit('filter-value', filterValue, true);
                 this.$root.$emit('toggle', false)

@@ -55,8 +55,11 @@ export function objToQueryParams(obj: any) : string {
 }
 
 //@TODO fix this once endpoint request is done
-export function marketFilterToQueryDict(filter: IMarketFilter) : Dictionary<string | (string | null)[] | null | undefined> {
-    const queryDict:Dictionary<string | (string | null)[] | null | undefined> = {};
+export function marketFilterToQueryDict(filter: IMarketFilter) : Dictionary<string | (string | null)[]> {
+    const queryDict:Dictionary<string | (string | null)[]> = {};
+    
+    queryDict["minStar"] = "";
+    queryDict["element"] = "";
 
     filter.elementFilter.some((res) => {
         queryDict["element"] = Capatitalize(res.value);
