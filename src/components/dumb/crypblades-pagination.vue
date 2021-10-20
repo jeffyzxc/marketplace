@@ -1,8 +1,8 @@
 <template>
 		<b-pagination
 			v-model="page"
-			:total-rows="totalItems"
-			:per-page="itemsPerPage"
+			:total-rows="totalRows"
+			:per-page="perPage"
 			v-on:change="onChangePage($event)"
 		>
 		</b-pagination>
@@ -20,8 +20,6 @@ export default Vue.extend({
 	name: 'CryptobladesPagination',
 	components: {},
 	data() {
-
-	this.$forceUpdate();
       return { 
           itemsPerPage : this.perPage,
 		  totalItems: this.totalRows,
@@ -29,12 +27,12 @@ export default Vue.extend({
 	  }
     },
 	watch: {
-		totalRows: function(val) {
-			this.totalItems = val;
-		},
-		perPage: function(val) {
-			this.itemsPerPage = val;
-		}
+		// totalRows: function(val) {
+		// 	this.totalItems = val;
+		// },
+		// perPage: function(val) {
+		// 	this.itemsPerPage = val;
+		// }
 	},
 	methods: {
 		onChangePage(page: number) {

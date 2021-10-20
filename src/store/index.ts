@@ -100,6 +100,7 @@ export interface IState {
   globalBuyMarketFilter: IGlobalFilter,
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
+  characterListFilter: IMarketFilter,
   weaponListPagination: IBasePagination,
   shieldAndArmorListPagination: IBasePagination,
   characterListPagination: IBasePagination,
@@ -130,6 +131,12 @@ export const store = new Vuex.Store<IState>({
       minPrice: 0
     },
     shieldListFilter: {
+      elementFilter: [],
+      rarityFilter: [],
+      maxPrice: Number.MAX_SAFE_INTEGER,
+      minPrice: 0
+    },
+    characterListFilter: {
       elementFilter: [],
       rarityFilter: [],
       maxPrice: Number.MAX_SAFE_INTEGER,
@@ -166,12 +173,20 @@ export const store = new Vuex.Store<IState>({
     },
     setGlobalFilter(state, payload: IGlobalFilter) {
       state.globalBuyMarketFilter = {
-        ...state.globalBuyMarketFilter,
         ...payload
       }
     },
     setWeaponListFilter(state, payload) {
-      state.weaponListFilter = payload.filter;
+      state.weaponListFilter = {
+        ...state.weaponListFilter,
+        ...payload.filter
+      };
+    },
+    setCharacterListFilter(state, payload) {
+      state.characterListFilter = {
+        ...state.characterListFilter,
+        ...payload.filter
+      };
     },
     setCurrentSkillBalance(state, payload) {
       state.currentSkillBalance = payload
@@ -289,14 +304,20 @@ export const store = new Vuex.Store<IState>({
       commit('setFetchCharacterListLoadingState', true);
 
       try {
-        const response = await fetch(`${BASE_API_URL}/static/market/character?pageNum=${this.state.characterListPagination.currentPage - 1}`);
+        const paginationFilter = `pageNum=${this.state.characterListPagination.currentPage - 1}`
+        const characterFilterParams = objToQueryParams(marketFilterToQueryDict(this.state.characterListFilter));
+        const marketFilter = objToQueryParams(this.state.globalBuyMarketFilter);
+
+        const queryParams = mergeQueryParams(characterFilterParams, paginationFilter, marketFilter);
+
+        const response = await fetch(`${BASE_API_URL}/static/market/character${queryParams}`);
         const data = await response.json();
 
+        console.log('test',  data.results);
         commit('setCharacterList', data.results);
-
         commit('setCharacterListPagination', {
           pageSize: data.page.pageSize,
-          totalItems: 31352
+          totalItems: data.page.total - 1
         });
 
         commit('setFetchCharacterListLoadingState', false);

@@ -69,6 +69,8 @@ const s = Vue.extend({
             this.filterIsToggled = data;
             
             if(resetToPage) {
+                let snapshotQuery = this.$route.query as Dictionary<string>;
+                this.$router.replace({name: "Buy", params: this.$route.params, query: { ...snapshotQuery, page:"1"} });
                 store.commit('setWeaponListCurrentPage', 1);
             }
 
@@ -87,7 +89,7 @@ const s = Vue.extend({
 
         if(pageQuery)
             store.commit('setWeaponListCurrentPage',  +pageQuery);
-
+        
         this.fetchWeaponsList();
 
         this.$root.$on('filter-value', this.filterValueHandler);
@@ -96,6 +98,7 @@ const s = Vue.extend({
     destroyed() {
         this.$root.$off('filter-value', this.filterValueHandler);
         store.commit('setWeaponListCurrentPage', 1);
+        store.commit('setGlobalFilter', {});
     }
 });
 
