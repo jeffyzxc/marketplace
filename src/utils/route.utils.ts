@@ -38,22 +38,28 @@ export function queryParamsToMarketFilter(dict:Dictionary<string | (string | nul
 export function objToQueryParams(obj: any) : string {
     let query = "";
     
-    let index = 0;
-
+    let isFirstParam = true;
     for (const [key, value] of Object.entries(obj)) {
-        if(index === 0) query += `?${key}=${value}`;
-        else  {
-            query += `&${key}=${value}`;
+        if(value && key) {
+            if(isFirstParam) {
+                query += `${key}=${value}`;
+                isFirstParam = false;
+            }
+            else {
+                query += `&${key}=${value}`;
+            }
         }
-        index += 1;
     }
 
     return query;
 }
 
 //@TODO fix this once endpoint request is done
-export function marketFilterToQueryDict(filter: IMarketFilter) : Dictionary<string | (string | null)[] | null | undefined> {
-    const queryDict:Dictionary<string | (string | null)[] | null | undefined> = {};
+export function marketFilterToQueryDict(filter: IMarketFilter) : Dictionary<string | (string | null)[]> {
+    const queryDict:Dictionary<string | (string | null)[]> = {};
+    
+    queryDict["minStar"] = "";
+    queryDict["element"] = "";
 
     filter.elementFilter.some((res) => {
         queryDict["element"] = Capatitalize(res.value);

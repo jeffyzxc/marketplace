@@ -141,7 +141,6 @@ export default Vue.extend({
                     return ' background-color: #08142b; color: #fff; border: 1px solid rgba(255, 255, 255, 0.357);'
                 }
             }
-            
         },
         setElement(el:string){
             for(var x in this.elements){
@@ -169,11 +168,3 @@ export default Vue.extend({
         overflow-y: auto !important;
     }
 </style>
-
-function BuyTabsRouteMap(tab: string): string {
-  throw new Error('Function not implemented.');
-}
-
-function BuyTabsRouteMap(tab: string): string {
-  throw new Error('Function not implemented.');
-}
