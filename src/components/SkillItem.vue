@@ -2,7 +2,7 @@
     <div class="item-card">
         <div class="imgs text-center">
             <!-------------- SKILL IMAGE------------>
-            <img class="characters" width="120" src="../assets/skill/skill1.png" alt="">
+            <img class="characters" width="120" src="../assets/skill/potion_05_te.png" alt="">
         </div>
         <div class="desc">
             <img width="20" src="../assets/nav-icons/fire.png" alt="">
