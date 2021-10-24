@@ -2,7 +2,7 @@ import { IMarketFilter } from '@/interface/filters.interface';
 import { IWeb3Instance } from '@/interface/web3instance.interface';
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { BASE_API_URL } from '../const/environments';
+import { BASE_API_URL } from '../environment/environments';
 import Web3 from 'web3';
 import createKeccakHash from 'keccak';
 import _, { isUndefined } from 'lodash';
