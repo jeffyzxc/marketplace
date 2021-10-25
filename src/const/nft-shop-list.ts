@@ -1,10 +1,14 @@
-import { LandPrice, SkillShopListing } from "@/interface/shop.inteface";
+import { 
+  LandPrice, 
+  SkillShopListing, 
+  SkillShopNFTTypeEnum 
+} from "@/interface/shop.inteface";
 
 export function nftList(): Array<SkillShopListing>  {
   return [
     {
       id: 0,
-      type: 'CharacterRenameTag',
+      type: SkillShopNFTTypeEnum.CharacterRenameTag,
       nftPrice: 0.1,
       name: 'Rename Tag',
       description: 'Renames one character.',
@@ -12,7 +16,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 0,
-      type: 'CharacterRenameTagDeal',
+      type: SkillShopNFTTypeEnum.CharacterRenameTagDeal,
       nftPrice: 0.3,
       name: 'Rename Tag Deal',
       description: 'Renames 4 characters for the price of 3.',
@@ -20,7 +24,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'WeaponRenameTag',
+      type: SkillShopNFTTypeEnum.WeaponRenameTag,
       nftPrice: 0.1,
       name: 'Weapon Tag',
       description: 'Renames a weapon.',
@@ -28,7 +32,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'WeaponRenameTagDeal',
+      type: SkillShopNFTTypeEnum.WeaponRenameTagDeal,
       nftPrice: 0.3,
       name: 'Weapon Tag Deal',
       description: 'Renames 4 weapons for the price of 3.',
@@ -36,7 +40,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'CharacterEarthTraitChange',
+      type: SkillShopNFTTypeEnum.CharacterEarthTraitChange,
       nftPrice: 0.2,
       name: 'Earth Character Trait',
       description: 'Changes character\'s trait to Earth.',
@@ -44,7 +48,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'CharacterFireTraitChange',
+      type: SkillShopNFTTypeEnum.CharacterFireTraitChange,
       nftPrice: 0.2,
       name: 'Fire Character Trait',
       description: 'Changes character\'s trait to Fire.',
@@ -52,7 +56,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'CharacterWaterTraitChange',
+      type: SkillShopNFTTypeEnum.CharacterWaterTraitChange,
       nftPrice: 0.2,
       name: 'Water Character Trait',
       description: 'Changes character\'s trait to Water.',
@@ -60,7 +64,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'CharacterLightningTraitChange',
+      type: SkillShopNFTTypeEnum.CharacterLightningTraitChange,
       nftPrice: 0.2,
       name: 'Lightning Character Trait',
       description: 'Changes character\'s trait to Lightning.',
@@ -68,7 +72,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.1,
       name: 'Weapon Grayscale',
       description: '',
@@ -76,7 +80,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 2,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.1,
       name: 'Weapon Contrast',
       description: 'Increased contrast',
@@ -84,7 +88,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 3,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.1,
       name: 'Weapon Sepia',
       description: '',
@@ -92,7 +96,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 4,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.1,
       name: 'Weapon Invert',
       description: 'Inverted colors',
@@ -100,7 +104,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 5,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.1,
       name: 'Weapon Blur',
       description: 'Blurred weapon',
@@ -108,7 +112,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 6,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Fire Glow',
       description: 'Glows with fire power',
@@ -116,7 +120,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 7,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Earth Glow',
       description: 'Glows with earth power',
@@ -124,7 +128,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 8,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Lightning Glow',
       description: 'Glows with lightning power',
@@ -132,7 +136,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 9,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Water Glow',
       description: 'Glows with water power',
@@ -140,7 +144,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 10,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Rainbow Glow',
       description: 'Glows with all elements powers',
@@ -148,7 +152,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 11,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Dark Glow',
       description: 'Glows with the dark',
@@ -156,7 +160,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 12,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Ghost Weapon',
       description: 'Ghost effect',
@@ -164,7 +168,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 13,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Police Lights',
       description: 'Police Lights background',
@@ -172,7 +176,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 14,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Neon Border',
       description: '',
@@ -180,7 +184,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 15,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.5,
       name: 'Weapon Rotating Neon Border',
       description: '',
@@ -188,7 +192,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 16,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.4,
       name: 'Diamond Weapon Border',
       description: '',
@@ -196,7 +200,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 17,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.3,
       name: 'Gold Weapon Border',
       description: '',
@@ -204,7 +208,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 18,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.2,
       name: 'Silver Weapon Border',
       description: '',
@@ -212,7 +216,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 19,
-      type: 'WeaponCosmetic',
+      type: SkillShopNFTTypeEnum.WeaponCosmetic,
       nftPrice: 0.1,
       name: 'Bronze Weapon Border',
       description: '',
@@ -220,7 +224,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 1,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.1,
       name: 'Character Grayscale',
       description: '',
@@ -228,7 +232,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 2,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.1,
       name: 'Character Contrast',
       description: 'Increased contrast',
@@ -236,7 +240,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 3,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.1,
       name: 'Character Sepia',
       description: '',
@@ -244,7 +248,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 4,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.1,
       name: 'Character Invert',
       description: 'Inverted colors',
@@ -252,7 +256,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 5,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.1,
       name: 'Character Blur',
       description: 'Blurred character',
@@ -260,7 +264,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 6,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Fire Glow',
       description: 'Glows with fire power',
@@ -268,7 +272,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 7,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Earth Glow',
       description: 'Glows with earth power',
@@ -276,7 +280,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 8,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Lightning Glow',
       description: 'Glows with lightning power',
@@ -284,7 +288,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 9,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Water Glow',
       description: 'Glows with water power',
@@ -292,7 +296,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 10,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Rainbow Glow',
       description: 'Glows with all elements powers',
@@ -300,7 +304,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 11,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Dark Glow',
       description: 'Glows with the dark',
@@ -308,7 +312,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 12,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Ghost Character',
       description: 'Ghost effect',
@@ -316,7 +320,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 13,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Police Lights',
       description: 'Police lights background',
@@ -324,7 +328,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 14,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.5,
       name: 'Character Neon Border',
       description: '',
@@ -332,7 +336,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 15,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.4,
       name: 'Character Diamond Border',
       description: '',
@@ -340,7 +344,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 16,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.3,
       name: 'Character Gold Border',
       description: '',
@@ -348,7 +352,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 17,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.2,
       name: 'Character Silver Border',
       description: '',
@@ -356,7 +360,7 @@ export function nftList(): Array<SkillShopListing>  {
     },
     {
       id: 18,
-      type: 'CharacterCosmetic',
+      type: SkillShopNFTTypeEnum.CharacterCosmetic,
       nftPrice: 0.1,
       name: 'Character Bronze Border',
       description: '',
@@ -365,11 +369,11 @@ export function nftList(): Array<SkillShopListing>  {
   ];
 }
 
-export function specialOffersNftList(isLandSaleAllowed:boolean = false, landPrice: LandPrice): SkillShopListing[] {
+export function specialOffersNftList(isLandSaleAllowed:boolean, landPrice: LandPrice): SkillShopListing[] {
   const nftList = [
     {
       id: 'placeholder',
-      type: 'shield',
+      type: SkillShopNFTTypeEnum.Shield,
       nftPrice: 3,
       name: 'Shield',
       description: 'A Legendary Defender Shield',
