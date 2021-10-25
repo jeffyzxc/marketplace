@@ -1,8 +1,11 @@
 <template>
     <div>
         <div class="spacer flex-wrap d-flex">
-            <skill-item v-for="(sl,index) in skillList" :key="'sl'+index">
-
+            <skill-item 
+                v-for="(sl,index) in skillList" 
+                :key="'sl'+index"
+                :skill="sl"
+            >
             </skill-item>
         </div>
     </div>
@@ -10,8 +13,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import SkillItem from './SkillItem.vue';
-import Pagination from './../components/dumb/crypblades-pagination.vue';
-
+import { nftList, specialOffersNftList } from '@/const/nft-shop-list';
+import { LandPrice } from '@/interface/shop.inteface';
 export default Vue.extend({
     components: { 
       SkillItem
@@ -19,7 +22,10 @@ export default Vue.extend({
     name: 'SortFilter',
     data (){
         return {
-            skillList:[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+            skillList: [
+                ...specialOffersNftList(false, {} as LandPrice),
+                ...nftList(),
+            ]
         }
     },
     methods:{
