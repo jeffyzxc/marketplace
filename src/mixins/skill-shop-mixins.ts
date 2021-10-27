@@ -1,5 +1,6 @@
 import { 
     isTypeCharacterCosmetic, 
+    isTypeLand, 
     isTypeShield, 
     isTypeSkills, 
     isTypeWeaponCosmetic, 
@@ -19,6 +20,9 @@ export const skillShopMixins = {
         },
         isTypeSkills(type: SkillShopNFTTypeEnum) {
             return isTypeSkills(type);
+        },
+        isTypeLand(type: SkillShopNFTTypeEnum) {
+            return isTypeLand(type);
         }
     }
 };

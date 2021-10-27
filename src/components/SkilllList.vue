@@ -21,9 +21,11 @@ export default Vue.extend({
     },
     name: 'SortFilter',
     data (){
+        const isLandSaleAllowed = false;
+
         return {
             skillList: [
-                ...specialOffersNftList(false, {} as LandPrice),
+                ...specialOffersNftList(isLandSaleAllowed, {} as LandPrice),
                 ...nftList(),
             ]
         }

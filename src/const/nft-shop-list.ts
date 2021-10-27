@@ -388,7 +388,7 @@ export function specialOffersNftList(isLandSaleAllowed:boolean, landPrice: LandP
       nftPrice: +landPrice?.Tier1,
       name: 'Tier 1 Land',
       description: 'A tier 1 land',
-      image: '',
+      image: 't1-frame.png',
     } as SkillShopListing);
     nftList.push({
       id: 't2land',
@@ -396,7 +396,7 @@ export function specialOffersNftList(isLandSaleAllowed:boolean, landPrice: LandP
       nftPrice: +landPrice?.Tier2,
       name: 'Tier 2 Land',
       description: 'A tier 2 land',
-      image: '',
+      image: 't2-frame.png',
     } as SkillShopListing);
     nftList.push({
       id: 't3land',
@@ -404,7 +404,7 @@ export function specialOffersNftList(isLandSaleAllowed:boolean, landPrice: LandP
       nftPrice: +landPrice?.Tier3,
       name: 'Tier 3 Land',
       description: 'A tier 3 land',
-      image: '',
+      image: 't3-frame.png',
     } as SkillShopListing);
   }
 

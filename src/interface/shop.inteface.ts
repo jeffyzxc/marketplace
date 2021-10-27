@@ -13,6 +13,10 @@ export interface LandPrice {
 }
 
 export enum SkillShopNFTTypeEnum {
+    T1Land = "t1land",
+    T2Land = "t2land",
+    T3Land = "t3land",
+
     Shield = "shield",
 
     WeaponCosmetic = "WeaponCosmetic",
@@ -39,6 +43,12 @@ export function isTypeWeaponCosmetic(type: SkillShopNFTTypeEnum) {
 
 export function isTypeShield(type: SkillShopNFTTypeEnum) {
     return type === SkillShopNFTTypeEnum.Shield;
+}
+
+export function isTypeLand(type: SkillShopNFTTypeEnum) {
+    return type === SkillShopNFTTypeEnum.T1Land || 
+        type === SkillShopNFTTypeEnum.T2Land || 
+        type === SkillShopNFTTypeEnum.T3Land
 }
 
 export function isTypeSkills(type: string) {

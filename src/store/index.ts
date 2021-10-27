@@ -312,8 +312,7 @@ export const store = new Vuex.Store<IState>({
 
         const response = await fetch(`${BASE_API_URL}/static/market/character${queryParams}`);
         const data = await response.json();
-
-        console.log('test',  data.results);
+        
         commit('setCharacterList', data.results);
         commit('setCharacterListPagination', {
           pageSize: data.page.pageSize,

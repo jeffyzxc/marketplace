@@ -4,6 +4,10 @@
             <img class="characters" width="120" :src="getSkillImage(skill.image)" alt="">
         </div> 
 
+        <div class="imgs text-center flex-grow-1 d-flex justify-content-center align-items-center" v-if="isTypeLand(skill.type)">
+            <img class="characters" width="120" :src="getLandImage(skill.image)" alt="">
+        </div> 
+
         <div class="imgs text-center flex-grow-1" v-if="isTypeWeaponCosmetic(skill.type)">
             <div class="animation" v-bind:class="'weapon-animation-applied-' + skill.id" />
             <img class="weapon-placeholder" width="120" :src="getWeaponPlaceholderImage()" v-bind:class="'weapon-cosmetic-applied-' + skill.id">
@@ -58,6 +62,9 @@ const vm = Vue.extend({
         },
         getSkillImage(imageFileName: string) {
             return require(`../assets/skill/${imageFileName}`);
+        },
+        getLandImage(imageFileName: string) {
+            return require(`../assets/land/${imageFileName}`);
         },
         getWeaponPlaceholderImage() {
             return require('../assets/placeholder/sword-placeholder-0.png');
