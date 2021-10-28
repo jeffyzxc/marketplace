@@ -78,7 +78,7 @@ const s = Vue.extend({
                 type: 'setWeaponListFilter',
                 filter: this.filterIsToggled
             });
-
+            
             this.fetchWeaponsList();
         }
     },

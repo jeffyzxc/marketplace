@@ -2,7 +2,7 @@ import { IMarketFilter } from '@/interface/filters.interface';
 import { IWeb3Instance } from '@/interface/web3instance.interface';
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { BASE_API_URL } from '../const/environments';
+import { BASE_API_URL } from '../environment/environments';
 import Web3 from 'web3';
 import createKeccakHash from 'keccak';
 import _, { isUndefined } from 'lodash';
@@ -89,7 +89,7 @@ export interface IGlobalFilter {
 
 export interface IState {
   contracts: Contracts,
-  defaultAccount: string,
+  defaultAccount: string | null,
   currentWalletAddress : string,
   currentSkillBalance: number,
   currentBNBBalance  : number,
@@ -289,6 +289,7 @@ export const store = new Vuex.Store<IState>({
        console.log('Please install Metamask');
       }
     },
+    
     async getMetamaskInformation({ dispatch }) {
       // step 1: check window ethereum provider
       await dispatch('getMetamaskProvider')
@@ -313,7 +314,6 @@ export const store = new Vuex.Store<IState>({
         const response = await fetch(`${BASE_API_URL}/static/market/character${queryParams}`);
         const data = await response.json();
 
-        console.log('test',  data.results);
         commit('setCharacterList', data.results);
         commit('setCharacterListPagination', {
           pageSize: data.page.pageSize,
@@ -439,6 +439,23 @@ export const store = new Vuex.Store<IState>({
 
         return { seller, nftID, price } as { seller: string, nftID: string, price: string };
     },
+    async getCBKLandPrice({state}, {tier}) {
+      const { Blacksmith } = state.contracts;
+
+      console.log(await Blacksmith?.methods.getCBKLandPrice(tier, 0));
+
+      return await Blacksmith?.methods
+        .getCBKLandPrice(tier, 0)
+        .call(defaultCallOptions(state));
+    },
+    async fetchIsLandSaleAllowed({state}) {
+      const { CBKLandSale } = state.contracts;
+
+      return await CBKLandSale?.methods
+        .salesAllowed()
+        .call(defaultCallOptions(state));
+    },
+
     async fetchWeaponsNftPrice({ state }, { tokenId }) {
       const { Weapons, NFTMarket } = state.contracts;
       if(!Weapons || !NFTMarket) return;
