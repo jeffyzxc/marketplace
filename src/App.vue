@@ -8,10 +8,10 @@
       <div class="mobile-menu col-lg-12 hidden-desktop-lg" v-if="menuIsToggled">
             <div class="nav-menu" v-if="menuIsToggled">
                 <ul class="navbar-nav mr-auto">
-                    <li  v-on:click="toggleMenu(false)" class="nav-item active"><a class="nav-link" href="#"><router-link to="/"  class="navlinks" active-class="active-navlink" exact>BUY</router-link></a> </li>
-                    <li  v-on:click="toggleMenu(false)" class="nav-item"><a class="nav-link" href="#"><router-link to="/sell"  class="navlinks" active-class="active-navlink">SELL</router-link></a></li>
-                    <li  v-on:click="toggleMenu(false)" class="nav-item"> <a class="nav-link" href="#"><router-link to="/listings"  class="navlinks" active-class="active-navlink">ADVERTISE</router-link></a></li>
-                    <!-- <li  v-on:click="toggleMenu(false)" class="nav-item"> <a class="nav-link" href="#"><router-link to="/history"  class="navlinks" active-class="active-navlink">TRANSACTION HISTORY</router-link></a></li> -->
+                    <li  v-on:click="toggleMenu(false)" class="nav-item active"><router-link to="/"  class="navlinks" active-class="active-navlink" exact>BUY</router-link> </li>
+                    <li  v-on:click="toggleMenu(false)" class="nav-item"><router-link to="/sell"  class="navlinks" active-class="active-navlink">SELL</router-link></li>
+                    <li  v-on:click="toggleMenu(false)" class="nav-item"><router-link to="/listings"  class="navlinks" active-class="active-navlink">ADVERTISE</router-link></li>
+                    <!-- <li  v-on:click="toggleMenu(false)" class="nav-item"><router-link to="/history"  class="navlinks" active-class="active-navlink">TRANSACTION HISTORY</router-link></li> -->
                   </ul>
             </div>
       </div>
@@ -28,10 +28,10 @@
             <div class="d-flex right-nav align-items-center navbar-expand-lg">
                 <div class="collapse navbar-collapse navs-hover pt-3" id="filters">
                     <ul class="navbar-nav mr-auto">
-                      <li class="nav-item active"><a class="nav-link" href="#"><router-link to="/"  class="navlinks" active-class="active-navlink" exact>BUY</router-link></a> </li>
-                      <li class="nav-item"><a class="nav-link" href="#"><router-link to="/sell"  class="navlinks" active-class="active-navlink">SELL</router-link></a></li>
-                      <li class="nav-item"> <a class="nav-link" href="#"><router-link to="/listings"  class="navlinks" active-class="active-navlink">ADVERTISE</router-link></a></li>
-                      <!-- <li class="nav-item"> <a class="nav-link" href="#"><router-link to="/history"  class="navlinks" active-class="active-navlink">TRANSACTION HISTORY</router-link></a></li> -->
+                      <li class="nav-item active"><router-link to="/"  class="navlinks" active-class="active-navlink" exact>BUY</router-link> </li>
+                      <li class="nav-item active"><router-link to="/sell"  class="navlinks" active-class="active-navlink">SELL</router-link></li>
+                      <li class="nav-item active"><router-link to="/listings"  class="navlinks" active-class="active-navlink">ADVERTISE</router-link></li>
+                      <!-- <li class="nav-item"><router-link to="/history"  class="navlinks" active-class="active-navlink">TRANSACTION HISTORY</router-link></li> -->
                     </ul>
                 </div>
                 <wallet-balance />
@@ -195,8 +195,8 @@ html, body {
   width: 15rem;
 }
 .navlinks{
-  padding-left: 15px;
-  padding-right:15px;
+  padding-left: 25px;
+  padding-right: 25px;
   text-decoration: none;
   color : rgba(255, 255, 255, 0.5);
 }
