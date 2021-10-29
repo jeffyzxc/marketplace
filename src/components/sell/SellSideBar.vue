@@ -26,7 +26,7 @@
 						fill="currentColor"
 					/>
 				</svg>
-				<span>Logout</span>
+				<span @click="logOut()">Logout</span>
 			</div>
 		</div>
 	</div>
@@ -34,6 +34,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import detectEthereumProvider from "@metamask/detect-provider";
+import {store} from "@/store";
 
 var tabs = ['Inventory', 'My Listings', 'Transaction History']
 
@@ -49,6 +51,26 @@ export default Vue.extend({
 		handleOnClick(tab: any) {
 			this.currentTab = tab
 			this.$emit('selectEvent', tab)
+		},
+
+		logOut: async () => {
+			try {
+				const provider = await detectEthereumProvider() as any;
+				if (provider) {
+					console.log('Ethereum successfully detected!');
+					const accounts = await provider.request({
+						method: 'eth_requestAccounts',
+						params: [
+							{
+								eth_accounts: {}
+							}
+						] });
+					store.commit('setDefaultAaccount', accounts[0]);
+					store.commit('setMetamaskConnected', false);
+				}
+			} catch (err) {
+				console.error('Logout Failure:', err)
+			}
 		},
 	},
 })
