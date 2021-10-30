@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-items-center right-nav pb-4 pl-4 bdr-line-left pt-3">
             <div class="csr-pointer d-flex">
-                <svg v-if="!isMobile" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" 
+                <svg v-if="!isMobile" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet"
                 viewBox="0 0 24 24"><g fill="none">
                 <path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#F0E2B6" stroke-width="2"/></g></svg>
             </div>
@@ -17,7 +17,7 @@
                 <div class="hex-id">
                         <span
                         outlined
-                        class="primary lighten-5" 
+                        class="primary lighten-5"
                         text
                         @click="connectMetamask()"
                         v-if="!getMetamaskConnected"
@@ -51,7 +51,7 @@ export default Vue.extend({
     msg: String,
   },
   data() {
-      return { 
+      return {
           metamaskConnected : false,
     }
   },
@@ -60,10 +60,11 @@ export default Vue.extend({
     if (!this.isConnected()) {
         this.onSetupMetamask();
     }
-   
-    this.getBNBBalanceSimple();
+      setInterval( function () {
+          store.dispatch('getMetamaskProvider');
+          store.dispatch('getMetamaskAccount');
+      }, 1000)
   },
- 
   computed: {
     // mix the getters into computed with object spread operator
     ...mapGetters([
@@ -90,7 +91,7 @@ export default Vue.extend({
     },
     connectMetamask: async () => {
       try {
-        const provider = await detectEthereumProvider() as any
+        const provider = await detectEthereumProvider() as any;
         if (provider) {
           console.log('Ethereum successfully detected!')
           const accounts = await provider.request({ method: 'eth_requestAccounts' }) // use for request metamask account
@@ -99,8 +100,9 @@ export default Vue.extend({
             // get account in array
             // account connect success fully will get array more then 1
             // store account to state
-            store.commit('setDefaultAaccount', accounts[0])
+            store.commit('setDefaultAaccount', accounts[0]);
             store.commit('setMetamaskConnected', true);
+            store.commit('setCurrentWalletAddress', provider.selectedAddress);
           }
         }
       } catch (err) {
@@ -118,7 +120,7 @@ export default Vue.extend({
         }
     },
     onSetupMetamask: async () => {
-      const provider = await detectEthereumProvider() as any
+      const provider = await detectEthereumProvider() as any;
 
       provider.on('connect', (connectInfo: ConnectInfo) => {
         console.log(connectInfo)
@@ -137,6 +139,7 @@ export default Vue.extend({
       });
       await store.dispatch('getMetamaskProvider');
       await store.dispatch('getMetamaskAccount');
+      store.commit('setCurrentWalletAddress', provider.selectedAddress);
     },
     convertWeiToSkill(wei: string) {
       return fromWeiEther(wei);

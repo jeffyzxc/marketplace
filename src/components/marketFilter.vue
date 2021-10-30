@@ -30,7 +30,7 @@
             </transition>
             <div class="log-out csr-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M4 18h2v2h12V4H6v2H4V3a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3zm2-7h7v2H6v3l-5-4l5-4v3z" fill="currentColor"/></svg>
-                <span>Logout</span>
+                <span  @click="logOut()" >Logout</span>
             </div>
         </div>
     </div>
@@ -40,6 +40,8 @@
 import Vue from 'vue';
 import Filters from '../components/Filters.vue'
 import { BuyTabsRouteMap, BuyPageRouteParamEnum } from '../utils/buy-page-routes';
+import detectEthereumProvider from "@metamask/detect-provider";
+import {store} from "@/store";
 
 export default Vue.extend({
     name: 'MarketFilter',
@@ -124,6 +126,26 @@ export default Vue.extend({
             
             this.$root.$emit('tab-changed', tab);
         },
+        logOut: async () => {
+            try {
+                const provider = await detectEthereumProvider() as any;
+                if (provider) {
+                    console.log('Ethereum successfully detected!');
+                    const accounts = await provider.request({
+                        method: 'eth_requestAccounts',
+                        params: [
+                            {
+                                eth_accounts: {}
+                            }
+                        ] });
+                    store.commit('setDefaultAaccount', accounts[0]);
+                    store.commit('setMetamaskConnected', false);
+                }
+            } catch (err) {
+                console.error('Logout Failure:', err)
+            }
+        },
+
         clickedFilter(x:string){
             this.activeBottomTab=x
         },
