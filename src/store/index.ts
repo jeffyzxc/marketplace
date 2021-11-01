@@ -6,6 +6,9 @@ import { BASE_API_URL } from '../environment/environments';
 import Web3 from 'web3';
 import createKeccakHash from 'keccak';
 import _, { isUndefined } from 'lodash';
+import {
+  stakeOnly as featureFlagStakeOnly,
+} from './../utils/feature-flags';
 
 import { Contracts } from '../interface/Contracts';
 import { INTERFACE_ID_TRANSFER_COOLDOWNABLE, setUpContracts } from '../contracts';
@@ -16,6 +19,8 @@ import {
 } from '../utils/route.utils';
 import { getCharacterNameFromSeed } from '@/utils/character-name';
 import { mergeQueryParams } from '@/utils/query-params';
+import { weaponFromContract } from '@/utils/weapon.utils';
+import { IWeapon } from '@/interface/weapon.inteface';
 let web3Instance : IWeb3Instance;
 let web3: Web3;
 
@@ -37,24 +42,6 @@ function toChecksumAddress(address: string) {
   }
 
   return ret
-}
-
-interface IWeapon {
-  id:            string;
-  price:         number;
-  weaponId:      string;
-  weaponStars:   number;
-  weaponElement: string;
-  stat1Element:  string;
-  stat1Value:    number;
-  stat2Element:  string;
-  stat2Value:    number;
-  stat3Element:  string;
-  stat3Value:    number;
-  timestamp:     number;
-  sellerAddress: string;
-  buyerAddress:  null;
-  network:       string;
 }
 
 interface IShield {
@@ -98,6 +85,8 @@ export interface IState {
   weaponsList : any,
   characterList: any,
   globalBuyMarketFilter: IGlobalFilter,
+  weapons: Record<number, IWeapon>;
+  weaponDurabilities: Record<number, number>;
   weaponListFilter: IMarketFilter,
   shieldListFilter: IMarketFilter,
   characterListFilter: IMarketFilter,
@@ -122,6 +111,8 @@ export const store = new Vuex.Store<IState>({
     currentSkillBalance : 0.00,
     metamaskConnected: false,
     weaponsList : [],
+    weapons: {},
+    weaponDurabilities: {},
     characterList: [],
     globalBuyMarketFilter: {},
     weaponListFilter: {
@@ -165,6 +156,9 @@ export const store = new Vuex.Store<IState>({
     characterStaminas: {},
   },
   mutations: {
+    updateWeapon(state: IState, { weaponId, weapon }) {
+      Vue.set(state.weapons, weaponId, weapon);
+    },
     setShieldListFilter(state, payload) {
       state.shieldListFilter = {
         ...state.shieldListFilter,
@@ -269,6 +263,7 @@ export const store = new Vuex.Store<IState>({
   actions: {
     async initialize({ dispatch }) {
       console.log('inside initialize');
+      
       await dispatch('setUpContracts');
     },
     async getMetamaskProvider({ dispatch }) {
@@ -447,6 +442,33 @@ export const store = new Vuex.Store<IState>({
         .getCBKLandPrice(tier, 0)
         .call(defaultCallOptions(state));
     },
+    async fetchAllMarketWeaponNftIdsPage({ state }, { nftContractAddr, limit, pageNumber, trait, stars }) {
+      const { NFTMarket } = state.contracts;
+      if(!NFTMarket) return;
+
+      return await NFTMarket.methods
+        .getWeaponListingIDsPage(
+          nftContractAddr,
+          limit,
+          pageNumber,
+          trait,
+          stars
+        )
+        .call(defaultCallOptions(state));
+    },
+    async fetchNumberOfWeaponListings({ state }, { nftContractAddr, trait, stars }) {
+        const { NFTMarket } = state.contracts;
+        if(!NFTMarket) return;
+
+        // returns an array of bignumbers (these are nft IDs)
+        return await NFTMarket.methods
+          .getNumberOfWeaponListings(
+            nftContractAddr,
+            trait,
+            stars
+          )
+          .call(defaultCallOptions(state));
+    },
     async fetchIsLandSaleAllowed({state}) {
       const { CBKLandSale } = state.contracts;
 
@@ -531,9 +553,44 @@ export const store = new Vuex.Store<IState>({
           tokenId
         )
         .call(defaultCallOptions(state));
-    }
+    },
+    async fetchWeapons({ dispatch }, weaponIds: (string | number)[]) {
+      await Promise.all(weaponIds.map(id => dispatch('fetchWeapon', id)));
+    },
+    async fetchWeapon({ state, commit, dispatch }, weaponId: string | number) {
+      const { Weapons } = state.contracts;
+      if(!Weapons) return;
+      
+      await Promise.all([
+        (async () => {
+          const weapon = weaponFromContract(
+            weaponId,
+            await Weapons.methods.get('' + weaponId).call(defaultCallOptions(state))
+          );
+          console.log(weaponId, weapon);
+          commit('updateWeapon', { weaponId, weapon });
+        })(),
+      ]);
+      dispatch('fetchWeaponDurability', weaponId);
+    },
+    async fetchWeaponDurability({ state, commit }, weaponId: number) {
+      if(featureFlagStakeOnly) return;
+
+      const durabilityString = await state.contracts.Weapons!.methods
+        .getDurabilityPoints('' + weaponId)
+        .call(defaultCallOptions(state));
+
+      const durability = parseInt(durabilityString, 10);
+      if (state.weaponDurabilities[weaponId] !== durability) {
+        commit('updateWeaponDurability', { weaponId, durability });
+      }
+    },
   },
+
     getters : {
+      weaponContractAddress(state: IState) {
+        return state.contracts && state.contracts.Weapons ? state.contracts.Weapons.options.address : null;
+      },
       getCharacterStamina(state: IState) {
         return (characterId: number) => {
           return state.characterStaminas[characterId] || 0;
@@ -562,6 +619,13 @@ export const store = new Vuex.Store<IState>({
       allCharacters: state => state.characterList,
       allWeapons: (state) => state.weaponsList,
       allShields: (state) => state.shieldList,
+      weaponsWithIds(state) {
+        return (weaponIds: (string | number)[]) => {
+          const weapons = weaponIds.map(id => state.weapons[+id]);
+          if (weapons.some((w) => w === null)) return [];
+          return weapons;
+        };
+      },
       contracts(state: IState) {
         // our root component prevents the app from being active if contracts
         // are not set up, so we never need to worry about it being null anywhere else
