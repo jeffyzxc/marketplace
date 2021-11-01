@@ -51,7 +51,6 @@ export function getRarityNameByValue(val: number) {
     return NORMAL_ITEM_RARITY_NAME;
 }
 
-
 export interface IItemRarity {
     Name: string;
     Value: number;
