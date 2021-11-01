@@ -6,19 +6,26 @@ export interface IWeaponListRequest {
 }
 
 export interface IWeapon {
-  id:            string;
-  price:         number;
-  weaponId:      string;
-  weaponStars:   number;
-  weaponElement: string;
-  stat1Element:  string;
-  stat1Value:    number;
-  stat2Element:  string;
-  stat2Value:    number;
-  stat3Element:  string;
-  stat3Value:    number;
-  timestamp:     number;
-  sellerAddress: string;
-  buyerAddress:  null;
-  network:       string;
+  id: number;
+  properties: string;
+  element: string;
+  stat1: string;
+  stat1Value: number;
+  stat1Type: number;
+  stat2: string;
+  stat2Value: number;
+  stat2Type: number;
+  stat3: string;
+  stat3Value: number;
+  stat3Type: number;
+  level: number;
+  blade: string;
+  crossguard: string;
+  grip: string;
+  pommel: string;
+  stars: number;
+  lowStarBurnPoints: number;
+  fourStarBurnPoints: number;
+  fiveStarBurnPoints: number;
+  bonusPower: number;
 }
