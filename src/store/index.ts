@@ -414,7 +414,6 @@ export const store = new Vuex.Store<IState>({
     },
     async setUpContracts({ commit }) {
       const contracts = await setUpContracts(web3);
-      console.log(contracts);
       commit('setContracts', contracts);
     },
     async purchaseWeaponListing({ state, dispatch }, { tokenId, maxPrice }: { nftContractAddr: string, tokenId: string, maxPrice: string }) {
@@ -566,7 +565,7 @@ export const store = new Vuex.Store<IState>({
       contracts(state: IState) {
         // our root component prevents the app from being active if contracts
         // are not set up, so we never need to worry about it being null anywhere else
-        return _.isFunction(state.contracts) ? state.contracts : null!;
+        return state.contracts;
       }
   }
 })

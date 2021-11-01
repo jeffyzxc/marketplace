@@ -66,10 +66,10 @@
         </div>
       </div>
     </div>
-    <transition name="fadeInUp" mode="out-in">
+    <transition name="fadeInUp" mode="out-in" v-if ="this.contracts !== null">
       <component v-bind:is="modal" :item="modalData"/>
     </transition>
-    <router-view class="switch-view-container"/>
+    <router-view class="switch-view-container" v-if ="this.contracts !== null"/>
   </div>
 </template>
 
@@ -92,6 +92,7 @@ import WalletBalance from './components/WalletBalance.vue';
         }
       },
       computed:{
+          ...mapGetters(['contracts']),
          isMobile() {
           if( screen.width <= 600) {
             return true;
