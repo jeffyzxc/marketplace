@@ -27,7 +27,7 @@
 			<div><div class="progress" style="width: 70% !important;"></div></div>
 		</div>
 		 <div class="cost-item">
-            <div v-if="weapon.sellStatus != 0">
+            <div v-if="weapon.sellStatus !== 0">
                 <img width="15" src="../../assets/apple-touch-icon.png" alt="">
                 <span>&nbsp; 1.2</span>
             </div>
@@ -35,15 +35,15 @@
                  <span>#931002</span>
             </div>
         </div>
-		<div class="buttons" v-if="weapon.sellStatus == 0">
-			<p class="btn-sell right csr-pointer mr-2">Sell</p>
+		<div class="buttons" v-if="weapon.sellStatus === 0">
+			<p class="btn-sell right csr-pointer mr-2" @click="sellItemModal()">Sell</p>
 			<p class="btn-sell left csr-pointer ml-2" @click="openModal(true)">
 				View
 			</p>
 		</div>
-		<div class="buttons" v-if="weapon.sellStatus != 0">
-			<p class="btn-active right csr-pointer mr-2" v-if="weapon.sellStatus == 1">Active</p>
-			<p class="btn-sold right csr-pointer mr-2" v-if="weapon.sellStatus == 2">Sold</p>
+		<div class="buttons" v-if="weapon.sellStatus !== 0">
+			<p class="btn-active right csr-pointer mr-2" v-if="weapon.sellStatus === 1">Active</p>
+			<p class="btn-sold right csr-pointer mr-2" v-if="weapon.sellStatus === 2">Sold</p>
 			<p class="btn-sell left csr-pointer ml-2">Cancel</p>
 		</div>
 		<b-popover target="popover-reactive-1" triggers="click" placement="left" container="my-container">
@@ -63,25 +63,34 @@
 				</div>
 			</div>
 		</b-popover>
+
+		<b-modal class="modal-body" size="xl" hide-header hide-footer ref="sellItem">
+			<sell-weapons-modal/>
+			<a @click="hideItemModal"><svg class='close closeButton' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="2.4em" height="2.4em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2zm0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12z" fill="#43506A"/><path d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z" fill="#FFFFFF"/></svg>
+			</a>
+		</b-modal>
 	</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { BModal } from 'bootstrap-vue';
+import SellWeaponsModal from "@/components/sell/SellWeaponsModal.vue";
 
 export default Vue.extend({
+	components: { SellWeaponsModal },
 	props: ['weapon'],
 	methods: {
 		setRarityColor(rarity: string) {
 			switch (rarity) {
 				case 'legendary':
-					return 'background-color:#D16100 !important'
+					return 'background-color:#D16100 !important';
 				case 'mythical':
-					return 'background-color:#7C1EC1 !important'
+					return 'background-color:#7C1EC1 !important';
 				case 'unique':
-					return 'background-color:#7ba224 !important'
+					return 'background-color:#7ba224 !important';
 				case 'rare':
-					return 'background-color:#3997F5 !important'
+					return 'background-color:#3997F5 !important';
 				// Normal
 				default:
 					return 'background-color:#43506A !important'
@@ -89,6 +98,13 @@ export default Vue.extend({
 		},
 		openModal(bol: boolean) {
 			this.$root.$emit('modal', bol)
+		},
+
+		sellItemModal() {
+			(this.$refs['sellItem'] as BModal).show();
+		},
+		hideItemModal() {
+			(this.$refs['sellItem'] as BModal).hide();
 		},
 	},
 })

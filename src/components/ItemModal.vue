@@ -1,6 +1,6 @@
 <template>
         <div class="modal-details">
-            <div class="modal-contianer">
+            <div class="modal-container">
                 <svg class='close' @click="closeModal('',item)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="2.4em" height="2.4em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32" fill="#08142b"><path d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2zm0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12z" fill="#43506A"/><path d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z" fill="#FFFFFF"/></svg>
             <div class="row">
                 <div class="col-lg-5">
@@ -32,7 +32,7 @@
                                 <p>+{{item.stat1Value}}</p>
                             </div>
                             <div class="col-lg-3 powers"  v-if="item.stat2Element != ''">
-                                <span><img width='12' src="../assets/nav-icons/fire.png" alt="">&nbsp;STRENGHT</span>
+                                <span><img width='12' src="../assets/nav-icons/fire.png" alt="">&nbsp;STRENGTH</span>
                                 <p>+{{item.stat2Value}}</p>
                             </div>
                             <div class="col-lg-3 powers"  v-if="item.stat3Element != ''">

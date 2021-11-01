@@ -805,13 +805,25 @@ body {
   align-items: center;
 }
 
-.modal-contianer {
+.modal-container {
+  background-color: #051126;
+  z-index: 1060 !important;
+  width: 85%;
+  padding: 60px 40px 60px 20px;
+}
+
+
+.modal-body {
   background-color: #051126;
   border: #43506a solid 1px;
   z-index: 1060 !important;
-  width: 48%;
   padding: 60px 40px 60px 20px;
-  height: fit-content;
+}
+
+.closeButton{
+  bottom: 490px;
+  right: 20px;
+  z-index: 1061 !important;
 }
 
 .rarities span {
