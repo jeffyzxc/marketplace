@@ -78,10 +78,18 @@
 import Vue from 'vue';
 
 import ItemModal from './components/ItemModal.vue'
-import { mapState, mapActions, mapGetters } from 'vuex';
+import {
+  mapGetters 
+} from 'vuex';
 import WalletBalance from './components/WalletBalance.vue';
-  export default Vue.extend({
-      components: { WalletBalance, 'item-modal': ItemModal },
+import BuyWeaponItemModalVue from './components/modal/BuyWeaponItemModal.vue';
+
+export default Vue.extend({
+      components: { 
+       WalletBalance, 
+        'item-modal': ItemModal,
+        'buy-weapon-item': BuyWeaponItemModalVue
+      },
       name: 'SortFilter',
       data: function(){
         return{
