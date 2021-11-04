@@ -77,21 +77,23 @@ const s = Vue.extend({
             }
         },
         async fetchWeaponsThroughChain() {
-            store.commit('setFetchWeaponListLoadingState', true);          
+            store.commit('setFetchWeaponListLoadingState', true);   
+            const weaponfilterParams = marketFilterToQueryDict(this.weaponListFilter);
+            const filterStar = +weaponfilterParams.minStar !== 0 ? +weaponfilterParams.minStar - 1 : NULL_FILTER_VALUE;
 
             try {
                 const totals = await this.fetchNumberOfWeaponListings({
                         nftContractAddr: this.weaponContractAddress,
-                        trait: getElementNumberValueByName("255"),
-                        stars: NULL_FILTER_VALUE
+                        trait: getElementNumberValueByName(weaponfilterParams.element.toString()),
+                        stars: filterStar
                 });
 
                 const results = await this.fetchAllMarketWeaponNftIdsPage({
                     nftContractAddr: this.weaponContractAddress,
                     limit: 2,
                     pageNumber: this.weaponListPagination.currentPage - 1,
-                    trait: NULL_FILTER_VALUE,
-                    stars: NULL_FILTER_VALUE
+                    trait: getElementNumberValueByName(weaponfilterParams.element.toString()),
+                    stars: filterStar
                 });
 
                 const filteredResults = await this.filterOutTargetBuyers(results);
