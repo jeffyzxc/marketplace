@@ -5,13 +5,13 @@ import Vuex from 'vuex'
 import { BASE_API_URL } from '../environment/environments';
 import Web3 from 'web3';
 import createKeccakHash from 'keccak';
-import _, { isUndefined } from 'lodash';
 import {
   stakeOnly as featureFlagStakeOnly,
 } from './../utils/feature-flags';
+import { market_blockchain as useBlockchain } from './../utils/feature-flags';
 
 import { Contracts } from '../interface/Contracts';
-import { INTERFACE_ID_TRANSFER_COOLDOWNABLE, setUpContracts } from '../contracts';
+import { setUpContracts } from '../contracts';
 
 import {
   marketFilterToQueryDict,
@@ -156,6 +156,12 @@ export const store = new Vuex.Store<IState>({
     characterStaminas: {},
   },
   mutations: {
+    updateWeaponDurability(state: IState, { weaponId, durability }) {
+      Vue.set(state.weaponDurabilities, weaponId, durability);
+    },
+    clearWeapons(state: IState) {
+      state.weapons = {};
+    },
     updateWeapon(state: IState, { weaponId, weapon }) {
       Vue.set(state.weapons, weaponId, weapon);
     },
@@ -322,32 +328,6 @@ export const store = new Vuex.Store<IState>({
         commit('setFetchCharacterListLoadingState', false);
       }
     },
-    async fetchWeaponsList({ commit }) {
-      commit('setFetchWeaponListLoadingState', true);
-      try {
-          const paginationFilter = `pageNum=${this.state.weaponListPagination.currentPage - 1}`
-          const weaponfilterParams = objToQueryParams(marketFilterToQueryDict(this.state.weaponListFilter));
-          const marketFilter = objToQueryParams(this.state.globalBuyMarketFilter);
-
-          const queryParams = mergeQueryParams(weaponfilterParams, paginationFilter, marketFilter);
-          
-          const response = await fetch(`${BASE_API_URL}/static/market/weapon${queryParams}`);
-  
-          const data = await response.json();
-       
-          commit('setWeaponsList', data.results);
-          commit('setWeaponListPagination', {
-            pageSize: data.page.pageSize,
-            totalItems: data.page.total - 1
-          });
-
-          commit('setFetchWeaponListLoadingState', false);
-          
-      } catch (error) {
-          console.log(error);
-          commit('setFetchWeaponListLoadingState', false);
-      }
-    },
     async fetchShieldsList({commit}){
       commit('setFetchShieldAndArmorListLoadingState', true);
 
@@ -476,7 +456,17 @@ export const store = new Vuex.Store<IState>({
         .salesAllowed()
         .call(defaultCallOptions(state));
     },
-
+    async fetchMarketNftPrice({ state }, { nftContractAddr, tokenId }) {
+      const { NFTMarket } = state.contracts;
+      if(!NFTMarket) return;
+      
+      return await NFTMarket.methods
+        .getFinalPrice(
+          nftContractAddr,
+          tokenId
+        )
+        .call(defaultCallOptions(state));
+    },
     async fetchWeaponsNftPrice({ state }, { tokenId }) {
       const { Weapons, NFTMarket } = state.contracts;
       if(!Weapons || !NFTMarket) return;
@@ -484,6 +474,18 @@ export const store = new Vuex.Store<IState>({
       return await NFTMarket.methods
         .getFinalPrice(
           Weapons.options.address,
+          tokenId
+        )
+        .call(defaultCallOptions(state));
+    },
+    async fetchMarketNftTargetBuyer({ state }, { nftContractAddr, tokenId }) {
+      const { NFTMarket } = state.contracts;
+      if(!NFTMarket) return;
+
+      // returns the listing's target buyer address
+      return await NFTMarket.methods
+        .getTargetBuyer(
+          nftContractAddr,
           tokenId
         )
         .call(defaultCallOptions(state));
@@ -554,7 +556,8 @@ export const store = new Vuex.Store<IState>({
         )
         .call(defaultCallOptions(state));
     },
-    async fetchWeapons({ dispatch }, weaponIds: (string | number)[]) {
+    async fetchWeapons({ commit, dispatch }, weaponIds: (string | number)[]) {
+      commit('clearWeapons');
       await Promise.all(weaponIds.map(id => dispatch('fetchWeapon', id)));
     },
     async fetchWeapon({ state, commit, dispatch }, weaponId: string | number) {
@@ -567,7 +570,6 @@ export const store = new Vuex.Store<IState>({
             weaponId,
             await Weapons.methods.get('' + weaponId).call(defaultCallOptions(state))
           );
-          console.log(weaponId, weapon);
           commit('updateWeapon', { weaponId, weapon });
         })(),
       ]);
@@ -588,6 +590,11 @@ export const store = new Vuex.Store<IState>({
   },
 
     getters : {
+      getWeaponDurability(state: IState) {
+        return (weaponId: number) => {
+          return state.weaponDurabilities[weaponId];
+        };
+      },
       weaponContractAddress(state: IState) {
         return state.contracts && state.contracts.Weapons ? state.contracts.Weapons.options.address : null;
       },
@@ -618,6 +625,7 @@ export const store = new Vuex.Store<IState>({
       currentSkillBalance : state => state.currentSkillBalance,
       allCharacters: state => state.characterList,
       allWeapons: (state) => state.weaponsList,
+      weapons: (state) => state.weapons,
       allShields: (state) => state.shieldList,
       weaponsWithIds(state) {
         return (weaponIds: (string | number)[]) => {
