@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="progress-bar p-0 m-0">
-                                <div><div class="progress" :style="'width:'+randomStamina()+'% !important;'"></div></div>
+                                <div><div class="progress" :style="'width:'+(getWeaponDurability(item.id)/20)*100+'% !important;'"></div></div>
                             </div>
                         </div>
                         <div class="col-lg-12 pt-2">
@@ -150,9 +150,6 @@ export default Vue.extend({
             }
             return x1 + x2;
         }
-    },
-    mounted(){
-        console.log(this.$props.item)
     }
 });
 
