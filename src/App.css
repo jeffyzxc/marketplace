@@ -737,7 +737,8 @@ body {
   border-radius: 0px;
 }
 .popover-body {
-  background-color: #020b1c !important;
+  background-color: #1e293c !important;
+  color: white !important;
   padding: 18px !important;
   background-color: rgba(255, 255, 255, 0);
 }

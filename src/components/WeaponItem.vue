@@ -31,7 +31,7 @@
         <div class="cost-item">
             <div>
                 <img width="15" src="../assets/apple-touch-icon.png" alt="">
-                <span>&nbsp; {{ price }} </span>
+                <span v-b-popover.hover.top="untruncatedPrice + ' ' + 'SKILL'" >&nbsp; {{ truncatePrice }} </span>
             </div>
             <div>
                  <span>#{{weapon.id}}</span>
@@ -40,7 +40,7 @@
         <div class="buttons">
              <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.id)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal('buy-weapon-item', weapon)">View</p>
-        </div>
+        </div>  
     </div>
 </template>
 
@@ -64,7 +64,8 @@ export default Vue.extend({
     },
     data() {
         return  {
-            price: "loading..",
+            truncatePrice: "loading..",
+            untruncatedPrice: "loading..",
             MAX_LOW_STAR_BURN_POINTS: MAX_LOW_STAR_BURN_POINTS,
             MAX_FOUR_STAR_BURN_POINTS: MAX_FOUR_STAR_BURN_POINTS,
             MAX_FIVE_STAR_BURN_POINTS: MAX_FIVE_STAR_BURN_POINTS
@@ -79,7 +80,8 @@ export default Vue.extend({
         )
     },
     async created() {
-        this.price = truncateDecimals(fromWeiEther((await this.lookupWeaponPrice(this.weapon.id)).toString()));
+        this.untruncatedPrice = fromWeiEther((await this.lookupWeaponPrice(this.weapon.id)).toString());
+        this.truncatePrice = truncateDecimals(this.untruncatedPrice);
     },
     methods:{
         ...mapActions(
