@@ -37,7 +37,7 @@ import Pagination from './../components/dumb/crypblades-pagination.vue';
 import Spinner from './../components/dumb/crypbolades-spinner.vue';
 import { Dictionary } from 'vue-router/types/router';
 import { getElementNumberValueByName } from '@/default/element.default';
-import { DEFAULT_TARGET_BUYER, NULL_FILTER_VALUE } from '@/default/common.default';
+import { DEFAULT_TARGET_BUYER, NULL_FILTER_VALUE, PAGE_SIZE_LIMIT } from '@/default/common.default';
 import { BASE_API_URL } from '@/environment/environments';
 import { mergeQueryParams } from '@/utils/query-params';
 import { marketFilterToQueryDict, objToQueryParams } from '@/utils/route.utils';
@@ -90,7 +90,7 @@ const s = Vue.extend({
 
                 const results = await this.fetchAllMarketWeaponNftIdsPage({
                     nftContractAddr: this.weaponContractAddress,
-                    limit: 2,
+                    limit: PAGE_SIZE_LIMIT,
                     pageNumber: this.weaponListPagination.currentPage - 1,
                     trait: getElementNumberValueByName(weaponfilterParams.element.toString()),
                     stars: filterStar
@@ -99,7 +99,7 @@ const s = Vue.extend({
                 const filteredResults = await this.filterOutTargetBuyers(results);
 
                 store.commit('setWeaponListPagination', {
-                    pageSize: 2,
+                    pageSize: PAGE_SIZE_LIMIT,
                     totalItems: totals
                 });
 
