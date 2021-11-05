@@ -31,7 +31,7 @@
         <div class="cost-item">
             <div>
                 <img width="15" src="../assets/apple-touch-icon.png" alt="">
-                <span>&nbsp; {{ price }}</span>
+                <span>&nbsp; {{ price }} </span>
             </div>
             <div>
                  <span>#{{weapon.id}}</span>
@@ -95,6 +95,8 @@ import { getWeaponArt } from '../weapon-arts-placeholder'
 import { mapActions, mapGetters } from 'vuex';
 import { fromWeiEther } from '@/utils/common';
 import { MAX_LOW_STAR_BURN_POINTS, MAX_FOUR_STAR_BURN_POINTS, MAX_FIVE_STAR_BURN_POINTS } from './../default/dust.default';
+import CurrencyConverter from '../components/CurrencyConverter.vue';
+import { truncateDecimals } from '@/utils/currency-converter';
 
 export default Vue.extend({
     name: 'SortFilter',
@@ -121,7 +123,7 @@ export default Vue.extend({
         )
     },
     async created() {
-        this.price = fromWeiEther((await this.lookupWeaponPrice(this.weapon.id)).toString());
+        this.price = truncateDecimals(fromWeiEther((await this.lookupWeaponPrice(this.weapon.id)).toString()));
     },
     methods:{
         ...mapActions(

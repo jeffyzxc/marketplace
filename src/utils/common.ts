@@ -1,5 +1,8 @@
 import BigNumber from 'bignumber.js';
 
+BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+BigNumber.config({ EXPONENTIAL_AT: 100 });
+
 export const fromWeiEther = (value: string | BigNumber): string => {
     return new BigNumber(value).div('1000000000000000000').toFixed();
 };

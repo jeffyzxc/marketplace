@@ -12,6 +12,7 @@ import Vue from 'vue';
 import { toBN } from '@/utils/common';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { countDecimalPlaces, truncateDecimals } from './../utils/currency-converter';
 
 export default Vue.extend({
   props: {
@@ -56,26 +57,11 @@ export default Vue.extend({
         this.skillPriceInUsd) as unknown as number;
     },
     calculateSkillWithDecimals(): string {
-      const parsedSkill = toBN(this.skill);
-      const decimalPlaces = this.countDecimalPlaces(parsedSkill);
-
-      if (this.skillMaxDecimals < decimalPlaces) {
-        return `~${parsedSkill.toFixed(this.skillMaxDecimals)}`;
-      }
-
-      if (
-        decimalPlaces > this.skillMinDecimals &&
-        decimalPlaces <= this.skillMaxDecimals
-      ) {
-        return parsedSkill.toString();
-      }
-
-      return parsedSkill.toFixed(this.skillMinDecimals);
+      return `~${truncateDecimals(this.skill, this.skillMinDecimals, this.skillMaxDecimals)}`;
     },
 
     countDecimalPlaces(value: BigNumber) {
-      if (Math.floor(+value.valueOf()).toString() === value.valueOf()) return 0;
-      return value.toString().split('.')[1].length || 0;
+      return countDecimalPlaces(value);
     },
   },
 });
