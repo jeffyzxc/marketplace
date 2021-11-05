@@ -41,50 +41,6 @@
              <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.id)">Purchase</p>
              <p class="btn-purchase left csr-pointer ml-2" @click="openModal('buy-weapon-item', weapon)">View</p>
         </div>
-
-        
-        <!-- <div class="progress-bar p-0 m-0 csr-pointer">
-            <div><div class="progress" :style="'width:'+randomStamina()+'% !important;'"></div></div>
-        </div>
-        <div class="cost-item">
-            <div>
-                <img width="15" src="../assets/apple-touch-icon.png" alt="">
-                <span>&nbsp; {{weapon.price}}</span>
-            </div>
-            <div>
-                 <span>#{{weapon.weaponId}}</span>
-            </div>
-        </div>
-        <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId)">Purchase</p>
-             <p class="btn-purchase left csr-pointer ml-2" @click="openModal('item-modal', weapon)">View</p>
-        </div> -->
-
-        <!--
-            <b-popover
-                    :target='weapon.id'
-                    triggers="hover focus"
-                    placement="placement"
-                    container="my-container"
-                >
-
-                <div class="popover-design">
-                    <p>Total Battle Power</p>
-                    <h4>{{addCommas(totalBattlePower(weapon))}}</h4>
-                    <div class="traits">
-                        <img width="10" v-if="weapon.stat1Element != ''" src="../assets/nav-icons/fire.png" alt="">
-                        <span  v-if="weapon.stat1Element != ''">{{weapon.stat1Value}}<br></span>
-                        <img width="10" v-if="weapon.stat2Element != ''" src="../assets/nav-icons/lightning.png" alt="">
-                        <span v-if="weapon.stat2Element != ''">{{weapon.stat2Value}}<br></span>
-                        <img width="10" v-if="weapon.stat3Element != ''" src="../assets/nav-icons/water.png" alt="">
-                        <span v-if="weapon.stat3Element != ''">{{weapon.stat3Value}}</span>
-                    </div>
-                    <div class="learn">
-                        Learn About Battle Powers
-                    </div>
-                </div> 
-            </b-popover>
-        -->
     </div>
 </template>
 
