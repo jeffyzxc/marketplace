@@ -16,7 +16,7 @@
                             <h4>{{(getWeaponNameFromSeed(item.id,item.stars)).toUpperCase()}}</h4>
                             <div class="d-flex">
                                 <p class="r">Battles Power: {{addCommas(totalBattlePower(item))}}</p>
-                                <p class="l">Reforge Bonus: 2,500</p>
+                                <p class="l">Reforge Bonus: {{ item.bonusPower }}</p>
                             </div>
                         </div>
                         <div class="col-lg-12">

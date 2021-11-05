@@ -5,7 +5,9 @@
                 <!------------ FOR LB/4B/5B ---------->
                 <div>
                     <p class="rarity" :style="setRarityColor(weapon.stars)">{{setRarityName(weapon.stars)}}</p>
-                    <!-- <p>LB:30/100</p> -->
+                    <p v-if="weapon.lowStarBurnPoints > 0">LB: {{ weapon.lowStarBurnPoints }} / {{ MAX_LOW_STAR_BURN_POINTS }}</p>
+                    <p v-if="weapon.fourStarBurnPoints > 0">4B: {{ weapon.fourStarBurnPoints }} / {{ MAX_FOUR_STAR_BURN_POINTS }}</p>
+                    <p v-if="weapon.fiveStarBurnPoints > 0">5B: {{ weapon.fiveStarBurnPoints }} / {{ MAX_FIVE_STAR_BURN_POINTS }}</p>
                 </div>
             </div>
             <!-------------- WEAPON IMAGE------------>
@@ -92,6 +94,7 @@ import { getWeaponNameFromSeed } from '../weapon-names';
 import { getWeaponArt } from '../weapon-arts-placeholder'
 import { mapActions, mapGetters } from 'vuex';
 import { fromWeiEther } from '@/utils/common';
+import { MAX_LOW_STAR_BURN_POINTS, MAX_FOUR_STAR_BURN_POINTS, MAX_FIVE_STAR_BURN_POINTS } from './../default/dust.default';
 
 export default Vue.extend({
     name: 'SortFilter',
@@ -103,7 +106,10 @@ export default Vue.extend({
     },
     data() {
         return  {
-            price: "loading.."
+            price: "loading..",
+            MAX_LOW_STAR_BURN_POINTS: MAX_LOW_STAR_BURN_POINTS,
+            MAX_FOUR_STAR_BURN_POINTS: MAX_FOUR_STAR_BURN_POINTS,
+            MAX_FIVE_STAR_BURN_POINTS: MAX_FIVE_STAR_BURN_POINTS
         }
     },
     computed: {
@@ -115,7 +121,7 @@ export default Vue.extend({
         )
     },
     async created() {
-        this.price = fromWeiEther(await this.lookupWeaponPrice(this.weapon.id));
+        this.price = fromWeiEther((await this.lookupWeaponPrice(this.weapon.id)).toString());
     },
     methods:{
         ...mapActions(
