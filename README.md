@@ -10,6 +10,15 @@ git clone https://github.com/CryptoBlades/cryptoblades-api
 
 ```
 git clone https://github.com/CryptoBlades/cryptoblades
+npm install
+mv .env.local .env (copy the example env to your local so it can be used)
+npm run contract:prepare (this builds your contracts)
+npm run contract:deploy (this deploys your contracts to your local blockchain)
+npm run start:frontend
+```
+
+```
+Run Local Cryptoblades app and forge sword -> make a sell of that sword so it appears on local contract with new marketplace. 
 ```
 
 ```
