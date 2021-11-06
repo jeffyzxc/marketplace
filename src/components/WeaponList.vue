@@ -10,12 +10,12 @@
                 <weapon-item v-for="weapon in weapons" :key="'wl'+weapon.id" :weapon="weapon" >
                 </weapon-item>
 
-            <div v-if="weapons.length <= 0" class="mb-5 mt-5">
+            <div v-if="isWeaponsEmpty()" class="mb-5 mt-5">
                 <h2>No Weapons Found...</h2>
             </div>
         </div>
         
-        <div class="d-flex justify-content-center" v-if="!getFetchWeaponlistLoadingState && !isFirstLoad">
+        <div class="d-flex justify-content-center" v-if="!getFetchWeaponlistLoadingState && !isFirstLoad && !isWeaponsEmpty()">
             <pagination 
                 :page="getWeaponListPagination.currentPage"
                 :total-rows="getWeaponListPagination.totalItems"
@@ -103,7 +103,7 @@ const s = Vue.extend({
                     totalItems: totals
                 });
 
-                await this.fetchWeapons(filteredResults)
+                await this.fetchWeapons(filteredResults);
 
                 store.commit('setFetchWeaponListLoadingState', false);
             } catch(e) {
@@ -128,7 +128,7 @@ const s = Vue.extend({
                 });
 
                 await this.fetchWeapons(data.idResults);
-                
+
                 store.commit('setFetchWeaponListLoadingState', false);
             } catch (error) {
                 store.commit('setFetchWeaponListLoadingState', false);
@@ -180,6 +180,9 @@ const s = Vue.extend({
             }));
 
             return results;
+        },
+        isWeaponsEmpty() {
+            return Object.entries(this.weapons).length === 0
         }
     },
     computed: 
