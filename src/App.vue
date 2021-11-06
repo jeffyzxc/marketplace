@@ -66,10 +66,10 @@
         </div>
       </div>
     </div>
-    <transition name="fadeInUp" mode="out-in">
+    <transition name="fadeInUp" mode="out-in" v-if ="this.contracts !== null">
       <component v-bind:is="modal" :item="modalData"/>
     </transition>
-    <router-view class="switch-view-container"/>
+    <router-view class="switch-view-container" v-if ="this.contracts !== null"/>
   </div>
 </template>
 
@@ -78,10 +78,18 @@
 import Vue from 'vue';
 
 import ItemModal from './components/ItemModal.vue'
-import { mapState, mapActions, mapGetters } from 'vuex';
+import {
+  mapGetters 
+} from 'vuex';
 import WalletBalance from './components/WalletBalance.vue';
-  export default Vue.extend({
-      components: { WalletBalance, 'item-modal': ItemModal },
+import BuyWeaponItemModalVue from './components/modal/BuyWeaponItemModal.vue';
+
+export default Vue.extend({
+      components: { 
+       WalletBalance, 
+        'item-modal': ItemModal,
+        'buy-weapon-item': BuyWeaponItemModalVue
+      },
       name: 'SortFilter',
       data: function(){
         return{
@@ -92,6 +100,7 @@ import WalletBalance from './components/WalletBalance.vue';
         }
       },
       computed:{
+          ...mapGetters(['contracts']),
          isMobile() {
           if( screen.width <= 600) {
             return true;

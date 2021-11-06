@@ -4,9 +4,10 @@
             <div class="label">
                 <!------------ FOR LB/4B/5B ---------->
                 <div>
-                    <p class="rarity" :style="setRarityColor(weapon.weaponStars)">{{setRarityName(weapon.weaponStars)}}</p>
-                    <p>LB:30/100</p>
-                    
+                    <p class="rarity" :style="setRarityColor(weapon.stars)">{{setRarityName(weapon.stars)}}</p>
+                    <p v-if="weapon.lowStarBurnPoints > 0">LB: {{ weapon.lowStarBurnPoints }} / {{ MAX_LOW_STAR_BURN_POINTS }}</p>
+                    <p v-if="weapon.fourStarBurnPoints > 0">4B: {{ weapon.fourStarBurnPoints }} / {{ MAX_FOUR_STAR_BURN_POINTS }}</p>
+                    <p v-if="weapon.fiveStarBurnPoints > 0">5B: {{ weapon.fiveStarBurnPoints }} / {{ MAX_FIVE_STAR_BURN_POINTS }}</p>
                 </div>
             </div>
             <!-------------- WEAPON IMAGE------------>
@@ -16,55 +17,30 @@
         </div>
         <div class="desc">
             <!-- <img width="20" :src=`../assets/nav-icons/${elementIcons(weapon.weaponElement)}+.png` alt=""> -->
-            <img width="20" :src="require(`../assets/nav-icons/${(weapon.weaponElement).toLowerCase()}.png`)" alt="">
-
-            <!-- Change the Math Random to weaponStar if data from api is working properly -->
-            <p class="image-name">{{getWeaponNameFromSeed(weapon.weaponId, weapon.weaponStars)}}</p>
-            <p class="battle-power csr-pointer"  :id="weapon.weaponId">Batte Power: {{addCommas(totalBattlePower(weapon))}} <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z"/><path d="M12 6a3.5 3.5 0 0 0-3.5 3.5a1 1 0 0 0 2 0A1.5 1.5 0 1 1 12 11a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.16A3.49 3.49 0 0 0 12 6z"/><circle cx="12" cy="17" r="1"/></g></svg></p>
+            <img width="20" :src="require(`../assets/nav-icons/${(weapon.element).toLowerCase()}.png`)" alt="">
             
+            <!-- Change the Math Random to weaponStar if data from api is working properly -->
+            <p class="image-name">{{getWeaponNameFromSeed(weapon.id, weapon.stars)}}</p>
+            <p class="battle-power csr-pointer" :id="weapon.id">Batte Power: {{addCommas(totalBattlePower(weapon))}} <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z"/><path d="M12 6a3.5 3.5 0 0 0-3.5 3.5a1 1 0 0 0 2 0A1.5 1.5 0 1 1 12 11a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.16A3.49 3.49 0 0 0 12 6z"/><circle cx="12" cy="17" r="1"/></g></svg></p>
         </div>
 
         <!-------------- PROGRESS BAR (User style width percentage (%))------------>
         <div class="progress-bar p-0 m-0 csr-pointer">
-            <div><div class="progress" :style="'width:'+randomStamina()+'% !important;'"></div></div>
+            <div><div class="progress" :style="'width:'+(getWeaponDurability(weapon.id)/20)*100+'% !important;'"></div></div>
         </div>
         <div class="cost-item">
             <div>
                 <img width="15" src="../assets/apple-touch-icon.png" alt="">
-                <span>&nbsp; {{weapon.price}}</span>
+                <span v-b-popover.hover.top="untruncatedPrice + ' ' + 'SKILL'" >&nbsp; {{ truncatePrice }} </span>
             </div>
             <div>
-                 <span>#{{weapon.weaponId}}</span>
+                 <span>#{{weapon.id}}</span>
             </div>
         </div>
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.weaponId)">Purchase</p>
-             <p class="btn-purchase left csr-pointer ml-2" @click="openModal('item-modal', weapon)">View</p>
-        </div>
-
-         <b-popover
-            :target='weapon.weaponId'
-            triggers="hover focus"
-            placement="placement"
-            container="my-container"
-            >
-            <div class="popover-design">
-                <p>Total Battle Power</p>
-                <h4>{{addCommas(totalBattlePower(weapon))}}</h4>
-                <div class="traits">
-                    <img width="10" v-if="weapon.stat1Element != ''" src="../assets/nav-icons/fire.png" alt="">
-                    <span  v-if="weapon.stat1Element != ''">{{weapon.stat1Value}}<br></span>
-                    <img width="10" v-if="weapon.stat2Element != ''" src="../assets/nav-icons/lightning.png" alt="">
-                    <span v-if="weapon.stat2Element != ''">{{weapon.stat2Value}}<br></span>
-                    <img width="10" v-if="weapon.stat3Element != ''" src="../assets/nav-icons/water.png" alt="">
-                    <span v-if="weapon.stat3Element != ''">{{weapon.stat3Value}}</span>
-                </div>
-                <div class="learn">
-                    Learn About Battle Powers
-                </div>
-            </div>
-    </b-popover>
-
+             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseWeapon(weapon.id)">Purchase</p>
+             <p class="btn-purchase left csr-pointer ml-2" @click="openModal('buy-weapon-item', weapon)">View</p>
+        </div>  
     </div>
 </template>
 
@@ -72,30 +48,54 @@
 import Vue from 'vue';
 import { getWeaponNameFromSeed } from '../weapon-names';
 import { getWeaponArt } from '../weapon-arts-placeholder'
-import { mapActions } from 'vuex';
-interface StoreMappedActions {
-    purchaseWeaponListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
-    fetchWeaponsNftPrice(payload: { tokenId: number }): Promise<string>;
-}
+import { mapActions, mapGetters } from 'vuex';
+import { fromWeiEther } from '@/utils/common';
+import { MAX_LOW_STAR_BURN_POINTS, MAX_FOUR_STAR_BURN_POINTS, MAX_FIVE_STAR_BURN_POINTS } from './../default/dust.default';
+import CurrencyConverter from '../components/CurrencyConverter.vue';
+import { truncateDecimals } from '@/utils/currency-converter';
 
 export default Vue.extend({
     name: 'SortFilter',
-     props: {
-            weapon: {
-                type: Object,
-                required: true
-            }
-        },
+    props: {
+        weapon: {
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return  {
+            truncatePrice: "loading..",
+            untruncatedPrice: "loading..",
+            MAX_LOW_STAR_BURN_POINTS: MAX_LOW_STAR_BURN_POINTS,
+            MAX_FOUR_STAR_BURN_POINTS: MAX_FOUR_STAR_BURN_POINTS,
+            MAX_FIVE_STAR_BURN_POINTS: MAX_FIVE_STAR_BURN_POINTS
+        }
+    },
+    computed: {
+        ...mapGetters(
+            [
+                'getWeaponDurability',
+                'weaponContractAddress'
+            ]
+        )
+    },
+    async created() {
+        this.untruncatedPrice = fromWeiEther((await this.lookupWeaponPrice(this.weapon.id)).toString());
+        this.truncatePrice = truncateDecimals(this.untruncatedPrice);
+    },
     methods:{
+        ...mapActions(
+            [
+                'purchaseWeaponListing',
+                'fetchWeaponsNftPrice',
+                'fetchMarketNftPrice'
+            ]
+        ),
         getWeaponArt,
         getWeaponNameFromSeed,
         elementIcons(element : string) {
             return element.toLowerCase
         },
-        ...(mapActions([
-            'purchaseWeaponListing',
-            'fetchWeaponsNftPrice'
-        ]) as StoreMappedActions),
         setRarityName(rarity:number){
             if(rarity == 4){
                 return 'Mythical'
@@ -149,20 +149,23 @@ export default Vue.extend({
             }
             return x1 + x2;
         },
-        async purchaseWeapon(weaponId: number){
-             const price = await this.lookupWeaponPrice(weaponId);
+        async lookupWeaponPrice(id: string) {
+            if (!this.weaponContractAddress) return;
+
+            return await this.fetchMarketNftPrice({
+                nftContractAddr: this.weaponContractAddress,
+                tokenId: id,
+            });
+        },
+        async purchaseWeapon(weaponId: string){
+            const price = await this.lookupWeaponPrice(weaponId);
             if(!price) return;
             
             await this.purchaseWeaponListing({
                 tokenId: weaponId,
                 maxPrice: price
             });
-        },
-        async lookupWeaponPrice(id: number) {
-            return await this.fetchWeaponsNftPrice({
-                tokenId: id
-            });
-        },
+        }
     }
 });
 

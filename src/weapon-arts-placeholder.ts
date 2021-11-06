@@ -16,5 +16,5 @@ export function getWeaponArt(weapon: IWeapon) {
     return null;
   }
 
-  return allImages[parseInt(weapon.weaponId) % allImages.length];
+  return allImages[weapon.id % allImages.length];
 }

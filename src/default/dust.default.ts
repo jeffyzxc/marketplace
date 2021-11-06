@@ -1,0 +1,3 @@
+export const MAX_LOW_STAR_BURN_POINTS = 100;
+export const MAX_FOUR_STAR_BURN_POINTS = 25;
+export const MAX_FIVE_STAR_BURN_POINTS = 10;
