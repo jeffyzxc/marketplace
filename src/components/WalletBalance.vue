@@ -60,10 +60,9 @@ export default Vue.extend({
     if (!this.isConnected()) {
         this.onSetupMetamask();
     }
-      setInterval( function () {
-          store.dispatch('getMetamaskProvider');
-          store.dispatch('getMetamaskAccount');
-      }, 1000)
+    
+    store.dispatch('getMetamaskProvider');
+    store.dispatch('getMetamaskAccount');
   },
   computed: {
     // mix the getters into computed with object spread operator

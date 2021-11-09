@@ -1,68 +1,37 @@
 <template>
     <div class="item-card">
         <div class="imgs text-center">
-            <!-- <div class="label"> -->
-                <!------------ FOR RARITY ---------->
-                <!-- <div>
-                    <p class="rarity" :style="setRarityColor('Mythical')">Mythical</p>
-                </div> -->
-            <!-- </div> -->
-            <!-------------- CHARACTER IMAGE------------>
-            <img class="characters" width="80" :src="getCharacterArt(character.charId)" style="height: 151px" alt="">
+            <img class="characters" width="80" :src="getCharacterArt(character)" style="height: 151px" alt="">
         </div>
         <div class="desc">
-            <img width="20" :src="require(`../assets/nav-icons/${character.charElement.toLowerCase()}.png`)" alt="">
+            <img width="20" :src="require(`../assets/nav-icons/${character.traitName.toLowerCase()}.png`)" alt="">
             <p class="image-name">
-                <!-- GARETH BALE BENZEMA -->
-                {{ getCleanCharacterName(character.charId) }}
-            </p>
-            <p class="battle-power csr-pointer"  id="popover-reactive-1">Level {{ character.charLevel }}</p>
-            
+                {{ getCleanCharacterName(character.id) }}
+            </p>            
         </div>
 
         <!-------------- PROGRESS BAR (User style width percentage (%))------------>
         <div class="progress-bar p-0 m-0">
-            <div><div class="progress" style="width: 70% !important;"></div></div>
+            <div><div class="progress" 
+             :style="`--staminaReady: ${(timestampToStamina(character.staminaTimestamp)/CHARACTER_MAX_STAMINA)*100}%;`"
+                v-b-popover.hover.bottom="staminaToolTipHtml()"
+             ></div></div>
         </div>
         
         <div class="cost-item">
             <div>
                 <img width="15" src="../assets/apple-touch-icon.png" alt="">
-                <span>&nbsp; {{ character.price }}</span>
+                <span v-b-popover.hover.top="untruncatedPrice + ' ' + 'SKILL'" >&nbsp; {{ truncatePrice }} </span>
             </div>
             <div>
-                 <span>#{{character.charId}}</span>
+                 <span>#{{character.id}}</span>
             </div>
         </div>
+
         <div class="buttons">
-             <p class="btn-purchase right csr-pointer mr-2" @click="purchaseCharacter(character.charId)">Purchase</p>
-             <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
+            <p class="btn-purchase right csr-pointer mr-2" @click="purchaseCharacter(character.id)">Purchase</p>
+            <p class="btn-purchase left csr-pointer ml-2" @click="openModal(true)">View</p>
         </div>
-
-         <b-popover
-            target="popover-reactive-1"
-            triggers="click"
-            placement="left"
-            container="my-container"
-            >
-
-            <div class="popover-design">
-                <p>Total Battle Power</p>
-                <h4>11,302</h4>
-                <div class="traits">
-                    <img width="10" src="../assets/nav-icons/fire.png" alt="">
-                    &nbsp;<span>Power</span><br>
-                    <img width="10" src="../assets/nav-icons/lightning.png" alt="">
-                    &nbsp;<span>Strength</span><br>
-                    <img width="10" src="../assets/nav-icons/water.png" alt="">
-                    &nbsp;<span>Intelligence</span>
-                </div>
-                <div class="learn">
-                    Learn About Battle Powers
-                </div>
-            </div>
-    </b-popover>
-
     </div>
 </template>
 
@@ -71,6 +40,9 @@ import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 import { getCleanName } from './../utils/rename-censor';
 import { getCharacterArt } from './../utils/character-arts-placeholder';
+import { CHARACTER_MAX_STAMINA } from '@/default/character.default';
+import { fromWeiEther } from '@/utils/common';
+import { truncateDecimals } from '@/utils/currency-converter';
 
 interface StoreMappedActions {
     purchaseCharactersListing(payload: { tokenId: number, maxPrice: string }): Promise<{ seller: string, nftID: string, price: string }>;
@@ -79,6 +51,13 @@ interface StoreMappedActions {
 
 export default Vue.extend({
     name: 'SortFilter',
+    data() {
+        return {
+            truncatePrice: "loading..",
+            untruncatedPrice: "loading..",
+            CHARACTER_MAX_STAMINA: CHARACTER_MAX_STAMINA
+        }
+    },
     props: {
         character: {
             type: Object,
@@ -90,10 +69,10 @@ export default Vue.extend({
         mapActions([
             'purchaseCharactersListing',
             'fetchCharactersNftPrice',
-        ]) as StoreMappedActions),
+            'fetchMarketNftPrice'
+        ])),
 
         getCharacterArt,
-
         setRarityColor(rarity:string){
             if(rarity == 'Mythical'){
                 return 'background-color:#D16100 !important'
@@ -107,18 +86,34 @@ export default Vue.extend({
                  return 'background-color:#43506A !important'
             }
         },
+        timestampToStamina(timestamp: number) {
+            if(timestamp > Math.floor(Date.now()/1000)) return 0;
+            return +Math.min((Math.floor(Date.now()/1000) - timestamp) / 300, 200).toFixed(0);
+        },
         openModal(bol:boolean){
             this.$root.$emit('modal',bol)
         },
-          async purchaseCharacter(characterId: number){
-              characterId = 1; // for testing purposes. API not finished yet just finishing ABI
-             const price = await this.lookupCharactersPrice(characterId);
+        async purchaseCharacter(characterId: number){
+            characterId = 1; // for testing purposes. API not finished yet just finishing ABI
+            const price = await this.lookupCharactersPrice(characterId);
+
             if(!price) return;
             
             await this.purchaseCharactersListing({
                 tokenId: characterId,
                 maxPrice: price
             });
+        },
+        async lookUpCharacterPrice(id: string) {
+            if (!this.characterContractAddress) return;
+
+            return await this.fetchMarketNftPrice({
+                nftContractAddr: this.characterContractAddress,
+                tokenId: id,
+            });
+        },
+        staminaToolTipHtml() {
+            return `STA ${this.timestampToStamina(this.character.staminaTimestamp)} / ${CHARACTER_MAX_STAMINA}`;
         },
         getCleanCharacterName(id:number) {
             return getCleanName(this.getCharacterName(id));
@@ -129,11 +124,17 @@ export default Vue.extend({
             }); 
         },
     },
+    async created() {
+        this.untruncatedPrice = fromWeiEther((await this.lookUpCharacterPrice(this.character.id)).toString());
+        this.truncatePrice = truncateDecimals(this.untruncatedPrice);
+    },
     computed: {
         ...mapGetters(
             [
+                'characterContractAddress',
                 'getCharacterName',
-                'getCharacterStamina'
+                'getCharacterStamina',
+                'timeUntilCharacterHasMaxStamina'
             ]
         )
     }
@@ -142,5 +143,4 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-
 </style>

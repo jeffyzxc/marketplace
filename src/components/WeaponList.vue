@@ -189,8 +189,7 @@ const s = Vue.extend({
     {
         ...mapGetters(
             [
-                'weapons',
-                'allWeapons', 
+                'weapons', 
                 'getWeaponListPagination', 
                 'getFetchWeaponlistLoadingState', 
                 'contracts',
