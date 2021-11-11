@@ -84,6 +84,7 @@ export interface IState {
   currentSkillBalance: number,
   currentBNBBalance  : number,
   chainId: string,
+  maxStamina: number,
   metamaskConnected: boolean,
   characters: Record<number, ICharacter>;
   globalBuyMarketFilter: IGlobalFilter,
@@ -112,6 +113,7 @@ export const store = new Vuex.Store<IState>({
     currentBNBBalance : 0.00,
     currentSkillBalance : 0.00,
     metamaskConnected: false,
+    maxStamina: 0,
     weapons: {},
     weaponDurabilities: {},
     characters: {},
@@ -623,8 +625,8 @@ export const store = new Vuex.Store<IState>({
           }
 
           const date = new Date();
-          if (CHARACTER_MAX_STAMINA !== currentStamina) {
-            date.setTime(date.getTime() + ((CHARACTER_MAX_STAMINA - 5) * (5 * 60000)));
+          if (state.maxStamina !== currentStamina) {
+            date.setTime(date.getTime() + ((state.maxStamina - 5) * (5 * 60000)));
           }
 
           return(`${

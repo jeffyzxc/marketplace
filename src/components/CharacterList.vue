@@ -9,7 +9,7 @@
             <character-item v-for="(cl,index) in characters" :key="'cl'+index" :character="cl">
             </character-item>
 
-            <div v-if="isCharactersEmpty()" class="mb-5 mt-5">
+            <div v-if="isCharactersEmpty() && !getFetchCharacterlistLoadingState" class="mb-5 mt-5">
                 <h2>No Characters Found...</h2>
             </div>
         </div>
